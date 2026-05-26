@@ -28,7 +28,8 @@ export default function CheckoutPage() {
   }, [id, eventData, navigate]);
 
   const isSoldOut = eventData?.status === 'AGOTADO';
-  const maxStock  = 10; // TODO: usar eventData.stock cuando esté en el modelo
+  // Usa el stock real del evento; si no está disponible cae a 10 por seguridad
+  const maxStock  = Math.min(eventData?.stock ?? 10, 10);
 
   function decrement() { setCantidad(q => Math.max(1, q - 1)); }
   function increment() { setCantidad(q => Math.min(maxStock, q + 1)); }
@@ -87,7 +88,10 @@ export default function CheckoutPage() {
 
         {/* Nota legal */}
         <p className={styles.legalNote}>
-          Máximo {maxStock} entradas por compra · Solo mayores de 18 años
+          {eventData?.rawPrice === 0
+            ? "Evento gratuito · Registrá tu asistencia"
+            : `Máximo ${maxStock} entradas por compra · Apto todo público`
+          }
         </p>
 
         {/* CTA */}

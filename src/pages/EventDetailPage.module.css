@@ -1,232 +1,629 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,300&display=swap');
+
+/* ─── ROOT ─────────────────────────────────────────────────────────────── */
 .root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: var(--ds-color-bg-canvas);
-  color: var(--ds-color-text-primary);
+  background-color: #0a0a0a;
+  color: #ffffff;
+  font-family: var(--ds-font-family-base, 'Inter', sans-serif);
 }
 
-.headerBar {
-  padding: 24px;
-  max-width: 1200px;
+/* ─── HERO ──────────────────────────────────────────────────────────────── */
+.hero {
+  position: relative;
   width: 100%;
-  margin: 0 auto;
+  height: 340px;
+  overflow: hidden;
+  flex-shrink: 0;
 }
 
+.heroBg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: brightness(0.5);
+}
+
+.heroOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.5) 50%,
+    rgba(0, 0, 0, 0.92) 100%
+  );
+}
+
+/* Nav icon buttons */
+.heroBack,
+.heroHeart {
+  position: absolute;
+  top: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.2s;
+}
+.heroBack  { left:  20px; }
+.heroHeart { right: 20px; }
+.heroBack:hover, .heroHeart:hover { background: rgba(255,255,255,0.15); }
+
+/* Top-right meta */
+.heroMeta {
+  position: absolute;
+  top: 20px;
+  right: 72px;
+  max-width: 340px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: right;
+}
+.heroArtistNames {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  line-height: 1.3;
+}
+.heroBy {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+.heroGenres {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+.heroChip {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 2px;
+  text-transform: uppercase;
+  color: #fff;
+}
+.heroPrice {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #bbb;
+}
+.heroVenue {
+  margin: 0;
+  font-size: 0.8rem;
+  color: #999;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  justify-content: flex-end;
+}
+
+/* Bottom-left big title */
+.heroTitleBlock {
+  position: absolute;
+  bottom: 24px;
+  left: 40px;
+  z-index: 5;
+  max-width: 60%;
+}
+.heroTitle {
+  margin: 0;
+  font-size: clamp(2rem, 5vw, 3.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #ffffff;
+  letter-spacing: -0.5px;
+}
+
+/* ─── MAIN GRID ─────────────────────────────────────────────────────────── */
 .container {
   max-width: 1200px;
   width: 100%;
   margin: 0 auto;
-  padding: 0 24px 48px;
-  flex: 1;
-  display: flex;
+  padding: 0 24px 80px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 48px;
   align-items: flex-start;
 }
 
-.maxCard {
-  width: 100%;
+@media (max-width: 900px) {
+  .container { grid-template-columns: 1fr; gap: 32px; }
+  .hero { height: 260px; }
+  .heroMeta { display: none; }
+  .heroTitleBlock { max-width: 80%; }
+}
+
+/* ─── SHARED SECTION ────────────────────────────────────────────────────── */
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+  padding-top: 32px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.sectionTitle {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #fff;
+}
+.iconNeon    { color: var(--ds-color-action-primary-bg, #a3e635); display: flex; align-items: center; }
+.iconMagenta { color: #f0abfc; display: flex; align-items: center; }
+
+/* ─── TOP INFO BAR ──────────────────────────────────────────────────────── */
+.topInfoBar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  background-color: #141414;
+  padding: 20px 28px;
+  border-radius: 4px;
+  border: 1px solid #1f1f1f;
+}
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.infoText { display: flex; flex-direction: column; }
+.infoLabel {
+  font-size: 0.62rem;
+  font-family: 'DM Sans', sans-serif;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+}
+.infoValue {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* ─── MOVIDA DESCRIPTION ────────────────────────────────────────────────── */
+.movidaDescription {
+  color: #999;
+  font-size: 1rem;
+  line-height: 1.65;
+  max-width: 75%;
+  margin: 0;
+}
+
+/* ─── TIMELINE ──────────────────────────────────────────────────────────── */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  padding-left: 8px;
+}
+
+.tlRow {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+/* Timeline time: monospace for all times */
+.tlTime {
+  width: 52px;
+  flex-shrink: 0;
+  text-align: right;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding-top: 3px;
+}
+.tlTimeGreen   { color: var(--ds-color-action-primary-bg, #a3e635); }
+.tlTimeMagenta { color: #f0abfc; }
+.tlTimeGrey    { color: #444; }
+.tlTimeWhite   { color: #aaa; }
+
+/* Dot + line column */
+.tlDivider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 20px;
+  flex-shrink: 0;
+}
+.tlDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  flex-shrink: 0;
+  margin-top: 5px;
+  z-index: 2;
+}
+.dotGreen   {
+  background-color: var(--ds-color-action-primary-bg, #a3e635);
+  box-shadow: 0 0 8px rgba(163, 230, 53, 0.5);
+}
+.dotMagenta {
+  background-color: #f0abfc;
+  box-shadow: 0 0 8px rgba(240, 171, 252, 0.5);
+}
+.dotGrey    { background-color: #3a3a3a; }
+
+.tlLine {
+  width: 1px;
+  flex: 1;
+  min-height: 28px;
+  background-color: #2a2a2a;
+  margin-top: 4px;
+}
+
+/* Content column */
+.tlContent {
+  padding-bottom: 28px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tlTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.tlTitle { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; }
+.tlTitleWhite   { color: #fff; }
+.tlTitleMagenta { color: #f0abfc; }
+.tlTitleGrey    { color: #555; }
+
+.tlSubtitle { font-size: 0.82rem; color: #666; }
+
+.tlBadge {
+  font-size: 0.62rem;
+  font-weight: 800;
+  padding: 3px 7px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.badgeGreen   { background-color: var(--ds-color-action-primary-bg, #a3e635); color: #000; }
+.badgeMagenta { background-color: #f0abfc; color: #000; }
+.badgeCyan    { background-color: #22d3ee; color: #000; }
+
+/* ─── ARTISTAS SECTION ──────────────────────────────────────────────────── */
+.artistsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.inDev {
+  font-size: 0.7rem;
+  color: var(--ds-color-action-primary-bg, #a3e635);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.artistsGrid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 600px) { .artistsGrid { grid-template-columns: 1fr; } }
+
+.artistCard {
+  background-color: #111;
+  border: 1px solid #222;
+  border-radius: 4px;
   overflow: hidden;
-  padding: 0 !important; /* Reseteamos padding de la primitive Card si lo tuviera */
-  background: var(--ds-color-bg-surface);
-  border: 1px solid var(--ds-color-border-strong);
-  /* Sombra profunda y oscura para estética pogo */
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s;
 }
+.artistCard:hover { border-color: #444; }
 
-@media (max-width: 900px) {
-  .maxCard {
-    grid-template-columns: 1fr;
-  }
-}
-
-.mediaSection {
-  width: 100%;
-  height: 100%;
-  min-height: 400px;
-  background: var(--ds-color-bg-surface-muted);
+.artistCardBg {
+  height: 190px;
+  background-color: #1a1a1a;
   position: relative;
+  overflow: hidden;
 }
-
-@media (max-width: 900px) {
-  .mediaSection {
-    min-height: 300px;
-  }
-}
-
-.image {
+.artistCardImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
-  /* Un ligero filtro para que se funda bien con la oscuridad si es brillante */
-  filter: contrast(1.1) brightness(0.9);
+  filter: brightness(0.65);
+  transition: transform 0.4s ease, filter 0.4s ease;
 }
+.artistCard:hover .artistCardImg { transform: scale(1.05); filter: brightness(0.8); }
 
-.fallbackImage {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, var(--ds-color-bg-surface-muted), var(--ds-color-bg-surface));
-  color: var(--ds-color-text-muted);
-  font-size: 1.5rem;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  text-align: center;
-  padding: 24px;
+.artistCardGradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 55%);
+  pointer-events: none;
 }
-
-.contentSection {
-  padding: 48px;
-  display: flex;
-  flex-direction: column;
-}
-
-@media (max-width: 900px) {
-  .contentSection {
-    padding: 32px 24px;
-  }
-}
-
-.topBadges {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.genres {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.title {
-  margin: 0 0 32px 0;
-  text-wrap: balance;
-  line-height: 1.1;
+.artistCardBadge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  font-size: 0.62rem;
   font-weight: 800;
-  color: var(--ds-color-text-primary);
+  padding: 4px 8px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  color: #000;
+  z-index: 5;
 }
+.bg_green   { background-color: var(--ds-color-action-primary-bg, #a3e635); }
+.bg_magenta { background-color: #f0abfc; }
+.bg_cyan    { background-color: #22d3ee; }
+.bg_grey    { background-color: #888; }
 
-.detailsGrid {
+.artistCardContent { padding: 20px; display: flex; flex-direction: column; flex: 1; }
+.artistCardInfo { margin-bottom: 20px; flex: 1; }
+.artistCardName {
+  margin: 0 0 6px 0;
+  font-size: 1.1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #fff;
+}
+.artistCardDesc { margin: 0; font-size: 0.85rem; color: #888; line-height: 1.4; }
+
+.artistCardFooter {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  margin-bottom: 40px;
+  justify-content: space-between;
+  align-items: center;
 }
+.artistIgBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid #333;
+  padding: 6px 10px;
+  border-radius: 2px;
+  font-size: 0.78rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.artistIgBadge:hover { background: #1a1a1a; color: #fff; border-color: #555; }
 
-.detailItem {
+.artistProfileBtn {
+  background: transparent;
+  border: 1px solid #3a3a3a;
+  color: #bbb;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.artistProfileBtn:hover { border-color: #888; color: #fff; background: #1a1a1a; }
+
+/* ─── INFO DEL EVENTO ───────────────────────────────────────────────────── */
+.infoGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2px;
+  border: 1px solid #1e1e1e;
+  border-radius: 4px;
+  overflow: hidden;
+}
+.infoCell {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
+  gap: 14px;
+  padding: 20px;
+  background: #111;
+  border: 1px solid #1e1e1e;
+  transition: background 0.15s;
 }
+.infoCell:hover { background: #161616; }
 
-.iconWrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--ds-color-action-secondary-bg);
-  color: var(--ds-color-action-primary-bg); /* lime green accents */
+.infoCellIcon {
+  color: var(--ds-color-action-primary-bg, #a3e635);
+  flex-shrink: 0;
+  margin-top: 2px;
 }
-
-.detailText {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.detailLabel {
-  color: var(--ds-color-text-muted);
+.infoCellText { display: flex; flex-direction: column; gap: 4px; }
+.infoCellLabel {
+  font-size: 0.62rem;
+  font-family: 'DM Sans', sans-serif;
+  color: #555;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.2px;
 }
+.infoCellValue { font-size: 0.95rem; font-weight: 600; color: #ddd; line-height: 1.4; }
+.infoCellHighlight { color: var(--ds-color-action-primary-bg, #a3e635); }
 
-.detailValue {
-  color: var(--ds-color-text-primary);
-  font-weight: 500;
+@media (max-width: 600px) { .infoGrid { grid-template-columns: 1fr; } }
+
+/* ─── UBICACIÓN ─────────────────────────────────────────────────────────── */
+.ubicacionTitle {
+  margin: 0 0 8px 0;
+  font-size: 1.4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  color: #fff;
 }
+.ubicacionAddress { margin: 0; font-size: 0.95rem; color: #888; }
 
-.artistsSection {
-  margin-bottom: 40px;
+/* ─── RIGHT COLUMN: TICKET CARD ─────────────────────────────────────────── */
+/* Sticky lives on the column, not the card, so it works in a grid */
+.rightColumn {
+  position: sticky;
+  top: 24px;
+  align-self: start;
   padding-top: 32px;
-  border-top: 1px solid var(--ds-color-border-subtle);
 }
 
-.sectionTitle {
-  margin: 0 0 16px 0;
-  color: var(--ds-color-text-secondary);
-}
-
-.artistList {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.artistName {
-  padding: 8px 16px;
-  background: var(--ds-color-bg-surface-muted);
-  border: 1px solid var(--ds-color-border-strong);
-  border-radius: 99px;
-  font-size: 0.9rem;
-  font-weight: 500;
-  color: var(--ds-color-text-primary);
-}
-
-.ticketSection {
-  margin-top: auto;
-  padding: 24px;
-  background: var(--ds-color-bg-canvas); /* ligeramente más oscuro para contrastar con la card */
-  border: 1px solid var(--ds-color-border-subtle);
-  border-radius: 12px;
+.ticketCard {
+  background-color: #111;
+  padding: 28px;
+  border-radius: 4px;
+  border: 1px solid #222;
+  /* Gradient top border */
+  border-top: 3px solid transparent;
+  background-image: linear-gradient(#111, #111),
+    linear-gradient(90deg, var(--ds-color-action-primary-bg, #a3e635), #f0abfc, #22d3ee);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
 
-.priceContainer {
+.ticketHeader {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px dashed #2a2a2a;
 }
+.ticketType {
+  font-size: 0.72rem;
+  font-family: 'DM Sans', sans-serif;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+.ticketPriceValue {
+  color: var(--ds-color-action-primary-bg, #a3e635);
+  font-size: 2.8rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.ticketFee { color: #555; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; }
 
-.priceLabel {
-  color: var(--ds-color-text-muted);
+.ticketDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.ticketRow { display: flex; justify-content: space-between; align-items: center; }
+.ticketLabel {
+  font-size: 0.7rem;
+  font-family: 'DM Sans', sans-serif;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
+.ticketValue { font-size: 0.92rem; font-weight: 600; color: #ccc; }
+.textNeon { color: var(--ds-color-action-primary-bg, #a3e635) !important; }
 
-.priceValue {
-  color: var(--ds-color-text-primary);
-  font-weight: 800;
+.ticketValueBadge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+}
+.badgeValAvailable {
+  color: var(--ds-color-action-primary-bg, #a3e635);
+  border-color: rgba(163,230,53,0.35);
+  background: rgba(163,230,53,0.07);
+}
+.badgeValSoldout {
+  color: #ef4444;
+  border-color: rgba(239,68,68,0.35);
+  background: rgba(239,68,68,0.07);
 }
 
-.buyAction {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
+.actionButtons { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
 
 .buyButton {
+  width: 100%;
+  background-color: var(--ds-color-action-primary-bg, #a3e635);
+  color: #000;
+  border: none;
+  padding: 15px;
+  font-size: 0.95rem;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  font-weight: 700;
+  cursor: pointer;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: opacity 0.2s;
+  letter-spacing: 0.5px;
 }
+.buyButton:hover:not(:disabled) { opacity: 0.88; }
+.buyButton:disabled { background-color: #2a2a2a; color: #555; cursor: not-allowed; }
 
-.purchaseNote {
-  color: var(--ds-color-text-muted);
+.outlineButton {
+  width: 100%;
+  background: transparent;
+  color: #bbb;
+  border: 1px solid #2e2e2e;
+  padding: 12px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s;
+}
+.outlineButton:hover { background: #1a1a1a; border-color: #555; color: #fff; }
+
+.termsText {
+  color: #555;
+  font-size: 0.72rem;
   text-align: center;
+  margin: 0;
+  line-height: 1.5;
 }
+.termsText a { color: #777; text-decoration: underline; }
 
-/* ESTADOS DE ERROR Y CARGA */
+/* ─── ERROR STATE ───────────────────────────────────────────────────────── */
 .errorState {
   min-height: 100vh;
   display: flex;
@@ -236,54 +633,23 @@
   gap: 24px;
   text-align: center;
   padding: 24px;
-  background-color: var(--ds-color-bg-canvas);
-  color: var(--ds-color-text-primary);
+  background: #0a0a0a;
+  color: #fff;
 }
 
-.errorMsg {
-  color: var(--ds-color-text-muted);
-  max-width: 400px;
-}
-
-.skeletonCard {
-  min-height: 600px;
-}
-
-.skeletonPulse {
-  background: var(--ds-color-bg-surface-muted);
-  border-radius: 4px;
+/* ─── SKELETON / LOADING ────────────────────────────────────────────────── */
+.skeletonHero {
+  width: 100%;
+  height: 340px;
+  background: #141414;
   animation: pulse 1.5s infinite ease-in-out;
 }
-
+.skeletonPulse {
+  background: #1a1a1a;
+  animation: pulse 1.5s infinite ease-in-out;
+}
 @keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 0.3; }
+  0%   { opacity: 0.6; }
+  50%  { opacity: 0.3; }
   100% { opacity: 0.6; }
-}
-
-.skeletonBadge {
-  width: 20%;
-  height: 24px;
-  border-radius: 4px;
-}
-
-.skeletonTitle {
-  width: 80%;
-  height: 48px;
-  margin-top: 16px;
-  border-radius: 4px;
-}
-
-.skeletonDetail {
-  width: 60%;
-  height: 24px;
-  margin-top: 32px;
-  border-radius: 4px;
-}
-
-.skeletonDetailShort {
-  width: 40%;
-  height: 24px;
-  margin-top: 16px;
-  border-radius: 4px;
 }

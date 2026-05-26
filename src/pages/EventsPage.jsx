@@ -10,7 +10,7 @@ import { useEvents } from "../hooks/useEvents";
 import { useEventFilters } from "../hooks/useEventFilters";
 import styles from "./EventsPage.module.css";
 
-const GENRES = ["PUNK", "ROCK", "HARDCORE", "METAL", "GRUNGE", "POP", "ALTER ROCK"];
+const GENRES = ["INDIE", "ROCK", "PUNK", "HARDCORE", "METAL", "GRUNGE", "SHOEGAZE", "FOLK", "ALTERNATIVO", "POP"];
 
 /**
  * COMPONENTE: EventsPage

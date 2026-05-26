@@ -35,18 +35,20 @@ const mapStatusTone = (status) => {
  * @returns {object} Evento normalizado
  */
 const mapEvent = (evt) => ({
-  id:         evt._id,
-  title:      evt.nombre,
-  imageUrl:   evt.imagen || '',
-  genres:     evt.generos  || [],
-  date:       evt.fecha    ? formatDate(evt.fecha) : 'Fecha a confirmar',
-  time:       evt.hora     ? `${evt.hora} HS`      : '',
-  venue:      evt.lugar    || 'Lugar a confirmar',
-  price:      evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),
-  rawPrice:   evt.precio   ?? 0,   // valor numérico para cálculos en el checkout
-  artists:    evt.artistas || [],
-  status:     evt.estado   || 'DISPONIBLE',
-  statusTone: mapStatusTone(evt.estado || 'DISPONIBLE'),
+  id:           evt._id,
+  title:        evt.nombre,
+  imageUrl:     evt.imagen || '',
+  genres:       evt.generos  || [],
+  date:         evt.fecha    ? formatDate(evt.fecha) : 'Fecha a confirmar',
+  time:         evt.hora     ? `${evt.hora} HS`      : '',
+  venue:        evt.lugar    || 'Lugar a confirmar',
+  price:        evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),
+  rawPrice:     evt.precio   ?? 0,
+  artists:      evt.artistas || [],
+  status:       evt.estado   || 'DISPONIBLE',
+  statusTone:   mapStatusTone(evt.estado || 'DISPONIBLE'),
+  capacity:     evt.capacidadTotal ?? null,  // capacidad real del venue
+  stock:        evt.stock ?? null,
 });
 
 /**
