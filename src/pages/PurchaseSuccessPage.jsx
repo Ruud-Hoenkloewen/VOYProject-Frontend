@@ -1,10 +1,12 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { QRCodeSVG } from 'qrcode.react';
 import CheckoutLayout from '../components/checkout/CheckoutLayout';
-import styles from './CheckoutPage.module.css'; // Reutilizamos estilos base de Checkout para consistencia visual
+import styles from './PurchaseSuccessPage.module.css';
 
 /**
  * PurchaseSuccessPage — Paso 4: Confirmación de compra exitosa
- * Ruta: /compra/confirmacion
+ * Muestra el ticket digital con código QR y número de orden
  */
 export default function PurchaseSuccessPage() {
   const location = useLocation();
@@ -15,108 +17,140 @@ export default function PurchaseSuccessPage() {
   const compradorData = location.state?.compradorData ?? null;
   const paymentMethod = location.state?.paymentMethod ?? '';
 
+  // Inicializa el número de orden con el retornado por el backend, o genera uno ficticio de respaldo
+  const [orderId] = useState(
+    location.state?.orderId ?? `VOY-${Math.floor(100000 + Math.random() * 900000)}`
+  );
+
+  const [showToast, setShowToast] = useState(false);
+
   function handleBackToHome() {
     navigate('/');
   }
 
+  function handleDownloadPDF() {
+    setShowToast(true);
+  }
+
+  // Desvanece el aviso de 'Próximamente' tras 3 segundos
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => {
+        setShowToast(false);
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
   return (
     <CheckoutLayout currentStep={4} eventData={eventData} cantidad={cantidad}>
-      <div className={styles.stepCard} style={{ textAlign: 'center', padding: '3.5rem 2rem' }}>
+      <div className={styles.container}>
         
-        {/* Ícono de éxito animado o simple */}
-        <div style={{ 
-          fontSize: '3.5rem', 
-          lineHeight: '1', 
-          color: 'var(--ds-color-accent-primary)', 
-          marginBottom: '1.5rem' 
-        }}>
-          ✓
-        </div>
-        
-        <h1 className={styles.stepTitle} style={{ justifyContent: 'center', marginBottom: '0.75rem', fontSize: '1.6rem' }}>
-          ¡COMPRA CONFIRMADA!
-        </h1>
-        
-        <p className={styles.stepSubtitle} style={{ margin: '0 auto 2.5rem', maxWidth: '440px', lineHeight: '1.6' }}>
-          Tus entradas han sido reservadas con éxito. Enviamos un mail a{' '}
-          <strong style={{ color: 'var(--ds-color-text-primary)' }}>
-            {compradorData?.email ?? 'tu dirección de correo'}
-          </strong>{' '}
-          con las instrucciones de pago, el código QR y los detalles del show.
-        </p>
-
-        {/* Panel con resumen de la compra */}
-        <div style={{
-          border: '1px solid var(--ds-color-border-editorial-mid)',
-          padding: '1.5rem',
-          textAlign: 'left',
-          marginBottom: '2.5rem',
-          background: 'var(--ds-color-bg-editorial-surface, #0f0f0f)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '1rem',
-          maxWidth: '440px',
-          margin: '0 auto 2.5rem'
-        }}>
-          <div>
-            <span style={{ 
-              fontSize: '0.6rem', 
-              color: 'var(--ds-color-text-muted)', 
-              display: 'block', 
-              letterSpacing: '0.15em',
-              fontWeight: '800',
-              marginBottom: '0.2rem'
-            }}>
-              EVENTO
-            </span>
-            <span style={{ fontWeight: '800', fontSize: '1rem', color: 'var(--ds-color-text-primary)' }}>
-              {eventData?.title ?? 'Evento VOY'}
-            </span>
+        {/* Toast de aviso Próximamente */}
+        {showToast && (
+          <div className={styles.toast} role="alert">
+            <span className={styles.toastIcon}>⚡</span>
+            <span>Próximamente disponible en el siguiente Sprint.</span>
           </div>
+        )}
+
+        {/* Encabezado */}
+        <div className={styles.successHeader}>
+          <div className={styles.checkCircle}>✓</div>
+          <h1 className={styles.successTitle}>¡COMPRA CONFIRMADA!</h1>
+          <p className={styles.successSubtitle}>
+            Tus entradas han sido reservadas. Enviamos un mail a{' '}
+            <strong className={styles.emailHighlight}>
+              {compradorData?.email ?? 'tu dirección de correo'}
+            </strong>{' '}
+            con los detalles y el código de ingreso.
+          </p>
+        </div>
+
+        {/* TICKET DIGITAL FÍSICO */}
+        <div className={styles.ticket}>
           
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-            <div>
-              <span style={{ 
-                fontSize: '0.6rem', 
-                color: 'var(--ds-color-text-muted)', 
-                display: 'block', 
-                letterSpacing: '0.15em',
-                fontWeight: '800',
-                marginBottom: '0.2rem'
-              }}>
-                CANTIDAD
-              </span>
-              <span style={{ fontWeight: '700', color: 'var(--ds-color-text-primary)' }}>
-                {cantidad} {cantidad === 1 ? 'entrada' : 'entradas'}
-              </span>
+          {/* Mitad Superior: Información del Evento */}
+          <div className={styles.ticketTop}>
+            <div className={styles.ticketLogo}>
+              <span className={styles.logoBox}>V</span>
+              <span className={styles.logoText}>VOY PROJECT</span>
             </div>
-            
-            <div>
-              <span style={{ 
-                fontSize: '0.6rem', 
-                color: 'var(--ds-color-text-muted)', 
-                display: 'block', 
-                letterSpacing: '0.15em',
-                fontWeight: '800',
-                marginBottom: '0.2rem'
-              }}>
-                MÉTODO DE PAGO
-              </span>
-              <span style={{ fontWeight: '700', color: 'var(--ds-color-text-primary)' }}>
-                {paymentMethod || 'Seleccionado'}
-              </span>
+
+            <div className={styles.ticketDetails}>
+              <h2 className={styles.eventName}>{eventData?.title ?? 'Evento Under'}</h2>
+
+              <div className={styles.metaGrid}>
+                <div className={styles.metaCell}>
+                  <span className={styles.metaLabel}>FECHA</span>
+                  <span className={styles.metaValue}>{eventData?.date ?? 'Fecha a confirmar'}</span>
+                </div>
+                <div className={styles.metaCell}>
+                  <span className={styles.metaLabel}>HORA</span>
+                  <span className={styles.metaValue}>{eventData?.time ?? 'Hora a confirmar'}</span>
+                </div>
+                <div className={`${styles.metaCell} ${styles.fullWidth}`}>
+                  <span className={styles.metaLabel}>LUGAR</span>
+                  <span className={styles.metaValue}>{eventData?.venue ?? 'Lugar a confirmar'}</span>
+                </div>
+                <div className={styles.metaCell}>
+                  <span className={styles.metaLabel}>CANTIDAD</span>
+                  <span className={styles.metaValue}>
+                    {cantidad} {cantidad === 1 ? 'entrada' : 'entradas'}
+                  </span>
+                </div>
+                <div className={styles.metaCell}>
+                  <span className={styles.metaLabel}>MÉTODO DE PAGO</span>
+                  <span className={styles.metaValue}>
+                    {paymentMethod || 'Transferencia bancaria'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Divisor perforado interactivo */}
+          <div className={styles.ticketDivider} aria-hidden="true">
+            <div className={styles.notchLeft} />
+            <div className={styles.dashedLine} />
+            <div className={styles.notchRight} />
+          </div>
+
+          {/* Mitad Inferior: QR & Código de Orden */}
+          <div className={styles.ticketBottom}>
+            <div className={styles.qrContainer}>
+              <QRCodeSVG
+                value={orderId}
+                bgColor="transparent"
+                fgColor="#ffffff"
+                size={130}
+                level="M"
+              />
+            </div>
+            <div className={styles.orderInfo}>
+              <span className={styles.orderLabel}>NÚMERO DE ORDEN</span>
+              <span className={styles.orderId}>{orderId}</span>
             </div>
           </div>
         </div>
 
-        {/* Botón de retorno al inicio */}
-        <button
-          onClick={handleBackToHome}
-          className={styles.ctaBtn}
-          style={{ maxWidth: '280px', margin: '0 auto' }}
-        >
-          VOLVER AL INICIO
-        </button>
+        {/* Botonera de acciones */}
+        <div className={styles.actions}>
+          <button
+            onClick={handleDownloadPDF}
+            className={styles.pdfBtn}
+            aria-label="Descargar entrada en PDF"
+          >
+            DESCARGAR PDF
+          </button>
+          
+          <button
+            onClick={handleBackToHome}
+            className={styles.homeBtn}
+          >
+            VOLVER AL INICIO
+          </button>
+        </div>
       </div>
     </CheckoutLayout>
   );
