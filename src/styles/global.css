@@ -20,3 +20,20 @@ body {
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
 }
+
+/* ── ANIMACIONES DE SCROLL (useScrollAnimation hook) ──────
+   Cualquier elemento con [data-animate] arranca invisible
+   y se revela cuando el hook le añade la clase animate-visible.
+──────────────────────────────────────────────────────────── */
+[data-animate] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity   0.5s ease var(--entry-delay, 0s),
+    transform 0.5s ease var(--entry-delay, 0s);
+}
+
+[data-animate].animate-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

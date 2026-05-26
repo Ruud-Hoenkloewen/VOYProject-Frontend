@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useCallback } from "react";
+import { createContext, useContext, useState, useCallback, useEffect } from "react";
 
 const TOKEN_KEY = "voy_token";
 const USER_KEY  = "voy_user";
@@ -10,8 +10,8 @@ const AuthContext = createContext(null);
  * Lee el token de localStorage al montar para restaurar la sesión.
  */
 export function AuthProvider({ children }) {
-  const [token, setToken]   = useState(() => localStorage.getItem(TOKEN_KEY) || null);
-  const [user,  setUser]    = useState(() => {
+  const [token, setToken] = useState(() => localStorage.getItem(TOKEN_KEY) || null);
+  const [user,  setUser]  = useState(() => {
     try {
       const raw = localStorage.getItem(USER_KEY);
       return raw ? JSON.parse(raw) : null;
@@ -36,6 +36,16 @@ export function AuthProvider({ children }) {
     setUser(null);
   }, []);
 
+  /**
+   * Escucha el evento 'voy:unauthorized' que dispara api.js cuando el backend
+   * devuelve 401 (token expirado o inválido). Cierra la sesión automáticamente
+   * sin generar una dependencia circular entre api.js y AuthContext.
+   */
+  useEffect(() => {
+    window.addEventListener('voy:unauthorized', logout);
+    return () => window.removeEventListener('voy:unauthorized', logout);
+  }, [logout]);
+
   const isAuthenticated = Boolean(token);
 
   return (
@@ -54,3 +64,4 @@ export function useAuth() {
   if (!ctx) throw new Error("useAuth debe usarse dentro de <AuthProvider>");
   return ctx;
 }
+

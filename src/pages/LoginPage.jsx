@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { loginUser } from "../services/authService";
 import styles from "./RegisterPage.module.css"; // Reutiliza el mismo diseño
@@ -11,7 +11,11 @@ import styles from "./RegisterPage.module.css"; // Reutiliza el mismo diseño
  */
 export default function LoginPage() {
   const navigate  = useNavigate();
+  const location  = useLocation();
   const { login } = useAuth();
+
+  // Si venimos redirigidos desde una ruta protegida, volvemos ahí después del login
+  const redirectTo = location.state?.from?.pathname ?? '/';
 
   const [form,       setForm]       = useState({ email: "", password: "" });
   const [errors,     setErrors]     = useState({});
@@ -46,7 +50,7 @@ export default function LoginPage() {
       const data = await loginUser(form.email, form.password);
       // data = { _id, nombre, email, token }
       login({ _id: data._id, nombre: data.nombre, email: data.email }, data.token);
-      navigate("/");
+      navigate(redirectTo, { replace: true });
     } catch (err) {
       const msg = err.response?.data?.mensaje || "Error al iniciar sesión. Intentá de nuevo.";
       setApiError(msg);

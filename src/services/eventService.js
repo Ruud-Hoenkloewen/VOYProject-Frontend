@@ -4,76 +4,78 @@ const MONTHS = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
-  const day = date.getUTCDate();
+  const day   = date.getUTCDate();
   const month = MONTHS[date.getUTCMonth()];
-  const year = date.getUTCFullYear();
+  const year  = date.getUTCFullYear();
   return `${day} ${month} ${year}`;
 };
 
 const formatPrice = (price) => {
   if (price === 0) return "Gratis";
-  // Formatear a pesos argentinos
   return new Intl.NumberFormat('es-AR', {
     style: 'currency',
     currency: 'ARS',
-    minimumFractionDigits: 0
+    minimumFractionDigits: 0,
   }).format(price);
 };
 
 const mapStatusTone = (status) => {
   switch (status) {
-    case 'DISPONIBLE': return 'success';
+    case 'DISPONIBLE':       return 'success';
     case 'ÚLTIMAS ENTRADAS': return 'warning';
-    case 'AGOTADO': return 'danger';
-    default: return 'neutral';
+    case 'AGOTADO':          return 'danger';
+    default:                 return 'neutral';
   }
 };
 
+/**
+ * mapEvent — transforma un documento de evento del backend al shape
+ * que consume el frontend. Centralizado para evitar duplicación.
+ * @param {object} evt - Documento crudo de MongoDB
+ * @returns {object} Evento normalizado
+ */
+const mapEvent = (evt) => ({
+  id:         evt._id,
+  title:      evt.nombre,
+  imageUrl:   evt.imagen || '',
+  genres:     evt.generos  || [],
+  date:       evt.fecha    ? formatDate(evt.fecha) : 'Fecha a confirmar',
+  time:       evt.hora     ? `${evt.hora} HS`      : '',
+  venue:      evt.lugar    || 'Lugar a confirmar',
+  price:      evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),
+  rawPrice:   evt.precio   ?? 0,   // valor numérico para cálculos en el checkout
+  artists:    evt.artistas || [],
+  status:     evt.estado   || 'DISPONIBLE',
+  statusTone: mapStatusTone(evt.estado || 'DISPONIBLE'),
+});
+
+/**
+ * fetchEvents — obtiene la lista de eventos con filtros opcionales.
+ * @param {object} params - Query params: genero, lugar, fecha, limit
+ * @returns {Array} Lista de eventos normalizados
+ */
 export const fetchEvents = async (params = {}) => {
   try {
-    const response = await api.get('/events', { params });
-    const backendEvents = response.data;
-
-    return backendEvents.map(evt => ({
-      id: evt._id,
-      title: evt.nombre,
-      imageUrl: evt.imagen || 'https://via.placeholder.com/400',
-      genres: evt.generos || [],
-      date: evt.fecha ? formatDate(evt.fecha) : 'Fecha a confirmar',
-      time: evt.hora ? `${evt.hora} HS` : '',
-      venue: evt.lugar || 'Lugar a confirmar',
-      price: evt.precio !== undefined ? formatPrice(evt.precio) : formatPrice(0),
-      artists: evt.artistas || [],
-      status: evt.estado || 'DISPONIBLE',
-      statusTone: mapStatusTone(evt.estado || 'DISPONIBLE'),
-      highlighted: false
-    }));
+    const { data } = await api.get('/events', { params });
+    return data.map((evt) => ({ ...mapEvent(evt), highlighted: false }));
   } catch (error) {
     console.error("Error fetching events:", error);
     throw new Error(error.response?.data?.mensaje || "Error al obtener eventos del servidor");
   }
 };
 
+/**
+ * fetchEventById — obtiene el detalle completo de un evento por su ID.
+ * Re-lanza el error original para preservar error.response.status (ej: 404).
+ * @param {string} id - MongoDB ObjectId del evento
+ * @returns {object} Evento normalizado
+ */
 export const fetchEventById = async (id) => {
   try {
-    const response = await api.get(`/events/${id}`);
-    const evt = response.data;
-    
-    return {
-      id: evt._id,
-      title: evt.nombre,
-      imageUrl: evt.imagen || 'https://via.placeholder.com/400',
-      genres: evt.generos || [],
-      date: evt.fecha ? formatDate(evt.fecha) : 'Fecha a confirmar',
-      time: evt.hora ? `${evt.hora} HS` : '',
-      venue: evt.lugar || 'Lugar a confirmar',
-      price: evt.precio !== undefined ? formatPrice(evt.precio) : formatPrice(0),
-      artists: evt.artistas || [],
-      status: evt.estado || 'DISPONIBLE',
-      statusTone: mapStatusTone(evt.estado || 'DISPONIBLE'),
-    };
+    const { data } = await api.get(`/events/${id}`);
+    return mapEvent(data);
   } catch (error) {
     console.error(`Error fetching event ${id}:`, error);
-    throw error; // Re-lanzamos el error original para preservar error.response.status (ej: 404)
+    throw error;
   }
 };

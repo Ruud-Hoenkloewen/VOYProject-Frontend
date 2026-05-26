@@ -3,11 +3,15 @@ import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-route
 import { AuthProvider, useAuth } from "../context/AuthContext";
 
 // ── Lazy loading — cada ruta descarga su chunk solo cuando se necesita
-const LandingPage     = lazy(() => import("../pages/LandingPage"));
-const EventsPage      = lazy(() => import("../pages/EventsPage"));
-const EventDetailPage = lazy(() => import("../pages/EventDetailPage"));
-const RegisterPage    = lazy(() => import("../pages/RegisterPage"));
-const LoginPage       = lazy(() => import("../pages/LoginPage"));
+const LandingPage          = lazy(() => import("../pages/LandingPage"));
+const EventsPage           = lazy(() => import("../pages/EventsPage"));
+const EventDetailPage      = lazy(() => import("../pages/EventDetailPage"));
+const RegisterPage         = lazy(() => import("../pages/RegisterPage"));
+const LoginPage            = lazy(() => import("../pages/LoginPage"));
+const CheckoutPage         = lazy(() => import("../pages/CheckoutPage"));
+const CheckoutFormPage     = lazy(() => import("../pages/CheckoutFormPage"));
+const CheckoutPaymentPage  = lazy(() => import("../pages/CheckoutPaymentPage"));
+const PurchaseSuccessPage  = lazy(() => import("../pages/PurchaseSuccessPage"));
 
 /** Componente utilitario para resetear el scroll al principio al cambiar de ruta */
 function ScrollToTop() {
@@ -35,6 +39,16 @@ function ProtectedLoginRoute() {
   return isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />;
 }
 
+/** Protege rutas que requieren sesión activa */
+function ProtectedRoute({ children }) {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+  if (!isAuthenticated) {
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
+  return children;
+}
+
 /**
  * Cada página gestiona su propio header:
  * - LandingPage      → EditorialHeader con nav links
@@ -52,6 +66,18 @@ export default function AppRouter() {
             <Route path="/"           element={<LandingPage />} />
             <Route path="/events"     element={<EventsPage />} />
             <Route path="/events/:id" element={<EventDetailPage />} />
+            <Route path="/events/:id/checkout" element={
+              <ProtectedRoute><CheckoutPage /></ProtectedRoute>
+            } />
+            <Route path="/events/:id/checkout/datos" element={
+              <ProtectedRoute><CheckoutFormPage /></ProtectedRoute>
+            } />
+            <Route path="/events/:id/checkout/pago" element={
+              <ProtectedRoute><CheckoutPaymentPage /></ProtectedRoute>
+            } />
+            <Route path="/compra/confirmacion" element={
+              <ProtectedRoute><PurchaseSuccessPage /></ProtectedRoute>
+            } />
             <Route path="/register"   element={<RegisterPage />} />
             <Route path="/login"      element={<ProtectedLoginRoute />} />
           </Routes>

@@ -1,0 +1,169 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   CheckoutPage.module.css — Paso 1: Elegí tus entradas
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Card que contiene el paso */
+.stepCard {
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-editorial);
+  padding: 2rem 2rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+/* Header del paso */
+.stepHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stepIcon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.stepTitle {
+  font-size: 1.4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--ds-color-text-primary);
+  margin: 0;
+}
+
+.stepSubtitle {
+  font-size: 0.82rem;
+  color: var(--ds-color-text-editorial-subtle);
+  margin: -0.75rem 0 0;
+}
+
+/* Fila de tipo de entrada + stepper */
+.ticketRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  padding: 0.875rem 1rem;
+  gap: 1rem;
+}
+
+.ticketInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.ticketType {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ds-color-text-primary);
+}
+
+.ticketPrice {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ds-color-accent-primary);
+}
+
+/* Control de cantidad */
+.quantityControl {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+}
+
+.qtyBtn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--ds-color-text-primary);
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.qtyBtn:hover:not(:disabled) {
+  background: var(--ds-color-bg-editorial-surface);
+}
+
+.qtyBtn:disabled {
+  color: var(--ds-color-text-editorial-muted);
+  cursor: default;
+}
+
+.qtyValue {
+  width: 36px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ds-color-text-primary);
+  border-left: 1px solid var(--ds-color-border-editorial-mid);
+  border-right: 1px solid var(--ds-color-border-editorial-mid);
+  line-height: 36px;
+  user-select: none;
+}
+
+/* Nota legal */
+.legalNote {
+  font-size: 0.7rem;
+  color: var(--ds-color-text-editorial-muted);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+/* Botón CTA principal */
+.ctaBtn {
+  width: 100%;
+  padding: 1rem;
+  background: var(--ds-color-accent-primary);
+  color: #000;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s, opacity 0.2s;
+  margin-top: 0.25rem;
+}
+
+.ctaBtn:hover:not(:disabled) {
+  background: var(--ds-color-lime-300, #33ffb2);
+}
+
+.ctaBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Loading */
+.loadingRoot {
+  min-height: 100vh;
+  background: var(--ds-color-bg-editorial);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingPulse {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--ds-color-border-editorial-mid);
+  border-top-color: var(--ds-color-accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}

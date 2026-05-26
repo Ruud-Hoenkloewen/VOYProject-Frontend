@@ -1,5 +1,4 @@
 import { useEffect } from 'react';
-import styles from '../pages/LandingPage.module.css';
 
 /**
  * useScrollAnimation
@@ -13,7 +12,7 @@ export function useScrollAnimation() {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.classList.add(styles.visible);
+            entry.target.classList.add('animate-visible');
             observer.unobserve(entry.target);
           }
         });

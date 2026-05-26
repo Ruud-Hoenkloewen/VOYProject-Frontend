@@ -5,25 +5,32 @@ const api = axios.create({
   timeout: 10000,
 });
 
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('voy_token'); // clave centralizada en AuthContext
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-  return config;
-}, (error) => Promise.reject(error));
+// Adjunta el JWT en cada request si existe en localStorage
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('voy_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
+// Manejo centralizado de errores de respuesta
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (!error.response) {
-      console.error('Error de red o servidor caído:', error);
+      console.error('[API] Error de red o servidor caído:', error.message);
     } else if (error.response.status === 401) {
-      console.error('No autorizado - Token expirado o inválido');
-      // Lógica de logout iría aquí
+      // Emitir evento global para que el AuthProvider cierre la sesión
+      // sin generar una dependencia circular (api → AuthContext)
+      window.dispatchEvent(new CustomEvent('voy:unauthorized'));
     }
     return Promise.reject(error);
   }
 );
 
 export default api;
+

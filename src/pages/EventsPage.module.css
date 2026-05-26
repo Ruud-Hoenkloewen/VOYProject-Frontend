@@ -103,8 +103,8 @@
 }
 
 .genreBtnActive {
-  border-color: #00d1ff;
-  color: #00d1ff;
+  border-color: var(--ds-color-accent-secondary);
+  color: var(--ds-color-accent-secondary);
 }
 
 .filterSelect {

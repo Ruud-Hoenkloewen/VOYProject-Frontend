@@ -4,18 +4,6 @@
    Paleta: negro var(--ds-color-bg-editorial) · verde ácido var(--ds-color-accent-primary) · fucsia var(--ds-color-accent-secondary)
 ───────────────────────────────────────── */
 
-/* ── ANIMACIONES DE SCROLL ─────────────── */
-[data-animate] {
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.5s ease var(--entry-delay, 0s), transform 0.5s ease var(--entry-delay, 0s);
-}
-
-[data-animate].visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
 /* ── HEADER → ver EditorialHeader.module.css ─────────── */
 /* Los estilos del header están en el componente compartido */
 
@@ -399,12 +387,12 @@
 .bracketCardGenre {
   display: inline-block;
   background: var(--ds-color-border-editorial-mid);
-  color: #00d1ff;
+  color: var(--ds-color-accent-secondary);
   font-size: 0.65rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   padding: 0.2rem 0.5rem;
-  border: 1px solid #00d1ff;
+  border: 1px solid var(--ds-color-accent-secondary);
   width: fit-content;
 }
 
@@ -468,7 +456,7 @@
   font-weight: 800;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #00d1ff;
+  color: var(--ds-color-accent-secondary);
   white-space: nowrap;
 }
 
@@ -521,14 +509,14 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: #00d1ff;
+  background: var(--ds-color-accent-secondary);
   transform: scaleX(0);
   transition: transform 0.2s ease;
   transform-origin: left;
 }
 
 .featureCard:hover {
-  border-color: #00d1ff;
+  border-color: var(--ds-color-accent-secondary);
   background: var(--ds-color-bg-editorial-surface);
 }
 
@@ -551,7 +539,7 @@
 }
 
 .featureCard:hover .featureTitle {
-  color: #00d1ff;
+  color: var(--ds-color-accent-secondary);
 }
 
 .featureDescription {
@@ -614,8 +602,6 @@
   to   { transform: translateX(-50%); }
 }
 
-/* (El antiguo .eventsGrid ya no se usa, pero lo dejamos comentado por si acaso) */
-/* .eventsGrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; } */
 
 
 .eventsCtaWrapper {
@@ -650,14 +636,14 @@
   left: 0;
   right: 0;
   height: 2px;
-  background: #00d1ff;
+  background: var(--ds-color-accent-secondary);
   transform: scaleX(0);
   transition: transform 0.2s ease;
   transform-origin: left;
 }
 
 .genreCard:hover {
-  border-color: #00d1ff;
+  border-color: var(--ds-color-accent-secondary);
   background: var(--ds-color-bg-editorial-surface);
 }
 
@@ -680,7 +666,7 @@
 }
 
 .genreCard:hover .genreCardName {
-  color: #00d1ff;
+  color: var(--ds-color-accent-secondary);
 }
 
 .genreCardDesc {
@@ -692,12 +678,6 @@
 
 /* Responsive genresGrid */
 @media (max-width: 1024px) {
-  .genresGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 768px) {
   .genresGrid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -726,8 +706,8 @@
 }
 
 .genreChip:hover {
-  border-color: #00d1ff;
-  color: #00d1ff;
+  border-color: var(--ds-color-accent-secondary);
+  color: var(--ds-color-accent-secondary);
 }
 
 

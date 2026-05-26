@@ -198,6 +198,7 @@ export default function EventDetailPage() {
                   fullWidth 
                   disabled={isSoldOut}
                   className={styles.buyButton}
+                  onClick={() => navigate(`/events/${id}/checkout`, { state: { eventData } })}
                 >
                   {isSoldOut ? "Sin entradas disponibles" : "Comprar Entrada"}
                 </Button>

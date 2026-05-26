@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 /**
@@ -6,14 +6,14 @@ import { useSearchParams } from 'react-router-dom';
  * Encapsula la lógica de negocio para filtrar eventos dinámicamente.
  * 
  * @param {Array} events - Lista original de eventos desde la API.
- * @returns {Object} { activeCategories, toggleCategory, filteredEvents }
+ * @returns {Object} { activeCategories, toggleCategory, activeLugar, setActiveLugar, availableLugares, activeFecha, setActiveFecha, availableFechas, filteredEvents }
  */
 export function useEventFilters(events = []) {
   // Estado para las categorías seleccionadas (soporta multiselección)
   const [activeCategories, setActiveCategories] = useState(["TODOS"]);
-  const [activeLugar, setActiveLugar] = useState("TODOS");
-  const [activeFecha, setActiveFecha] = useState("TODOS");
-  
+  const [activeLugar,       setActiveLugar]       = useState("TODOS");
+  const [activeFecha,       setActiveFecha]       = useState("TODOS");
+
   // Extrae el valor de 'q' de la URL para la búsqueda global (Navbar)
   const [searchParams] = useSearchParams();
   const searchQuery = (searchParams.get("q") || "").toLowerCase();
@@ -46,34 +46,34 @@ export function useEventFilters(events = []) {
   };
 
   /**
-   * Motor de filtrado en tiempo real.
-   * Evalúa la búsqueda por texto (título, venue, artistas) y las categorías seleccionadas.
-   * Utiliza memoización implícita en cada renderizado (se puede envolver en useMemo si la lista crece mucho).
+   * Motor de filtrado — memoizado para evitar recálculos innecesarios.
+   * Solo se recomputa cuando cambian los eventos o alguno de los filtros activos.
    */
-  const filteredEvents = events.filter((evt) => {
-    // 1. Coincidencias de texto libre
-    const matchesSearch = searchQuery === "" || 
+  const filteredEvents = useMemo(() => events.filter((evt) => {
+    const matchesSearch = searchQuery === "" ||
       evt.title.toLowerCase().includes(searchQuery) ||
-      (evt.venue && evt.venue.toLowerCase().includes(searchQuery)) ||
+      (evt.venue   && evt.venue.toLowerCase().includes(searchQuery)) ||
       (evt.artists && evt.artists.some(a => a.nombre && a.nombre.toLowerCase().includes(searchQuery)));
-      
-    // 2. Coincidencias de género (case-insensitive)
+
     const matchesCategories = activeCategories.includes("TODOS") ||
       (evt.genres && evt.genres.some(g => activeCategories.includes(g.toUpperCase())));
 
-    // 3. Coincidencias de lugar
     const matchesLugar = activeLugar === "TODOS" || evt.venue === activeLugar;
-    
-    // 4. Coincidencias de fecha
-    const matchesFecha = activeFecha === "TODOS" || evt.date === activeFecha;
+    const matchesFecha = activeFecha === "TODOS" || evt.date  === activeFecha;
 
     return matchesSearch && matchesCategories && matchesLugar && matchesFecha;
-  });
+  }), [events, searchQuery, activeCategories, activeLugar, activeFecha]);
 
-  // Extraer opciones únicas dinámicamente de los eventos actuales
-  const availableLugares = [...new Set(events.map(e => e.venue).filter(Boolean))].sort();
-  // No ordenamos las fechas alfabéticamente para preservar el orden original de la DB (cronológico)
-  const availableFechas = [...new Set(events.map(e => e.date).filter(Boolean))];
+  // Opciones únicas extraídas dinámicamente — también memoizadas
+  const availableLugares = useMemo(
+    () => [...new Set(events.map(e => e.venue).filter(Boolean))].sort(),
+    [events]
+  );
+  // Fechas sin ordenar para preservar el orden cronológico de la DB
+  const availableFechas = useMemo(
+    () => [...new Set(events.map(e => e.date).filter(Boolean))],
+    [events]
+  );
 
   return {
     activeCategories,

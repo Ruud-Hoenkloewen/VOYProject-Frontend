@@ -10,7 +10,7 @@ import { useEvents } from "../hooks/useEvents";
 import { useEventFilters } from "../hooks/useEventFilters";
 import styles from "./EventsPage.module.css";
 
-const GENRES = ["TODOS", "PUNK", "ROCK", "HARDCORE", "METAL", "GRUNGE", "POP", "ALTER ROCK"];
+const GENRES = ["PUNK", "ROCK", "HARDCORE", "METAL", "GRUNGE", "POP", "ALTER ROCK"];
 
 /**
  * COMPONENTE: EventsPage
@@ -48,7 +48,7 @@ export default function EventsPage() {
             <div className={styles.filterGroupLarge}>
               <Typography variant="caption" className={styles.filterLabel}>GÉNERO</Typography>
               <div className={styles.genresList}>
-                {GENRES.filter(g => g !== "TODOS").map(genre => (
+                {GENRES.map(genre => (
                   <button
                     key={genre}
                     onClick={() => toggleCategory(genre)}
@@ -111,20 +111,7 @@ export default function EventsPage() {
           ) : (
             <div className={styles.eventsGrid}>
               {filteredEvents.map((evt) => (
-                <EventCard
-                  key={evt.id}
-                  id={evt.id}
-                  title={evt.title}
-                  date={evt.date}
-                  time={evt.time}
-                  venue={evt.venue}
-                  price={evt.price}
-                  genres={evt.genres}
-                  status={evt.status}
-                  statusTone={evt.statusTone}
-                  highlighted={evt.highlighted}
-                  imageUrl={evt.imageUrl}
-                />
+                <EventCard key={evt.id} {...evt} />
               ))}
             </div>
           )}
