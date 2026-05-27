@@ -1,9 +1,9 @@
 import { useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
-import { useEvents } from "../hooks/useEvents";
-import { useScrollAnimation } from "../hooks/useScrollAnimation";
-import EventCard from "../design-system/composites/EventCard/EventCard";
-import EditorialHeader from "../design-system/composites/EditorialHeader/EditorialHeader";
+import { useEvents } from "../../hooks/useEvents";
+import { useScrollAnimation } from "../../hooks/useScrollAnimation";
+import EventCard from "../../design-system/composites/EventCard/EventCard";
+import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
 import styles from "./LandingPage.module.css";
 
 

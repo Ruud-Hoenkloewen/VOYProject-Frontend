@@ -1,7 +1,7 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { fetchEventById } from '../services/eventService';
-import CheckoutLayout from '../components/checkout/CheckoutLayout';
+import { fetchEventById } from '../../services/eventService';
+import CheckoutLayout from '../../components/checkout/CheckoutLayout';
 import styles from './CheckoutFormPage.module.css';
 
 /**
@@ -22,6 +22,7 @@ export default function CheckoutFormPage() {
     nombre:   location.state?.compradorData?.nombre ?? '',
     apellido: location.state?.compradorData?.apellido ?? '',
     email:    location.state?.compradorData?.email ?? '',
+    dni:      location.state?.compradorData?.dni ?? '',
   });
 
   const [errors, setErrors] = useState({});
@@ -41,6 +42,14 @@ export default function CheckoutFormPage() {
     if (errors[name]) setErrors((prev) => ({ ...prev, [name]: '' }));
   }
 
+  function handleBlur(e) {
+    const { name } = e.target;
+    const errs = validate();
+    if (errs[name]) {
+      setErrors((prev) => ({ ...prev, [name]: errs[name] }));
+    }
+  }
+
   function validate() {
     const nextErrors = {};
     if (!form.nombre.trim()) {
@@ -53,6 +62,11 @@ export default function CheckoutFormPage() {
       nextErrors.email = 'El email es requerido';
     } else if (!/\S+@\S+\.\S+/.test(form.email)) {
       nextErrors.email = 'El formato del email es inválido';
+    }
+    if (!form.dni.trim()) {
+      nextErrors.dni = 'El DNI es requerido';
+    } else if (!/^\d+$/.test(form.dni)) {
+      nextErrors.dni = 'Solo se aceptan números';
     }
     return nextErrors;
   }
@@ -97,7 +111,9 @@ export default function CheckoutFormPage() {
     form.nombre.trim() !== '' &&
     form.apellido.trim() !== '' &&
     form.email.trim() !== '' &&
-    /\S+@\S+\.\S+/.test(form.email);
+    /\S+@\S+\.\S+/.test(form.email) &&
+    form.dni.trim() !== '' &&
+    /^\d+$/.test(form.dni);
 
   return (
     <CheckoutLayout currentStep={2} eventData={eventData} cantidad={cantidad}>
@@ -107,56 +123,78 @@ export default function CheckoutFormPage() {
           <span className={styles.stepIcon}>👤</span>
           <h1 className={styles.stepTitle}>TUS DATOS</h1>
         </div>
-        <p className={styles.stepSubtitle}>Escribí la información de contacto para recibir las entradas.</p>
+        <p className={styles.stepSubtitle}>Usaremos estos datos para enviar tu entrada</p>
 
         {/* Formulario */}
         <form onSubmit={handleSubmit} className={styles.form} noValidate>
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="nombre">
-              NOMBRE
-            </label>
-            <input
-              id="nombre"
-              name="nombre"
-              type="text"
-              placeholder="Tu nombre"
-              value={form.nombre}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.nombre ? styles.inputError : ''}`}
-            />
-            {errors.nombre && <span className={styles.errorMsg}>{errors.nombre}</span>}
-          </div>
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="nombre">
+                NOMBRE
+              </label>
+              <input
+                id="nombre"
+                name="nombre"
+                type="text"
+                placeholder="Ej. Ramiro"
+                value={form.nombre}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`${styles.input} ${errors.nombre ? styles.inputError : ''}`}
+              />
+              {errors.nombre && <span className={styles.errorMsg}>{errors.nombre}</span>}
+            </div>
 
-          <div className={styles.field}>
-            <label className={styles.label} htmlFor="apellido">
-              APELLIDO
-            </label>
-            <input
-              id="apellido"
-              name="apellido"
-              type="text"
-              placeholder="Tu apellido"
-              value={form.apellido}
-              onChange={handleChange}
-              className={`${styles.input} ${errors.apellido ? styles.inputError : ''}`}
-            />
-            {errors.apellido && <span className={styles.errorMsg}>{errors.apellido}</span>}
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="apellido">
+                APELLIDO
+              </label>
+              <input
+                id="apellido"
+                name="apellido"
+                type="text"
+                placeholder="Ej. Gómez"
+                value={form.apellido}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                className={`${styles.input} ${errors.apellido ? styles.inputError : ''}`}
+              />
+              {errors.apellido && <span className={styles.errorMsg}>{errors.apellido}</span>}
+            </div>
           </div>
 
           <div className={styles.field}>
             <label className={styles.label} htmlFor="email">
-              EMAIL
+              CORREO ELECTRÓNICO
             </label>
             <input
               id="email"
               name="email"
               type="email"
-              placeholder="tu@email.com"
+              placeholder="vos@email.com"
               value={form.email}
               onChange={handleChange}
+              onBlur={handleBlur}
               className={`${styles.input} ${errors.email ? styles.inputError : ''}`}
             />
             {errors.email && <span className={styles.errorMsg}>{errors.email}</span>}
+          </div>
+
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="dni">
+              DNI
+            </label>
+            <input
+              id="dni"
+              name="dni"
+              type="text"
+              placeholder="12.345.678"
+              value={form.dni}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              className={`${styles.input} ${errors.dni ? styles.inputError : ''}`}
+            />
+            {errors.dni && <span className={styles.errorMsg}>{errors.dni}</span>}
           </div>
 
           {/* Acciones */}
@@ -173,7 +211,7 @@ export default function CheckoutFormPage() {
               className={styles.ctaBtn}
               disabled={!isFormValid}
             >
-              CONTINUAR →
+              CONTINUAR AL PAGO →
             </button>
           </div>
         </form>

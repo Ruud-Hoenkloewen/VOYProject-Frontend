@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import CheckoutLayout from '../components/checkout/CheckoutLayout';
+import CheckoutLayout from '../../components/checkout/CheckoutLayout';
 import styles from './PurchaseSuccessPage.module.css';
 
 /**

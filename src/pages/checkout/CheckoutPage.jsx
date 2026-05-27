@@ -1,7 +1,7 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { fetchEventById } from '../services/eventService';
-import CheckoutLayout from '../components/checkout/CheckoutLayout';
+import { fetchEventById } from '../../services/eventService';
+import CheckoutLayout from '../../components/checkout/CheckoutLayout';
 import styles from './CheckoutPage.module.css';
 
 /**
@@ -65,25 +65,27 @@ export default function CheckoutPage() {
             <span className={styles.ticketType}>ENTRADA GENERAL</span>
             <span className={styles.ticketPrice}>{eventData?.price} / entrada</span>
           </div>
-          <div className={styles.quantityControl}>
-            <button
-              className={styles.qtyBtn}
-              onClick={decrement}
-              disabled={cantidad === 1}
-              aria-label="Reducir cantidad"
-            >
-              −
-            </button>
-            <span className={styles.qtyValue}>{cantidad}</span>
-            <button
-              className={styles.qtyBtn}
-              onClick={increment}
-              disabled={cantidad >= maxStock || isSoldOut}
-              aria-label="Aumentar cantidad"
-            >
-              +
-            </button>
-          </div>
+          {!isSoldOut && (
+            <div className={styles.quantityControl}>
+              <button
+                className={styles.qtyBtn}
+                onClick={decrement}
+                disabled={cantidad === 1}
+                aria-label="Reducir cantidad"
+              >
+                −
+              </button>
+              <span className={styles.qtyValue}>{cantidad}</span>
+              <button
+                className={styles.qtyBtn}
+                onClick={increment}
+                disabled={cantidad >= maxStock}
+                aria-label="Aumentar cantidad"
+              >
+                +
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Nota legal */}

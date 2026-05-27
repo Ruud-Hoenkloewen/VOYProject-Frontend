@@ -1,8 +1,8 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { fetchEventById } from '../services/eventService';
-import { createOrder } from '../services/orderService';
-import CheckoutLayout from '../components/checkout/CheckoutLayout';
+import { fetchEventById } from '../../services/eventService';
+import { createOrder } from '../../services/orderService';
+import CheckoutLayout from '../../components/checkout/CheckoutLayout';
 import styles from './CheckoutPaymentPage.module.css';
 
 // Ícono de tarjeta de crédito/débito en formato SVG

@@ -22,6 +22,10 @@
   height: 60px;
   border-bottom: 1px solid var(--ds-color-border-editorial);
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--ds-color-bg-editorial);
 }
 
 .headerLeft {
@@ -38,14 +42,15 @@
   height: 32px;
   background: transparent;
   border: 1px solid var(--ds-color-border-editorial-mid);
-  color: var(--ds-color-text-primary);
+  color: var(--ds-color-accent-primary);
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
   flex-shrink: 0;
 }
 
 .backBtn:hover {
-  border-color: var(--ds-color-text-primary);
+  border-color: var(--ds-color-accent-primary);
+  background: rgba(0, 255, 159, 0.07);
 }
 
 .headerEventInfo {
@@ -72,7 +77,10 @@
   line-height: 1;
 }
 
-.cancelBtn {
+.backTextBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
   background: transparent;
   border: none;
   color: var(--ds-color-text-editorial-muted);
@@ -85,8 +93,17 @@
   transition: color 0.2s;
 }
 
-.cancelBtn:hover {
+.backTextBtn:hover {
   color: var(--ds-color-text-primary);
+}
+
+.backTextBtn svg {
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+
+.backTextBtn:hover svg {
+  transform: translateX(-3px);
 }
 
 /* ── STEPPER ───────────────────────────────────────────────────────────────── */

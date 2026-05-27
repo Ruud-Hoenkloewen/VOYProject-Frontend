@@ -2,8 +2,18 @@ import { useNavigate } from 'react-router-dom';
 import styles from './CheckoutLayout.module.css';
 
 // ── Iconos inline ────────────────────────────────────────────────────────────
-const ArrowLeftIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+// Logo "V" de VOY Project
+const VoyLogo = () => (
+  <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <polygon
+      points="10,15 50,85 90,15 75,15 50,58 25,15"
+      fill="currentColor"
+    />
+  </svg>
+);
+
+const ArrowLeftSmall = () => (
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
     stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
     <path d="M19 12H5M12 5l-7 7 7 7" />
   </svg>
@@ -77,7 +87,7 @@ export default function CheckoutLayout({ currentStep, eventData, cantidad = 1, c
             onClick={() => navigate(-1)}
             aria-label="Volver"
           >
-            <ArrowLeftIcon />
+            <VoyLogo />
           </button>
           <div className={styles.headerEventInfo}>
             <span className={styles.headerEyebrow}>COMPRANDO ENTRADAS PARA</span>
@@ -85,10 +95,11 @@ export default function CheckoutLayout({ currentStep, eventData, cantidad = 1, c
           </div>
         </div>
         <button
-          className={styles.cancelBtn}
-          onClick={() => navigate(`/events/${eventData?.id}`)}
+          className={styles.backTextBtn}
+          onClick={() => navigate(-1)}
         >
-          CANCELAR
+          <ArrowLeftSmall />
+          VOLVER ATRÁS
         </button>
       </header>
 

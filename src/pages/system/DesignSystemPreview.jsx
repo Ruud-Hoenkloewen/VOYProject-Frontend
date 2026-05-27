@@ -10,9 +10,9 @@ import {
   SearchBar,
   Stack,
   Typography,
-} from "../design-system";
-import DocItem from "../design-system/docs/DocItem";
-import styles from "../design-system/docs/DesignSystemPreview.module.css";
+} from "../../design-system";
+import DocItem from "../../design-system/docs/DocItem";
+import styles from "../../design-system/docs/DesignSystemPreview.module.css";
 
 const sampleCards = [
   {

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import { loginUser } from "../services/authService";
+import { useAuth } from "../../context/AuthContext";
+import { loginUser } from "../../services/authService";
 import styles from "./RegisterPage.module.css"; // Reutiliza el mismo diseño
 
 /**

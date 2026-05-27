@@ -1,13 +1,13 @@
 import { useNavigate } from "react-router-dom";
-import Container from "../design-system/layout/Container/Container";
-import Stack from "../design-system/layout/Stack/Stack";
-import Typography from "../design-system/primitives/Typography/Typography";
-import EventCard from "../design-system/composites/EventCard/EventCard";
-import Button from "../design-system/primitives/Button/Button";
-import SearchBar from "../design-system/composites/SearchBar/SearchBar";
-import EditorialHeader from "../design-system/composites/EditorialHeader/EditorialHeader";
-import { useEvents } from "../hooks/useEvents";
-import { useEventFilters } from "../hooks/useEventFilters";
+import Container from "../../design-system/layout/Container/Container";
+import Stack from "../../design-system/layout/Stack/Stack";
+import Typography from "../../design-system/primitives/Typography/Typography";
+import EventCard from "../../design-system/composites/EventCard/EventCard";
+import Button from "../../design-system/primitives/Button/Button";
+import SearchBar from "../../design-system/composites/SearchBar/SearchBar";
+import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
+import { useEvents } from "../../hooks/useEvents";
+import { useEventFilters } from "../../hooks/useEventFilters";
 import styles from "./EventsPage.module.css";
 
 const GENRES = ["INDIE", "ROCK", "PUNK", "HARDCORE", "METAL", "GRUNGE", "SHOEGAZE", "FOLK", "ALTERNATIVO", "POP"];
