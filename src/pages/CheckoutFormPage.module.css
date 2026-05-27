@@ -1,0 +1,177 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   CheckoutFormPage.module.css — Paso 2: Tus datos
+   Estética editorial underground coherente con el resto del flujo
+   y el Design System
+ ───────────────────────────────────────────────────────────────────────────── */
+
+.stepCard {
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-editorial);
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.stepHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.stepIcon {
+  font-size: 1.3rem;
+  line-height: 1;
+}
+
+.stepTitle {
+  font-size: 1.4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--ds-color-text-primary);
+  margin: 0;
+}
+
+.stepSubtitle {
+  font-size: 0.82rem;
+  color: var(--ds-color-text-editorial-subtle);
+  margin: -0.75rem 0 0.5rem;
+  line-height: 1.4;
+}
+
+/* Formulario */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ds-color-text-secondary);
+}
+
+.input {
+  background: var(--ds-color-bg-editorial-surface, #0f0f0f);
+  border: 1px solid var(--ds-color-border-editorial-mid, #2a2a2a);
+  color: var(--ds-color-text-primary);
+  font-size: 0.9rem;
+  padding: 0.8rem 1rem;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s, background-color 0.2s;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input::placeholder {
+  color: var(--ds-color-text-editorial-muted, #666666);
+}
+
+.input:focus {
+  border-color: var(--ds-color-text-secondary);
+  background: #121212;
+}
+
+.inputError {
+  border-color: var(--ds-color-state-danger, #ff3f48) !important;
+}
+
+.errorMsg {
+  font-size: 0.7rem;
+  color: var(--ds-color-state-danger, #ff3f48);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-top: 0.1rem;
+}
+
+/* Contenedor de botones */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+/* Botón VOLVER */
+.backBtn {
+  padding: 1rem;
+  background: transparent;
+  color: var(--ds-color-text-secondary);
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.backBtn:hover {
+  background: var(--ds-color-bg-editorial-surface);
+  color: var(--ds-color-text-primary);
+  border-color: var(--ds-color-text-secondary);
+}
+
+/* Botón CTA (CONTINUAR) */
+.ctaBtn {
+  padding: 1rem;
+  background: var(--ds-color-accent-primary);
+  color: #000;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background-color 0.2s, opacity 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ctaBtn:hover:not(:disabled) {
+  background: var(--ds-color-lime-300, #33ffb2);
+}
+
+.ctaBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Loading */
+.loadingRoot {
+  min-height: 100vh;
+  background: var(--ds-color-bg-editorial);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.loadingPulse {
+  width: 48px;
+  height: 48px;
+  border: 2px solid var(--ds-color-border-editorial-mid);
+  border-top-color: var(--ds-color-accent-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
