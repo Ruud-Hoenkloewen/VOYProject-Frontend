@@ -6,12 +6,15 @@ import Typography from "../../design-system/primitives/Typography/Typography";
 import styles from "./EventDetailPage.module.css";
 import {
   CalendarIcon, ClockIcon, MapPinIcon, WarningIcon, MusicIcon,
-  TicketIcon, HeartIcon, ShareIcon, UsersIcon, InstagramIcon,
-  ExternalLinkIcon, ZapIcon, UserCheckIcon, ShirtIcon, RefreshIcon,
+  HeartIcon, UsersIcon, ZapIcon, UserCheckIcon, ShirtIcon, RefreshIcon,
   AccessibilityIcon, CameraIcon, UtensilsIcon, CigaretteIcon, PeopleIcon
 } from "../../components/icons";
-import { addMinutes, igSlug } from "../../utils/helpers";
+import { addMinutes } from "../../utils/helpers";
 import { CONCERT_PHOTOS, BAND_DESCRIPTIONS } from "../../utils/mockData";
+
+import Timeline from "./components/Timeline/Timeline";
+import ArtistGrid from "./components/ArtistGrid/ArtistGrid";
+import TicketCard from "./components/TicketCard/TicketCard";
 
 // Duración de cada set en minutos
 const SET_DURATION   = 55;
@@ -101,14 +104,6 @@ export default function EventDetailPage() {
     },
   ] : [];
 
-  const concertPhotos  = CONCERT_PHOTOS;
-  const bandDescriptions = BAND_DESCRIPTIONS;
-
-
-  // Artistas lineup en texto (para el hero, si se necesita)
-  // const artistNames = eventData.artists?.map(a => a.nombre).join(" | ") || "";
-
-
   return (
     <div className={styles.root}>
 
@@ -185,65 +180,7 @@ export default function EventDetailPage() {
                 <span className={styles.iconMagenta}><MusicIcon /></span>
                 <h2 className={styles.sectionTitle}>ORDEN DEL SHOW</h2>
               </div>
-
-              <div className={styles.timeline}>
-                {timelineItems.map((item, idx) => {
-                  const isPast   = item.role === "cierre";
-                  const isGreen  = item.role === "puertas";
-                  const isMag    = item.role === "headliner";
-                  const timeClass = isGreen
-                    ? styles.tlTimeGreen
-                    : isMag
-                    ? styles.tlTimeMagenta
-                    : isPast
-                    ? styles.tlTimeGrey
-                    : styles.tlTimeWhite;
-                  const dotClass = isGreen
-                    ? styles.dotGreen
-                    : isMag
-                    ? styles.dotMagenta
-                    : styles.dotGrey;
-                  const titleClass = isPast
-                    ? styles.tlTitleGrey
-                    : isMag
-                    ? styles.tlTitleMagenta
-                    : styles.tlTitleWhite;
-
-                  return (
-                    <div key={`${item.time}-${idx}`} className={styles.tlRow}>
-                      {/* Hora */}
-                      <div className={`${styles.tlTime} ${timeClass}`}>{item.time}</div>
-
-                      {/* Dot + line */}
-                      <div className={styles.tlDivider}>
-                        <div className={`${styles.tlDot} ${dotClass}`} />
-                        {idx !== timelineItems.length - 1 && (
-                          <div className={styles.tlLine} />
-                        )}
-                      </div>
-
-                      {/* Content */}
-                      <div className={styles.tlContent}>
-                        <div className={styles.tlTitleRow}>
-                          <span className={`${styles.tlTitle} ${titleClass}`}>{item.title}</span>
-                          {item.badge && (
-                            <span className={`${styles.tlBadge} ${
-                              item.role === "headliner"
-                                ? styles.badgeMagenta
-                                : item.role === "apertura"
-                                ? styles.badgeGreen
-                                : styles.badgeCyan
-                            }`}>
-                              {item.badge}
-                            </span>
-                          )}
-                        </div>
-                        <span className={styles.tlSubtitle}>{item.subtitle}</span>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <Timeline items={timelineItems} />
             </div>
           )}
 
@@ -257,48 +194,11 @@ export default function EventDetailPage() {
                 </div>
                 <span className={styles.inDev}>● EN DESARROLLO</span>
               </div>
-
-              <div className={styles.artistsGrid}>
-                {eventData.artists.map((artist, idx) => {
-                  const isHeadliner = idx === n - 1;
-                  const isApertura  = idx === 0;
-                  const isInvitada  = idx === 1 && n > 2;
-                  const badgeColor  = isHeadliner ? "magenta" : isApertura ? "green" : "grey";
-                  const badgeText   = isHeadliner ? "HEADLINER" : isApertura ? "APERTURA" : isInvitada ? "INVITADA" : null;
-                  const photo  = concertPhotos[idx % concertPhotos.length];
-                  const desc   = bandDescriptions[idx % bandDescriptions.length];
-
-                  return (
-                    <div key={artist._id || `artist-${idx}`} className={styles.artistCard}>
-                      <div className={styles.artistCardBg}>
-                        <img src={photo} alt={artist.nombre} className={styles.artistCardImg} />
-                        <div className={styles.artistCardGradient} />
-                        {badgeText && (
-                          <span className={`${styles.artistCardBadge} ${styles[`bg_${badgeColor}`]}`}>
-                            {badgeText}
-                          </span>
-                        )}
-                      </div>
-
-                      <div className={styles.artistCardContent}>
-                        <div className={styles.artistCardInfo}>
-                          <h3 className={styles.artistCardName}>{artist.nombre}</h3>
-                          <p className={styles.artistCardDesc}>{desc}</p>
-                        </div>
-                        <div className={styles.artistCardFooter}>
-                          <div className={styles.artistIgBadge}>
-                            <InstagramIcon />
-                            <span>@{igSlug(artist.nombre)}</span>
-                          </div>
-                          <button className={styles.artistProfileBtn}>
-                            Ver perfil <ExternalLinkIcon />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+              <ArtistGrid 
+                artists={eventData.artists} 
+                concertPhotos={CONCERT_PHOTOS} 
+                bandDescriptions={BAND_DESCRIPTIONS} 
+              />
             </div>
           )}
 
@@ -337,52 +237,7 @@ export default function EventDetailPage() {
 
         {/* ── COLUMNA DERECHA: TICKET CARD ──────────────────────────────── */}
         <div className={styles.rightColumn}>
-          <div className={styles.ticketCard}>
-            <div className={styles.ticketHeader}>
-              <span className={styles.ticketType}>ENTRADA GENERAL</span>
-              <div className={styles.ticketPriceValue}>{eventData.price}</div>
-              <span className={styles.ticketFee}>+ cargo por servicio</span>
-            </div>
-
-            <div className={styles.ticketDetails}>
-              <div className={styles.ticketRow}>
-                <span className={styles.ticketLabel}>ESTADO</span>
-                <span className={`${styles.ticketValueBadge} ${isSoldOut ? styles.badgeValSoldout : styles.badgeValAvailable}`}>
-                  {eventData.status}
-                </span>
-              </div>
-              <div className={styles.ticketRow}>
-                <span className={styles.ticketLabel}>CAPACIDAD</span>
-                <span className={styles.ticketValue}>
-                  {eventData.capacity ? `${eventData.capacity} personas` : "Venue chico"}
-                </span>
-              </div>
-              <div className={styles.ticketRow}>
-                <span className={styles.ticketLabel}>RESTRICCIÓN</span>
-                <span className={styles.ticketValue}>Apto todo público</span>
-              </div>
-              <div className={styles.ticketRow}>
-                <span className={styles.ticketLabel}>REINGRESO</span>
-                <span className={`${styles.ticketValue} ${styles.textNeon}`}>Permitido</span>
-              </div>
-            </div>
-
-            <div className={styles.actionButtons}>
-              <button
-                className={styles.buyButton}
-                disabled={isSoldOut}
-                onClick={() => navigate(`/events/${id}/checkout`, { state: { eventData } })}
-              >
-                <TicketIcon /> {isSoldOut ? "AGOTADO" : "COMPRAR ENTRADA"}
-              </button>
-              <button className={styles.outlineButton}><HeartIcon /> GUARDAR EVENTO</button>
-              <button className={styles.outlineButton}><ShareIcon /> COMPARTIR EVENTO</button>
-            </div>
-
-            <p className={styles.termsText}>
-              Al comprar tu entrada aceptás los <a href="#">términos y condiciones de VOYProject</a>.
-            </p>
-          </div>
+          <TicketCard eventData={eventData} isSoldOut={isSoldOut} id={id} />
         </div>
 
       </main>
