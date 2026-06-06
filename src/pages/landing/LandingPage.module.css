@@ -27,10 +27,428 @@
   position: relative;
 }
 
+.heroInner {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 3rem;
+  margin-top: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .heroInner {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
 .heroContent {
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
+  flex: 1;
+  max-width: 600px;
+}
+
+/* ── HERO WIDGET (Right Side) ── */
+.heroWidget {
+  width: 100%;
+  max-width: 380px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Logged Out Widget Styles */
+.hwLoggedOutCard {
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  background: var(--ds-color-bg-editorial);
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  position: relative;
+}
+
+.hwLoggedOutCard::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ds-color-accent-secondary), transparent);
+}
+
+.hwEyebrow {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ds-color-accent-secondary);
+}
+
+.hwTitle {
+  font-size: 1.4rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--ds-color-text-primary);
+}
+
+.hwList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.hwListItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--ds-color-text-editorial-subtle);
+}
+
+.hwListItemIcon {
+  color: var(--ds-color-accent-primary);
+  flex-shrink: 0;
+  display: flex;
+}
+
+.hwBtnPrimary {
+  background: var(--ds-color-accent-primary);
+  color: var(--ds-color-bg-editorial);
+  border: none;
+  padding: 1rem;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.2s ease, filter 0.2s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hwBtnPrimary:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+}
+
+.hwBtnSecondary {
+  background: transparent;
+  color: var(--ds-color-text-editorial-muted);
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  padding: 1rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.hwBtnSecondary:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ds-color-text-primary);
+}
+
+/* Logged In Widget Styles */
+.hwLoggedInContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.hwTopRow {
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  padding: 1rem 1.25rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+.hwTopRow::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -1px;
+  right: -1px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--ds-color-accent-primary), var(--ds-color-accent-secondary));
+}
+
+.hwTopLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hwUserLevel {
+  background: var(--ds-color-accent-primary);
+  color: var(--ds-color-bg-editorial);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+.hwGreeting {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.hwGreetingSub {
+  font-size: 0.6rem;
+  color: var(--ds-color-text-editorial-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.hwGreetingName {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--ds-color-text-primary);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.hwDiamond {
+  color: var(--ds-color-accent-primary);
+  font-size: 0.7rem;
+}
+
+.hwProfileLink {
+  font-size: 0.65rem;
+  color: var(--ds-color-text-editorial-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.hwProfileLink:hover {
+  color: var(--ds-color-accent-primary);
+}
+
+.hwStatsRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+}
+
+.hwStatBox {
+  padding: 1.25rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  text-align: center;
+}
+
+.hwStatBox:not(:last-child) {
+  border-right: 1px solid var(--ds-color-border-editorial-mid);
+}
+
+.hwStatValue {
+  font-size: 1.25rem;
+  font-weight: 900;
+}
+
+.hwStatValue.active {
+  color: var(--ds-color-accent-primary);
+}
+
+.hwStatValue.fuchsia {
+  color: var(--ds-color-accent-secondary);
+}
+
+.hwStatValue.cyan {
+  color: #00ffff; /* Fallback if needed, or cyan global */
+}
+
+.hwStatLabel {
+  font-size: 0.55rem;
+  color: var(--ds-color-text-editorial-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.hwEmptyState {
+  border: 1px dashed var(--ds-color-border-editorial-mid);
+  padding: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.hwEmptyStateIcon {
+  color: var(--ds-color-text-editorial-muted);
+}
+
+.hwEmptyStateText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.hwEmptyStateTitle {
+  font-size: 0.8rem;
+  color: var(--ds-color-text-editorial-subtle);
+}
+
+.hwEmptyStateLink {
+  font-size: 0.65rem;
+  color: var(--ds-color-text-editorial-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.hwEmptyStateLink:hover {
+  color: var(--ds-color-text-primary);
+}
+
+/* Nuevas secciones del Mini Dashboard */
+.hwSection {
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  background: var(--ds-color-bg-editorial);
+}
+
+.hwSectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px dashed var(--ds-color-border-editorial-mid);
+  padding-bottom: 0.75rem;
+}
+
+.hwSectionTitle {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ds-color-text-primary);
+  margin: 0;
+}
+
+.hwSectionLink {
+  font-size: 0.65rem;
+  color: var(--ds-color-text-editorial-muted);
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: color 0.2s ease;
+}
+
+.hwSectionLink:hover {
+  color: var(--ds-color-accent-secondary);
+}
+
+.hwTicketEmpty {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--ds-color-text-editorial-subtle);
+  font-size: 0.8rem;
+}
+
+.hwTicketEmptyIcon {
+  color: var(--ds-color-text-editorial-muted);
+}
+
+.hwChipsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hwChip {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ds-color-text-editorial-subtle);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.2s ease;
+}
+
+.hwChip:hover {
+  border-color: var(--ds-color-accent-primary);
+  color: var(--ds-color-accent-primary);
+  background: transparent;
+}
+
+.hwCommunity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hwAvatarGroup {
+  display: flex;
+  align-items: center;
+}
+
+.hwAvatarMini {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ds-color-border-editorial-mid);
+  border: 2px solid var(--ds-color-bg-editorial);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 800;
+  margin-left: -8px;
+}
+
+.hwAvatarMini:first-child {
+  margin-left: 0;
+  background: var(--ds-color-accent-secondary);
+  color: var(--ds-color-bg-editorial);
+}
+
+.hwAvatarMini:nth-child(2) {
+  background: var(--ds-color-accent-primary);
+  color: var(--ds-color-bg-editorial);
+}
+
+.hwCommunityText {
+  font-size: 0.75rem;
+  color: var(--ds-color-text-editorial-subtle);
+}
+
+.hwCommunityText strong {
+  color: var(--ds-color-text-primary);
 }
 
 /* ── BARRA SUPERIOR CONECTADA (Desktop / Mobile) ── */

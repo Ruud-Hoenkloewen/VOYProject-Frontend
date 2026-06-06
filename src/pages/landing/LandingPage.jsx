@@ -1,29 +1,37 @@
 import { Link } from "react-router-dom";
 import { useEvents } from "../../hooks/useEvents";
 import { useScrollAnimation } from "../../hooks/useScrollAnimation";
+import { useAuth } from "../../context/AuthContext";
 import EventCard from "../../design-system/composites/EventCard/EventCard";
 import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
 import FeaturedCarousel from "./components/FeaturedCarousel/FeaturedCarousel";
+import HeroWidgetLoggedIn from "./components/HeroWidgets/HeroWidgetLoggedIn";
+import HeroWidgetLoggedOut from "./components/HeroWidgets/HeroWidgetLoggedOut";
+import { 
+  MusicIcon, TicketIcon, PeopleIcon, MapPinIcon, 
+  ZapIcon, FlameIcon, DiscIcon, HeadphonesIcon, 
+  StarIcon, RadioIcon, SpeakerIcon, EyeIcon 
+} from "../../components/icons";
 import styles from "./LandingPage.module.css";
 
 const FEATURES = [
   {
-    icon: "🎸",
+    icon: <MusicIcon />,
     title: "Descubrí Bandas",
     description: "Encontrá los artistas emergentes de la escena tucumana antes que nadie.",
   },
   {
-    icon: "🎟️",
+    icon: <TicketIcon />,
     title: "Conseguí Entradas",
     description: "Comprá tus tickets de forma rápida y segura, sin colas ni intermediarios.",
   },
   {
-    icon: "🤘",
+    icon: <PeopleIcon />,
     title: "Unite a la Escena",
     description: "Conectate con el underground local y apoyá la música en vivo.",
   },
   {
-    icon: "📍",
+    icon: <MapPinIcon />,
     title: "Todos los Venues",
     description: "Bares, clubs y teatros de Tucumán en un solo lugar.",
   },
@@ -31,42 +39,42 @@ const FEATURES = [
 
 const GENRES = [
   {
-    icon: "⚡",
+    icon: <ZapIcon />,
     name: "Punk",
     description: "Rápido, corto y sin filtros. La energía en su forma más honesta.",
   },
   {
-    icon: "🔥",
+    icon: <FlameIcon />,
     name: "Hardcore",
     description: "Más pesado, más intenso. El pogo llevado al límite.",
   },
   {
-    icon: "🌀",
+    icon: <DiscIcon />,
     name: "Post-Hardcore",
     description: "Emociones crudas y estructuras que no siguen reglas.",
   },
   {
-    icon: "🎸",
+    icon: <SpeakerIcon />,
     name: "Rock Alternativo",
     description: "Fuera del mainstream. Riffs que cuentan historias propias.",
   },
   {
-    icon: "🌧️",
+    icon: <HeadphonesIcon />,
     name: "Grunge",
     description: "Sucio, oscuro y real. El sonido que no pide disculpas.",
   },
   {
-    icon: "🤘",
+    icon: <StarIcon />,
     name: "Metal",
     description: "Pesado y preciso. Desde el thrash hasta el doom más lento.",
   },
   {
-    icon: "📻",
+    icon: <RadioIcon />,
     name: "Noise Rock",
     description: "Caos como lenguaje. Distorsión convertida en arte.",
   },
   {
-    icon: "✨",
+    icon: <EyeIcon />,
     name: "Pop Underground",
     description: "Melodías que no piden permiso. Lo indie con actitud.",
   },
@@ -81,6 +89,8 @@ const GENRES = [
  */
 export default function LandingPage() {
   const { events: previewEvents, isLoading } = useEvents({ limit: 4 });
+  const { events: allEvents } = useEvents();
+  const { user, isAuthenticated } = useAuth();
 
   useScrollAnimation();
 
@@ -97,25 +107,31 @@ export default function LandingPage() {
 
         {/* Barra superior: solo BIENVENIDO en desktop */}
         <div className={styles.heroTopBar}>
-          <span className={styles.heroEyebrowLeft}>♦ BIENVENIDO</span>
+          <span className={styles.heroEyebrowLeft}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> BIENVENIDO</span>
           <div className={styles.heroTopBarLine} />
-          <span className={styles.heroEyebrowRight}>ESCENA UNDERGROUND · NOA · TUCUMÁN ♦</span>
+          <span className={styles.heroEyebrowRight}>ESCENA UNDERGROUND · NOA · TUCUMÁN <span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span></span>
         </div>
 
-        <div className={styles.heroContent}>
-          <h1 className={styles.heroTitle}>
-            WELCOME<br />
-            TO THE<br />
-            <span className={styles.heroTitleAccent}>POGO</span>
-          </h1>
-          <p className={styles.heroSubtitle}>LA ESCENA EMERGENTE Y UNDERGROUND</p>
-          <p className={styles.heroDescription}>
-            La plataforma de eventos musicales del noroeste argentino.<br />
-            Punk, Rock, Metal, Grunge y más — todo en un solo lugar.
-          </p>
-          <div className={styles.heroCtas}>
-            <Link to="/register" className={`${styles.ctaPrimary} ${styles.ctaFull}`}>CREAR TU CUENTA →</Link>
+        <div className={styles.heroInner}>
+          <div className={styles.heroContent}>
+            <h1 className={styles.heroTitle}>
+              WELCOME<br />
+              TO THE<br />
+              <span className={styles.heroTitleAccent}>POGO</span>
+            </h1>
+            <p className={styles.heroSubtitle}>LA ESCENA EMERGENTE Y UNDERGROUND</p>
+            <p className={styles.heroDescription}>
+              La plataforma de eventos musicales del noroeste argentino.<br />
+              Punk, Rock, Metal, Grunge y más — todo en un solo lugar.
+            </p>
+
           </div>
+          
+          {isAuthenticated ? (
+            <HeroWidgetLoggedIn user={user} activeShowsCount={allEvents?.length || 0} />
+          ) : (
+            <HeroWidgetLoggedOut />
+          )}
         </div>
       </section>
 
@@ -127,11 +143,11 @@ export default function LandingPage() {
       <div className={styles.marqueeWrapper} aria-hidden="true">
         <div className={styles.marqueeTrack}>
           {["SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT"].map((item, i) => (
-            <span key={i} className={styles.marqueeItem}>♦ {item}</span>
+            <span key={i} className={styles.marqueeItem}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> {item}</span>
           ))}
           {/* Duplicado para el loop infinito */}
           {["SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT"].map((item, i) => (
-            <span key={`dup-${i}`} className={styles.marqueeItem} aria-hidden="true">♦ {item}</span>
+            <span key={`dup-${i}`} className={styles.marqueeItem} aria-hidden="true"><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> {item}</span>
           ))}
         </div>
       </div>
@@ -140,7 +156,7 @@ export default function LandingPage() {
       <section className={styles.features}>
         <div className={styles.sectionHeader} data-animate>
           <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}>♦ QUÉ ES VOY ♦</span>
+          <span className={styles.sectionLabel}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> QUÉ ES VOY <span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span></span>
           <div className={styles.sectionDivider} />
         </div>
         <div className={styles.featuresGrid}>
@@ -158,7 +174,7 @@ export default function LandingPage() {
       <section className={styles.genresSection}>
         <div className={styles.sectionHeader} data-animate>
           <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}>♦ NUESTROS GÉNEROS ♦</span>
+          <span className={styles.sectionLabel}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> NUESTROS GÉNEROS <span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span></span>
           <div className={styles.sectionDivider} />
         </div>
         <div className={styles.genresGrid}>
@@ -181,7 +197,7 @@ export default function LandingPage() {
       <section className={styles.eventsPreview}>
         <div className={styles.sectionHeader} data-animate>
           <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}>♦ EN CARTELERA ♦</span>
+          <span className={styles.sectionLabel}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> EN CARTELERA <span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span></span>
           <div className={styles.sectionDivider} />
         </div>
 

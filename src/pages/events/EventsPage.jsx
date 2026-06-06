@@ -8,6 +8,7 @@ import SearchBar from "../../design-system/composites/SearchBar/SearchBar";
 import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
 import { useEvents } from "../../hooks/useEvents";
 import { useEventFilters } from "../../hooks/useEventFilters";
+import { WarningIcon } from "../../components/icons";
 import styles from "./EventsPage.module.css";
 
 const GENRES = ["INDIE", "ROCK", "PUNK", "HARDCORE", "METAL", "GRUNGE", "SHOEGAZE", "FOLK", "ALTERNATIVO", "POP"];
@@ -102,7 +103,9 @@ export default function EventsPage() {
             </div>
           ) : filteredEvents.length === 0 && !error ? (
             <div className={styles.emptyState}>
-              <Typography variant="h3">No hay nada disponible 😢</Typography>
+              <Typography variant="h3" style={{display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'center'}}>
+                <WarningIcon /> No hay nada disponible
+              </Typography>
               <Typography variant="body" tone="muted" className={styles.emptyStateText}>
                 Parece que la movida está descansando temporalmente. ¡Volvé pronto!
               </Typography>

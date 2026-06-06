@@ -11,8 +11,8 @@
   /* Brand editorial — paleta underground */
   --ds-color-brand-canvas: #080808;   /* fondo más oscuro que neutral-0, editorial */
   --ds-color-brand-lime: #00ff9f;     /* Verde menta eléctrico */
-  --ds-color-brand-fuchsia: #00d1ff; /* Cyan editorial */
-  --ds-color-brand-fuchsia-dark: #0088cc; /* Cyan oscuro */
+  --ds-color-brand-fuchsia: #ff7bee; /* Rosa/Fucsia editorial */
+  --ds-color-brand-fuchsia-dark: #cc5abb; /* Rosa/Fucsia oscuro */
 
   /* Grises editoriales intermedios */
   --ds-color-editorial-border: #1a1a1a;  /* borde sutil sobre canvas editorial */
@@ -25,8 +25,12 @@
   --ds-color-lime-400: #00ff9f;
   --ds-color-lime-500: #00cc7f;
   
-  --ds-color-magenta-400: #33daff;
-  --ds-color-magenta-500: #00d1ff;
+  --ds-color-magenta-400: #ff9cf2;
+  --ds-color-magenta-500: #ff7bee;
+
+  /* Colores de Acento Globales */
+  --ds-color-accent-primary: var(--ds-color-brand-fuchsia); /* Usaremos el celeste como primario usualmente, pero definamos esto */
+  --ds-color-accent-secondary: var(--ds-color-magenta-500); /* El rosita que pidió el usuario */
 
   --ds-color-red-400: #ff3f48;
   --ds-color-yellow-300: #ffd84e;

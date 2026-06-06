@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import LogoVoy from "../../../components/LogoVoy/LogoVoy";
 import styles from "./EditorialHeader.module.css";
 
 /**
@@ -67,10 +68,9 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         }}
       >
         {/* LOGO */}
-        <Link to="/" className={styles.logo} onClick={closeMenu}>
-          <span className={styles.logoBox}>V</span>
-          <span className={styles.logoText}>VOY PROJECT</span>
-        </Link>
+        <div onClick={closeMenu} style={{ cursor: "pointer" }}>
+          <LogoVoy />
+        </div>
 
         {/* NAV LINKS — desktop */}
         <nav className={styles.nav}>
