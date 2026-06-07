@@ -1,6 +1,7 @@
 :root {
   --ds-font-family-base: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
-  --ds-font-family-display: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  --ds-font-family-display: "Outfit", "Segoe UI", Roboto, Arial, sans-serif;
+  --ds-font-family-mono: "Space Mono", monospace;
 
   /* Escala de tamaños — body */
   --ds-font-size-100: 0.75rem;   /* caption / overline */

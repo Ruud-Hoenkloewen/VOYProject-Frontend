@@ -29,8 +29,12 @@
   --ds-color-magenta-500: #ff7bee;
 
   /* Colores de Acento Globales */
-  --ds-color-accent-primary: var(--ds-color-brand-fuchsia); /* Usaremos el celeste como primario usualmente, pero definamos esto */
-  --ds-color-accent-secondary: var(--ds-color-magenta-500); /* El rosita que pidió el usuario */
+  --ds-color-accent-primary: var(--ds-color-brand-lime); /* Verde menta eléctrico */
+  --ds-color-accent-secondary: var(--ds-color-brand-fuchsia); /* Fucsia editorial */
+
+  /* Resplandores y Glows */
+  --ds-glow-primary: 0 0 15px rgba(0, 255, 159, 0.3);
+  --ds-glow-secondary: 0 0 15px rgba(255, 123, 238, 0.3);
 
   --ds-color-red-400: #ff3f48;
   --ds-color-yellow-300: #ffd84e;

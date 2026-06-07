@@ -74,7 +74,7 @@
   font-size: 0.9rem;
   padding: 0.8rem 1rem;
   outline: none;
-  font-family: inherit;
+  font-family: var(--ds-font-family-base);
   transition: border-color 0.2s, background-color 0.2s;
   width: 100%;
   box-sizing: border-box;
@@ -120,7 +120,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--ds-font-family-base);
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   display: flex;
   align-items: center;
@@ -144,7 +144,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--ds-font-family-base);
   transition: background-color 0.2s, opacity 0.2s;
   display: flex;
   align-items: center;

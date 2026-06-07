@@ -16,6 +16,29 @@
   padding-top: 60px;
 }
 
+/* ── ANIMATIONS ──────────────────────────────── */
+@keyframes fadeInUpStagger {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animateStagger {
+  opacity: 0;
+  animation: fadeInUpStagger 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.delay1 { animation-delay: 0.1s; }
+.delay2 { animation-delay: 0.25s; }
+.delay3 { animation-delay: 0.4s; }
+.delay4 { animation-delay: 0.55s; }
+.delay5 { animation-delay: 0.7s; }
+
 /* ── HERO ──────────────────────────────── */
 .hero {
   display: flex;
@@ -282,7 +305,7 @@
 }
 
 .hwStatValue.cyan {
-  color: #00ffff; /* Fallback if needed, or cyan global */
+  color: var(--ds-color-accent-primary);
 }
 
 .hwStatLabel {

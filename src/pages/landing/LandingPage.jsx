@@ -106,7 +106,7 @@ export default function LandingPage() {
         <div className={styles.heroGrain} aria-hidden="true" />
 
         {/* Barra superior: solo BIENVENIDO en desktop */}
-        <div className={styles.heroTopBar}>
+        <div className={`${styles.heroTopBar} ${styles.animateStagger} ${styles.delay1}`}>
           <span className={styles.heroEyebrowLeft}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> BIENVENIDO</span>
           <div className={styles.heroTopBarLine} />
           <span className={styles.heroEyebrowRight}>ESCENA UNDERGROUND · NOA · TUCUMÁN <span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span></span>
@@ -114,24 +114,26 @@ export default function LandingPage() {
 
         <div className={styles.heroInner}>
           <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>
+            <h1 className={`${styles.heroTitle} ${styles.animateStagger} ${styles.delay2}`}>
               WELCOME<br />
               TO THE<br />
               <span className={styles.heroTitleAccent}>POGO</span>
             </h1>
-            <p className={styles.heroSubtitle}>LA ESCENA EMERGENTE Y UNDERGROUND</p>
-            <p className={styles.heroDescription}>
+            <p className={`${styles.heroSubtitle} ${styles.animateStagger} ${styles.delay3}`}>LA ESCENA EMERGENTE Y UNDERGROUND</p>
+            <p className={`${styles.heroDescription} ${styles.animateStagger} ${styles.delay3}`}>
               La plataforma de eventos musicales del noroeste argentino.<br />
               Punk, Rock, Metal, Grunge y más — todo en un solo lugar.
             </p>
 
           </div>
           
-          {isAuthenticated ? (
-            <HeroWidgetLoggedIn user={user} activeShowsCount={allEvents?.length || 0} />
-          ) : (
-            <HeroWidgetLoggedOut />
-          )}
+          <div className={`${styles.animateStagger} ${styles.delay4}`} style={{ width: '100%', maxWidth: '380px' }}>
+            {isAuthenticated ? (
+              <HeroWidgetLoggedIn user={user} activeShowsCount={allEvents?.length || 0} />
+            ) : (
+              <HeroWidgetLoggedOut />
+            )}
+          </div>
         </div>
       </section>
 

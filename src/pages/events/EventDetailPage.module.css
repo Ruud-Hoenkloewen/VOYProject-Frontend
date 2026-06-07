@@ -179,7 +179,7 @@
   letter-spacing: 0.5px;
   color: #fff;
 }
-.iconNeon    { color: var(--ds-color-action-primary-bg, #a3e635); display: flex; align-items: center; }
+.iconNeon    { color: var(--ds-color-accent-primary); display: flex; align-items: center; }
 .iconMagenta { color: #f0abfc; display: flex; align-items: center; }
 
 /* ─── TOP INFO BAR ──────────────────────────────────────────────────────── */
@@ -200,7 +200,7 @@
 .infoText { display: flex; flex-direction: column; }
 .infoLabel {
   font-size: 0.62rem;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--ds-font-family-base);
   color: #666;
   text-transform: uppercase;
   letter-spacing: 1.2px;
@@ -238,12 +238,12 @@
   width: 52px;
   flex-shrink: 0;
   text-align: right;
-  font-family: 'Courier New', monospace;
+  font-family: var(--ds-font-family-mono);
   font-size: 0.9rem;
   font-weight: 700;
   padding-top: 3px;
 }
-.tlTimeGreen   { color: var(--ds-color-action-primary-bg, #a3e635); }
+.tlTimeGreen   { color: var(--ds-color-accent-primary); }
 .tlTimeMagenta { color: #f0abfc; }
 .tlTimeGrey    { color: #444; }
 .tlTimeWhite   { color: #aaa; }
@@ -265,7 +265,7 @@
   z-index: 2;
 }
 .dotGreen   {
-  background-color: var(--ds-color-action-primary-bg, #a3e635);
+  background-color: var(--ds-color-accent-primary);
   box-shadow: 0 0 8px rgba(163, 230, 53, 0.5);
 }
 .dotMagenta {
@@ -311,7 +311,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.badgeGreen   { background-color: var(--ds-color-action-primary-bg, #a3e635); color: #000; }
+.badgeGreen   { background-color: var(--ds-color-accent-primary); color: #000; }
 .badgeMagenta { background-color: #f0abfc; color: #000; }
 .badgeCyan    { background-color: #22d3ee; color: #000; }
 
@@ -325,7 +325,7 @@
 }
 .inDev {
   font-size: 0.7rem;
-  color: var(--ds-color-action-primary-bg, #a3e635);
+  color: var(--ds-color-accent-primary);
   text-transform: uppercase;
   letter-spacing: 1px;
   display: flex;
@@ -385,7 +385,7 @@
   color: #000;
   z-index: 5;
 }
-.bg_green   { background-color: var(--ds-color-action-primary-bg, #a3e635); }
+.bg_green   { background-color: var(--ds-color-accent-primary); }
 .bg_magenta { background-color: #f0abfc; }
 .bg_cyan    { background-color: #22d3ee; }
 .bg_grey    { background-color: #888; }
@@ -459,20 +459,20 @@
 .infoCell:hover { background: #161616; }
 
 .infoCellIcon {
-  color: var(--ds-color-action-primary-bg, #a3e635);
+  color: var(--ds-color-accent-primary);
   flex-shrink: 0;
   margin-top: 2px;
 }
 .infoCellText { display: flex; flex-direction: column; gap: 4px; }
 .infoCellLabel {
   font-size: 0.62rem;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--ds-font-family-base);
   color: #555;
   text-transform: uppercase;
   letter-spacing: 1.2px;
 }
 .infoCellValue { font-size: 0.95rem; font-weight: 600; color: #ddd; line-height: 1.4; }
-.infoCellHighlight { color: var(--ds-color-action-primary-bg, #a3e635); }
+.infoCellHighlight { color: var(--ds-color-accent-primary); }
 
 @media (max-width: 600px) { .infoGrid { grid-template-columns: 1fr; } }
 
@@ -503,7 +503,7 @@
   /* Gradient top border */
   border-top: 3px solid transparent;
   background-image: linear-gradient(#111, #111),
-    linear-gradient(90deg, var(--ds-color-action-primary-bg, #a3e635), #f0abfc, #22d3ee);
+    linear-gradient(90deg, var(--ds-color-accent-primary), #f0abfc, #22d3ee);
   background-origin: border-box;
   background-clip: padding-box, border-box;
   display: flex;
@@ -521,20 +521,20 @@
 }
 .ticketType {
   font-size: 0.72rem;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--ds-font-family-base);
   color: #666;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 8px;
 }
 .ticketPriceValue {
-  color: var(--ds-color-action-primary-bg, #a3e635);
+  color: var(--ds-color-accent-primary);
   font-size: 2.8rem;
   font-weight: 900;
   line-height: 1;
   margin-bottom: 6px;
 }
-.ticketFee { color: #555; font-size: 0.78rem; font-family: 'DM Sans', sans-serif; }
+.ticketFee { color: #555; font-size: 0.78rem; font-family: var(--ds-font-family-base); }
 
 .ticketDetails {
   display: flex;
@@ -545,13 +545,13 @@
 .ticketRow { display: flex; justify-content: space-between; align-items: center; }
 .ticketLabel {
   font-size: 0.7rem;
-  font-family: 'DM Sans', sans-serif;
+  font-family: var(--ds-font-family-base);
   color: #555;
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 .ticketValue { font-size: 0.92rem; font-weight: 600; color: #ccc; }
-.textNeon { color: var(--ds-color-action-primary-bg, #a3e635) !important; }
+.textNeon { color: var(--ds-color-accent-primary) !important; }
 
 .ticketValueBadge {
   font-size: 0.72rem;
@@ -562,7 +562,7 @@
   text-transform: uppercase;
 }
 .badgeValAvailable {
-  color: var(--ds-color-action-primary-bg, #a3e635);
+  color: var(--ds-color-accent-primary);
   border-color: rgba(163,230,53,0.35);
   background: rgba(163,230,53,0.07);
 }
@@ -576,7 +576,7 @@
 
 .buyButton {
   width: 100%;
-  background-color: var(--ds-color-action-primary-bg, #a3e635);
+  background-color: var(--ds-color-accent-primary);
   color: #000;
   border: none;
   padding: 15px;

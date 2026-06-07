@@ -21,7 +21,7 @@
   justify-content: center;
   height: 26px;
   padding: 0 10px;
-  background-color: var(--ds-color-accent-secondary, #ff7bee);
+  background-color: var(--ds-color-accent-secondary);
   color: var(--ds-color-bg-canvas, #0a0b10);
   
   /* Ticket cutout effect using CSS masks */
@@ -41,7 +41,7 @@
 }
 
 .ticketLetter {
-  font-family: var(--ds-font-family-display, sans-serif);
+  font-family: var(--ds-font-family-display);
   font-weight: 900;
   font-size: 14px;
   letter-spacing: 1px;
@@ -66,7 +66,7 @@
 }
 
 .logoProject {
-  font-family: var(--ds-font-family-mono, monospace);
+  font-family: var(--ds-font-family-mono);
   font-weight: 700;
   font-size: 13px;
   color: var(--ds-color-text-primary, #ffffff);
@@ -75,5 +75,5 @@
 }
 
 .logoContainer:hover .logoProject {
-  color: var(--ds-color-accent-secondary, #ff7bee);
+  color: var(--ds-color-accent-secondary);
 }
