@@ -107,9 +107,9 @@ export default function LandingPage() {
 
         {/* Barra superior: solo BIENVENIDO en desktop */}
         <div className={`${styles.heroTopBar} ${styles.animateStagger} ${styles.delay1}`}>
-          <span className={styles.heroEyebrowLeft}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> BIENVENIDO</span>
+          <span className={styles.heroEyebrowLeft}><span className={styles.diamond}>♦</span> BIENVENIDO</span>
           <div className={styles.heroTopBarLine} />
-          <span className={styles.heroEyebrowRight}>ESCENA UNDERGROUND · NOA · TUCUMÁN <span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span></span>
+          <span className={styles.heroEyebrowRight}>ESCENA UNDERGROUND · NOA · TUCUMÁN <span className={styles.diamond}>♦</span></span>
         </div>
 
         <div className={styles.heroInner}>
@@ -145,11 +145,11 @@ export default function LandingPage() {
       <div className={styles.marqueeWrapper} aria-hidden="true">
         <div className={styles.marqueeTrack}>
           {["SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT"].map((item, i) => (
-            <span key={i} className={styles.marqueeItem}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> {item}</span>
+            <span key={i} className={styles.marqueeItem}><span className={styles.diamond}>♦</span> {item}</span>
           ))}
           {/* Duplicado para el loop infinito */}
           {["SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT"].map((item, i) => (
-            <span key={`dup-${i}`} className={styles.marqueeItem} aria-hidden="true"><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> {item}</span>
+            <span key={`dup-${i}`} className={styles.marqueeItem} aria-hidden="true"><span className={styles.diamond}>♦</span> {item}</span>
           ))}
         </div>
       </div>
@@ -158,7 +158,7 @@ export default function LandingPage() {
       <section className={styles.features}>
         <div className={styles.sectionHeader} data-animate>
           <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> QUÉ ES VOY <span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span></span>
+          <span className={styles.sectionLabel}><span className={styles.diamond}>♦</span> QUÉ ES VOY <span className={styles.diamond}>♦</span></span>
           <div className={styles.sectionDivider} />
         </div>
         <div className={styles.featuresGrid}>
@@ -176,7 +176,7 @@ export default function LandingPage() {
       <section className={styles.genresSection}>
         <div className={styles.sectionHeader} data-animate>
           <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> NUESTROS GÉNEROS <span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span></span>
+          <span className={styles.sectionLabel}><span className={styles.diamond}>♦</span> NUESTROS GÉNEROS <span className={styles.diamond}>♦</span></span>
           <div className={styles.sectionDivider} />
         </div>
         <div className={styles.genresGrid}>
@@ -199,7 +199,7 @@ export default function LandingPage() {
       <section className={styles.eventsPreview}>
         <div className={styles.sectionHeader} data-animate>
           <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> EN CARTELERA <span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span></span>
+          <span className={styles.sectionLabel}><span className={styles.diamond}>♦</span> EN CARTELERA <span className={styles.diamond}>♦</span></span>
           <div className={styles.sectionDivider} />
         </div>
 
@@ -222,12 +222,8 @@ export default function LandingPage() {
                     venue={evt.venue}
                     price={evt.price}
                     genres={evt.genres}
-                    status={evt.estado || evt.status}
-                    statusTone={
-                      (evt.estado || evt.status) === "AGOTADO" ? "danger"
-                      : (evt.estado || evt.status) === "ÚLTIMAS ENTRADAS" ? "warning"
-                      : "success"
-                    }
+                    status={evt.status}
+                    statusTone={evt.statusTone}
                     imageUrl={evt.imageUrl}
                   />
                 </div>
@@ -244,12 +240,8 @@ export default function LandingPage() {
                   venue={evt.venue}
                   price={evt.price}
                   genres={evt.genres}
-                  status={evt.estado || evt.status}
-                  statusTone={
-                    (evt.estado || evt.status) === "AGOTADO" ? "danger"
-                    : (evt.estado || evt.status) === "ÚLTIMAS ENTRADAS" ? "warning"
-                    : "success"
-                  }
+                  status={evt.status}
+                  statusTone={evt.statusTone}
                   imageUrl={evt.imageUrl}
                 />
               </div>

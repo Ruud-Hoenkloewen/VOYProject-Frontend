@@ -1,4 +1,5 @@
 import api from './api';
+import { formatPrice } from '../utils/helpers';
 
 const MONTHS = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
 
@@ -8,15 +9,6 @@ const formatDate = (dateString) => {
   const month = MONTHS[date.getUTCMonth()];
   const year  = date.getUTCFullYear();
   return `${day} ${month} ${year}`;
-};
-
-const formatPrice = (price) => {
-  if (price === 0) return "Gratis";
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: 0,
-  }).format(price);
 };
 
 const mapStatusTone = (status) => {

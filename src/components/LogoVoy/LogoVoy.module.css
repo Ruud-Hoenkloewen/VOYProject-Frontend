@@ -22,7 +22,7 @@
   height: 26px;
   padding: 0 10px;
   background-color: var(--ds-color-accent-secondary);
-  color: var(--ds-color-bg-canvas, #0a0b10);
+  color: var(--ds-color-bg-canvas);
   
   /* Ticket cutout effect using CSS masks */
   mask-image: radial-gradient(circle at 0 50%, transparent 4px, black 4.5px),
@@ -69,7 +69,7 @@
   font-family: var(--ds-font-family-mono);
   font-weight: 700;
   font-size: 13px;
-  color: var(--ds-color-text-primary, #ffffff);
+  color: var(--ds-color-text-primary);
   letter-spacing: 0.15em;
   text-transform: uppercase;
 }

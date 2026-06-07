@@ -1,13 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900;1,9..40,300&display=swap');
-
 /* ─── ROOT ─────────────────────────────────────────────────────────────── */
 .root {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #0a0a0a;
-  color: #ffffff;
-  font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+  background-color: var(--ds-color-bg-canvas);
+  color: var(--ds-color-text-primary);
+  font-family: var(--ds-font-family-base);
 }
 
 /* ─── HERO ──────────────────────────────────────────────────────────────── */
@@ -49,7 +47,7 @@
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  color: #fff;
+  color: var(--ds-color-text-primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -77,13 +75,13 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: #fff;
+  color: var(--ds-color-text-primary);
   line-height: 1.3;
 }
 .heroBy {
   margin: 0;
   font-size: 0.8rem;
-  color: #aaa;
+  color: var(--ds-color-text-secondary);
 }
 .heroGenres {
   display: flex;
@@ -98,17 +96,17 @@
   border: 1px solid rgba(255,255,255,0.3);
   border-radius: 2px;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
 .heroPrice {
   margin: 0;
   font-size: 0.85rem;
-  color: #bbb;
+  color: var(--ds-color-text-secondary);
 }
 .heroVenue {
   margin: 0;
   font-size: 0.8rem;
-  color: #999;
+  color: var(--ds-color-text-editorial-subtle);
   display: flex;
   align-items: center;
   gap: 4px;
@@ -129,7 +127,7 @@
   font-weight: 900;
   text-transform: uppercase;
   line-height: 1;
-  color: #ffffff;
+  color: var(--ds-color-text-primary);
   letter-spacing: -0.5px;
 }
 
@@ -177,20 +175,20 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
 .iconNeon    { color: var(--ds-color-accent-primary); display: flex; align-items: center; }
-.iconMagenta { color: #f0abfc; display: flex; align-items: center; }
+.iconMagenta { color: var(--ds-color-magenta-400); display: flex; align-items: center; }
 
 /* ─── TOP INFO BAR ──────────────────────────────────────────────────────── */
 .topInfoBar {
   display: flex;
   flex-wrap: wrap;
   gap: 32px;
-  background-color: #141414;
+  background-color: var(--ds-color-bg-surface);
   padding: 20px 28px;
   border-radius: 4px;
-  border: 1px solid #1f1f1f;
+  border: 1px solid var(--ds-color-border-subtle);
 }
 .infoItem {
   display: flex;
@@ -201,19 +199,19 @@
 .infoLabel {
   font-size: 0.62rem;
   font-family: var(--ds-font-family-base);
-  color: #666;
+  color: var(--ds-color-text-editorial-muted);
   text-transform: uppercase;
   letter-spacing: 1.2px;
 }
 .infoValue {
   font-size: 1rem;
   font-weight: 700;
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
 
 /* ─── MOVIDA DESCRIPTION ────────────────────────────────────────────────── */
 .movidaDescription {
-  color: #999;
+  color: var(--ds-color-text-editorial-subtle);
   font-size: 1rem;
   line-height: 1.65;
   max-width: 75%;
@@ -244,9 +242,9 @@
   padding-top: 3px;
 }
 .tlTimeGreen   { color: var(--ds-color-accent-primary); }
-.tlTimeMagenta { color: #f0abfc; }
-.tlTimeGrey    { color: #444; }
-.tlTimeWhite   { color: #aaa; }
+.tlTimeMagenta { color: var(--ds-color-magenta-400); }
+.tlTimeGrey    { color: var(--ds-color-border-editorial-mid); }
+.tlTimeWhite   { color: var(--ds-color-text-secondary); }
 
 /* Dot + line column */
 .tlDivider {
@@ -266,19 +264,19 @@
 }
 .dotGreen   {
   background-color: var(--ds-color-accent-primary);
-  box-shadow: 0 0 8px rgba(163, 230, 53, 0.5);
+  box-shadow: var(--ds-glow-primary);
 }
 .dotMagenta {
-  background-color: #f0abfc;
-  box-shadow: 0 0 8px rgba(240, 171, 252, 0.5);
+  background-color: var(--ds-color-magenta-400);
+  box-shadow: var(--ds-glow-secondary);
 }
-.dotGrey    { background-color: #3a3a3a; }
+.dotGrey    { background-color: var(--ds-color-border-editorial-mid); }
 
 .tlLine {
   width: 1px;
   flex: 1;
   min-height: 28px;
-  background-color: #2a2a2a;
+  background-color: var(--ds-color-border-editorial-mid);
   margin-top: 4px;
 }
 
@@ -297,11 +295,11 @@
   flex-wrap: wrap;
 }
 .tlTitle { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.3px; }
-.tlTitleWhite   { color: #fff; }
-.tlTitleMagenta { color: #f0abfc; }
-.tlTitleGrey    { color: #555; }
+.tlTitleWhite   { color: var(--ds-color-text-primary); }
+.tlTitleMagenta { color: var(--ds-color-magenta-400); }
+.tlTitleGrey    { color: var(--ds-color-text-editorial-muted); }
 
-.tlSubtitle { font-size: 0.82rem; color: #666; }
+.tlSubtitle { font-size: 0.82rem; color: var(--ds-color-text-editorial-muted); }
 
 .tlBadge {
   font-size: 0.62rem;
@@ -311,9 +309,9 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.badgeGreen   { background-color: var(--ds-color-accent-primary); color: #000; }
-.badgeMagenta { background-color: #f0abfc; color: #000; }
-.badgeCyan    { background-color: #22d3ee; color: #000; }
+.badgeGreen   { background-color: var(--ds-color-accent-primary); color: var(--ds-color-neutral-0); }
+.badgeMagenta { background-color: var(--ds-color-magenta-400); color: var(--ds-color-neutral-0); }
+.badgeCyan    { background-color: var(--ds-color-cyan-400); color: var(--ds-color-neutral-0); }
 
 /* ─── ARTISTAS SECTION ──────────────────────────────────────────────────── */
 .artistsHeader {
@@ -341,19 +339,19 @@
 @media (max-width: 600px) { .artistsGrid { grid-template-columns: 1fr; } }
 
 .artistCard {
-  background-color: #111;
-  border: 1px solid #222;
+  background-color: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-subtle);
   border-radius: 4px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   transition: border-color 0.2s;
 }
-.artistCard:hover { border-color: #444; }
+.artistCard:hover { border-color: var(--ds-color-border-editorial-mid); }
 
 .artistCardBg {
   height: 190px;
-  background-color: #1a1a1a;
+  background-color: var(--ds-color-bg-surface-muted);
   position: relative;
   overflow: hidden;
 }
@@ -382,13 +380,13 @@
   padding: 4px 8px;
   border-radius: 2px;
   text-transform: uppercase;
-  color: #000;
+  color: var(--ds-color-neutral-0);
   z-index: 5;
 }
 .bg_green   { background-color: var(--ds-color-accent-primary); }
-.bg_magenta { background-color: #f0abfc; }
-.bg_cyan    { background-color: #22d3ee; }
-.bg_grey    { background-color: #888; }
+.bg_magenta { background-color: var(--ds-color-magenta-400); }
+.bg_cyan    { background-color: var(--ds-color-cyan-400); }
+.bg_grey    { background-color: var(--ds-color-text-editorial-subtle); }
 
 .artistCardContent { padding: 20px; display: flex; flex-direction: column; flex: 1; }
 .artistCardInfo { margin-bottom: 20px; flex: 1; }
@@ -397,9 +395,9 @@
   font-size: 1.1rem;
   font-weight: 900;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
-.artistCardDesc { margin: 0; font-size: 0.85rem; color: #888; line-height: 1.4; }
+.artistCardDesc { margin: 0; font-size: 0.85rem; color: var(--ds-color-text-editorial-subtle); line-height: 1.4; }
 
 .artistCardFooter {
   display: flex;
@@ -410,20 +408,20 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  border: 1px solid #333;
+  border: 1px solid var(--ds-color-border-editorial-mid);
   padding: 6px 10px;
   border-radius: 2px;
   font-size: 0.78rem;
-  color: #ccc;
+  color: var(--ds-color-text-secondary);
   cursor: pointer;
   transition: all 0.2s;
 }
-.artistIgBadge:hover { background: #1a1a1a; color: #fff; border-color: #555; }
+.artistIgBadge:hover { background: var(--ds-color-bg-surface-muted); color: var(--ds-color-text-primary); border-color: var(--ds-color-text-editorial-muted); }
 
 .artistProfileBtn {
   background: transparent;
-  border: 1px solid #3a3a3a;
-  color: #bbb;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  color: var(--ds-color-text-secondary);
   display: flex;
   align-items: center;
   gap: 6px;
@@ -436,14 +434,14 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.artistProfileBtn:hover { border-color: #888; color: #fff; background: #1a1a1a; }
+.artistProfileBtn:hover { border-color: var(--ds-color-text-editorial-subtle); color: var(--ds-color-text-primary); background: var(--ds-color-bg-surface-muted); }
 
 /* ─── INFO DEL EVENTO ───────────────────────────────────────────────────── */
 .infoGrid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2px;
-  border: 1px solid #1e1e1e;
+  border: 1px solid var(--ds-color-border-subtle);
   border-radius: 4px;
   overflow: hidden;
 }
@@ -452,11 +450,11 @@
   align-items: flex-start;
   gap: 14px;
   padding: 20px;
-  background: #111;
-  border: 1px solid #1e1e1e;
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-subtle);
   transition: background 0.15s;
 }
-.infoCell:hover { background: #161616; }
+.infoCell:hover { background: var(--ds-color-bg-surface-muted); }
 
 .infoCellIcon {
   color: var(--ds-color-accent-primary);
@@ -467,11 +465,11 @@
 .infoCellLabel {
   font-size: 0.62rem;
   font-family: var(--ds-font-family-base);
-  color: #555;
+  color: var(--ds-color-text-editorial-muted);
   text-transform: uppercase;
   letter-spacing: 1.2px;
 }
-.infoCellValue { font-size: 0.95rem; font-weight: 600; color: #ddd; line-height: 1.4; }
+.infoCellValue { font-size: 0.95rem; font-weight: 600; color: var(--ds-color-text-secondary); line-height: 1.4; }
 .infoCellHighlight { color: var(--ds-color-accent-primary); }
 
 @media (max-width: 600px) { .infoGrid { grid-template-columns: 1fr; } }
@@ -482,9 +480,9 @@
   font-size: 1.4rem;
   font-weight: 900;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
-.ubicacionAddress { margin: 0; font-size: 0.95rem; color: #888; }
+.ubicacionAddress { margin: 0; font-size: 0.95rem; color: var(--ds-color-text-editorial-subtle); }
 
 /* ─── RIGHT COLUMN: TICKET CARD ─────────────────────────────────────────── */
 /* Sticky lives on the column, not the card, so it works in a grid */
@@ -496,14 +494,14 @@
 }
 
 .ticketCard {
-  background-color: #111;
+  background-color: var(--ds-color-bg-surface);
   padding: 28px;
   border-radius: 4px;
-  border: 1px solid #222;
+  border: 1px solid var(--ds-color-border-subtle);
   /* Gradient top border */
   border-top: 3px solid transparent;
-  background-image: linear-gradient(#111, #111),
-    linear-gradient(90deg, var(--ds-color-accent-primary), #f0abfc, #22d3ee);
+  background-image: linear-gradient(var(--ds-color-bg-surface), var(--ds-color-bg-surface)),
+    linear-gradient(90deg, var(--ds-color-accent-primary), var(--ds-color-magenta-400), var(--ds-color-cyan-400));
   background-origin: border-box;
   background-clip: padding-box, border-box;
   display: flex;
@@ -517,12 +515,12 @@
   text-align: center;
   margin-bottom: 20px;
   padding-bottom: 20px;
-  border-bottom: 1px dashed #2a2a2a;
+  border-bottom: 1px dashed var(--ds-color-border-editorial-mid);
 }
 .ticketType {
   font-size: 0.72rem;
   font-family: var(--ds-font-family-base);
-  color: #666;
+  color: var(--ds-color-text-editorial-muted);
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 8px;
@@ -534,7 +532,7 @@
   line-height: 1;
   margin-bottom: 6px;
 }
-.ticketFee { color: #555; font-size: 0.78rem; font-family: var(--ds-font-family-base); }
+.ticketFee { color: var(--ds-color-text-editorial-muted); font-size: 0.78rem; font-family: var(--ds-font-family-base); }
 
 .ticketDetails {
   display: flex;
@@ -546,11 +544,11 @@
 .ticketLabel {
   font-size: 0.7rem;
   font-family: var(--ds-font-family-base);
-  color: #555;
+  color: var(--ds-color-text-editorial-muted);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
-.ticketValue { font-size: 0.92rem; font-weight: 600; color: #ccc; }
+.ticketValue { font-size: 0.92rem; font-weight: 600; color: var(--ds-color-text-secondary); }
 .textNeon { color: var(--ds-color-accent-primary) !important; }
 
 .ticketValueBadge {
@@ -567,7 +565,7 @@
   background: rgba(163,230,53,0.07);
 }
 .badgeValSoldout {
-  color: #ef4444;
+  color: var(--ds-color-red-400);
   border-color: rgba(239,68,68,0.35);
   background: rgba(239,68,68,0.07);
 }
@@ -577,7 +575,7 @@
 .buyButton {
   width: 100%;
   background-color: var(--ds-color-accent-primary);
-  color: #000;
+  color: var(--ds-color-neutral-0);
   border: none;
   padding: 15px;
   font-size: 0.95rem;
@@ -593,13 +591,13 @@
   letter-spacing: 0.5px;
 }
 .buyButton:hover:not(:disabled) { opacity: 0.88; }
-.buyButton:disabled { background-color: #2a2a2a; color: #555; cursor: not-allowed; }
+.buyButton:disabled { background-color: var(--ds-color-border-editorial-mid); color: var(--ds-color-text-editorial-muted); cursor: not-allowed; }
 
 .outlineButton {
   width: 100%;
   background: transparent;
-  color: #bbb;
-  border: 1px solid #2e2e2e;
+  color: var(--ds-color-text-secondary);
+  border: 1px solid var(--ds-color-border-editorial-mid);
   padding: 12px;
   font-size: 0.82rem;
   font-weight: 600;
@@ -612,16 +610,16 @@
   gap: 8px;
   transition: all 0.2s;
 }
-.outlineButton:hover { background: #1a1a1a; border-color: #555; color: #fff; }
+.outlineButton:hover { background: var(--ds-color-bg-surface-muted); border-color: var(--ds-color-text-editorial-muted); color: var(--ds-color-text-primary); }
 
 .termsText {
-  color: #555;
+  color: var(--ds-color-text-editorial-muted);
   font-size: 0.72rem;
   text-align: center;
   margin: 0;
   line-height: 1.5;
 }
-.termsText a { color: #777; text-decoration: underline; }
+.termsText a { color: var(--ds-color-text-editorial-subtle); text-decoration: underline; }
 
 /* ─── ERROR STATE ───────────────────────────────────────────────────────── */
 .errorState {
@@ -633,19 +631,19 @@
   gap: 24px;
   text-align: center;
   padding: 24px;
-  background: #0a0a0a;
-  color: #fff;
+  background: var(--ds-color-bg-canvas);
+  color: var(--ds-color-text-primary);
 }
 
 /* ─── SKELETON / LOADING ────────────────────────────────────────────────── */
 .skeletonHero {
   width: 100%;
   height: 340px;
-  background: #141414;
+  background: var(--ds-color-bg-surface);
   animation: pulse 1.5s infinite ease-in-out;
 }
 .skeletonPulse {
-  background: #1a1a1a;
+  background: var(--ds-color-bg-surface-muted);
   animation: pulse 1.5s infinite ease-in-out;
 }
 @keyframes pulse {

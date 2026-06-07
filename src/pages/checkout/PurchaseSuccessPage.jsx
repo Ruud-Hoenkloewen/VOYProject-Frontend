@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { MailIcon } from '../../components/icons';
+import { formatPrice } from '../../utils/helpers';
 import styles from './PurchaseSuccessPage.module.css';
 
 /**
@@ -47,14 +48,6 @@ export default function PurchaseSuccessPage() {
   const subtotal       = precioUnitario * cantidad;
   const cargoServicio  = Math.round(subtotal * 0.10);
   const total          = subtotal + cargoServicio;
-
-  function fmt(amount) {
-    return new Intl.NumberFormat('es-AR', {
-      style: 'currency',
-      currency: 'ARS',
-      minimumFractionDigits: 0,
-    }).format(amount);
-  }
 
   return (
     <div className={styles.pageRoot}>
@@ -156,7 +149,7 @@ export default function PurchaseSuccessPage() {
             <div className={styles.receiptHeader}>
               <div>
                 <div className={styles.receiptCompany}>VOY PROJECT TICKETS</div>
-                <div className={styles.receiptSub}>undertuc.ar • Tucumán, Argentina</div>
+                <div className={styles.receiptSub}>voyproject.ar • Tucumán, Argentina</div>
               </div>
               <div className={styles.receiptOrder}>
                 <span>Nº COMPROBANTE</span>
@@ -177,9 +170,9 @@ export default function PurchaseSuccessPage() {
             </div>
 
             <div className={styles.receiptTotals}>
-              <div className={styles.receiptRow}><span className={styles.rl}>Subtotal ({cantidad} × {fmt(precioUnitario)})</span><span className={styles.rr}>{fmt(subtotal)}</span></div>
-              <div className={styles.receiptRow}><span className={styles.rl}>Cargo por servicio</span><span className={styles.rr}>{fmt(cargoServicio)}</span></div>
-              <div className={styles.receiptRowTotal}><span className={styles.rl}>TOTAL</span><span className={styles.rrTotal}>{fmt(total)}</span></div>
+              <div className={styles.receiptRow}><span className={styles.rl}>Subtotal ({cantidad} × {formatPrice(precioUnitario)})</span><span className={styles.rr}>{formatPrice(subtotal)}</span></div>
+              <div className={styles.receiptRow}><span className={styles.rl}>Cargo por servicio</span><span className={styles.rr}>{formatPrice(cargoServicio)}</span></div>
+              <div className={styles.receiptRowTotal}><span className={styles.rl}>TOTAL</span><span className={styles.rrTotal}>{formatPrice(total)}</span></div>
             </div>
 
             <div className={styles.receiptFooter}>DOCUMENTO VÁLIDO COMO COMPROBANTE • NO ES FACTURA</div>

@@ -68,8 +68,8 @@
 }
 
 .input {
-  background: var(--ds-color-bg-editorial-surface, #0f0f0f);
-  border: 1px solid var(--ds-color-border-editorial-mid, #2a2a2a);
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-editorial-mid);
   color: var(--ds-color-text-primary);
   font-size: 0.9rem;
   padding: 0.8rem 1rem;
@@ -81,21 +81,21 @@
 }
 
 .input::placeholder {
-  color: var(--ds-color-text-editorial-muted, #666666);
+  color: var(--ds-color-text-editorial-muted);
 }
 
 .input:focus {
   border-color: var(--ds-color-text-secondary);
-  background: #121212;
+  background: var(--ds-color-bg-surface-muted);
 }
 
 .inputError {
-  border-color: var(--ds-color-state-danger, #ff3f48) !important;
+  border-color: var(--ds-color-red-400) !important;
 }
 
 .errorMsg {
   font-size: 0.7rem;
-  color: var(--ds-color-state-danger, #ff3f48);
+  color: var(--ds-color-red-400);
   font-weight: 600;
   letter-spacing: 0.02em;
   margin-top: 0.1rem;
@@ -128,7 +128,7 @@
 }
 
 .backBtn:hover {
-  background: var(--ds-color-bg-editorial-surface);
+  background: var(--ds-color-bg-surface);
   color: var(--ds-color-text-primary);
   border-color: var(--ds-color-text-secondary);
 }
@@ -137,7 +137,7 @@
 .ctaBtn {
   padding: 1rem;
   background: var(--ds-color-accent-primary);
-  color: #000;
+  color: var(--ds-color-neutral-0);
   border: none;
   font-size: 0.85rem;
   font-weight: 900;
@@ -152,7 +152,7 @@
 }
 
 .ctaBtn:hover:not(:disabled) {
-  background: var(--ds-color-lime-300, #33ffb2);
+  filter: brightness(1.1);
 }
 
 .ctaBtn:disabled {

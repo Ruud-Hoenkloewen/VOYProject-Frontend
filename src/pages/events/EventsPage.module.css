@@ -8,7 +8,7 @@
 .pageWrapper {
   background: var(--ds-color-bg-editorial);
   min-height: 100vh;
-  color: #fff;
+  color: var(--ds-color-text-primary);
   overflow-x: hidden;
 }
 
@@ -34,7 +34,7 @@
   text-transform: uppercase;
   letter-spacing: -0.02em;
   line-height: 1;
-  color: #ffffff;
+  color: var(--ds-color-text-primary);
   margin: 0;
 }
 
@@ -43,7 +43,7 @@
   font-weight: 700;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-  color: #555;
+  color: var(--ds-color-text-editorial-muted);
   margin: 0;
 }
 
@@ -71,7 +71,7 @@
 
 .filterLabel {
   text-transform: uppercase;
-  color: #555;
+  color: var(--ds-color-text-editorial-muted);
   margin-bottom: 1rem;
   display: block;
   font-size: 0.72rem;
@@ -86,8 +86,8 @@
 
 .genreBtn {
   background: transparent;
-  border: 1px solid #333;
-  color: #888;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  color: var(--ds-color-text-editorial-subtle);
   padding: 0.25rem 0.85rem;
   font-size: 0.72rem;
   font-weight: 700;
@@ -98,8 +98,8 @@
 }
 
 .genreBtn:hover {
-  border-color: #fff;
-  color: #fff;
+  border-color: var(--ds-color-text-primary);
+  color: var(--ds-color-text-primary);
 }
 
 .genreBtnActive {
@@ -109,9 +109,9 @@
 
 .filterSelect {
   width: 100%;
-  background: #111;
-  border: 1px solid #333;
-  color: #fff;
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  color: var(--ds-color-text-primary);
   padding: 0.5rem;
   font-size: 0.85rem;
   cursor: pointer;
@@ -128,14 +128,14 @@
 .errorContainer {
   text-align: center;
   padding: 2rem;
-  color: #ff4444;
+  color: var(--ds-color-red-400);
 }
 
 .emptyState {
   text-align: center;
   padding: 4rem 1rem;
-  background: #111;
-  border: 1px solid #222;
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-subtle);
 }
 
 .emptyStateText {

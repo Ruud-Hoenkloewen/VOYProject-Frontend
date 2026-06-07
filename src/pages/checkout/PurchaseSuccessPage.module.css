@@ -4,7 +4,7 @@
  ───────────────────────────────────────────────────────────────────────────── */
 
 .pageRoot {
-  background: var(--ds-color-bg-editorial, #0a0b10);
+  background: var(--ds-color-bg-editorial);
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -17,8 +17,8 @@
   position: fixed;
   bottom: 2rem;
   right: 2rem;
-  background: #333;
-  color: #fff;
+  background: var(--ds-color-bg-surface-muted);
+  color: var(--ds-color-text-primary);
   padding: 1rem 1.5rem;
   border-radius: 8px;
   display: flex;
@@ -128,13 +128,13 @@
   font-weight: 900;
   line-height: 0.9;
   letter-spacing: -0.02em;
-  color: #ffffff;
+  color: var(--ds-color-text-primary);
   margin: 0 0 1rem 0;
   text-transform: uppercase;
 }
 
 .successSubtitle {
-  color: #888;
+  color: var(--ds-color-text-editorial-subtle);
   font-size: 1rem;
   margin: 0;
 }
@@ -288,14 +288,14 @@
 }
 
 .qrContainer {
-  background: #fff;
+  background: var(--ds-color-bg-surface-muted);
   padding: 0.5rem;
 }
 
 .qrInstruction {
   font-family: var(--ds-font-family-mono);
   font-size: 0.75rem;
-  color: #888;
+  color: var(--ds-color-text-editorial-subtle);
   text-align: center;
   line-height: 1.4;
   letter-spacing: 0.1em;
@@ -422,7 +422,7 @@
 .instructionsTitle {
   font-size: 1.2rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--ds-color-text-primary);
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -437,19 +437,19 @@
   font-family: var(--ds-font-family-display);
   font-size: 1.5rem;
   font-weight: 900;
-  color: #444;
+  color: var(--ds-color-text-editorial-muted);
   margin-top: -0.2rem;
 }
 
 .stepTitle {
-  color: #fff;
+  color: var(--ds-color-text-primary);
   font-weight: 800;
   font-size: 1rem;
   margin-bottom: 0.4rem;
 }
 
 .stepDesc {
-  color: #888;
+  color: var(--ds-color-text-editorial-subtle);
   font-size: 0.9rem;
   line-height: 1.4;
 }
@@ -483,7 +483,7 @@
 .homeBtn {
   background: var(--ds-color-accent-primary);
   border: none;
-  color: #000;
+  color: var(--ds-color-neutral-0);
   padding: 1.25rem;
   font-size: 0.9rem;
   font-weight: 900;
@@ -512,7 +512,7 @@
   
   .ticketMain {
     border-right: none;
-    border-bottom: 2px dashed #333;
+    border-bottom: 2px dashed var(--ds-color-border-editorial-mid);
   }
   
   .ticketStub {

@@ -25,10 +25,8 @@ function ScrollToTop() {
 /** Fallback minimalista durante la carga del chunk */
 function PageLoader() {
   return (
-    <div style={{ minHeight: "100vh", background: "#080808", display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <span style={{ color: "#333", fontSize: "0.7rem", letterSpacing: "0.2em", fontFamily: "monospace" }}>
-        CARGANDO...
-      </span>
+    <div className="page-loader">
+      <span className="page-loader__text">CARGANDO...</span>
     </div>
   );
 }

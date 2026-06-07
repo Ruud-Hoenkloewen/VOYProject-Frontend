@@ -10,8 +10,8 @@
 .page {
   position: relative;
   min-height: 100vh;
-  background: #080808;
-  color: #fff;
+  background: var(--ds-color-bg-editorial);
+  color: var(--ds-color-text-primary);
   font-family: var(--ds-font-family-base);
   display: flex;
   flex-direction: column;
@@ -38,7 +38,7 @@
   display: flex;
   align-items: center;
   padding: 1.4rem 3rem;
-  border-bottom: 1px solid #141414;
+  border-bottom: 1px solid var(--ds-color-border-subtle);
 }
 
 .navLogo {
@@ -50,7 +50,7 @@
   font-weight: 900;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--ds-color-text-primary);
   transition: color 0.2s;
 }
 
@@ -65,7 +65,7 @@
   width: 26px;
   height: 26px;
   background: var(--ds-color-accent-primary);
-  color: #080808;
+  color: var(--ds-color-bg-editorial);
   font-size: 0.8rem;
   font-weight: 900;
 }
@@ -82,8 +82,8 @@
 
 /* ── ASIDE — branding ────────────────── */
 .aside {
-  background: #0a0a0a;
-  border-right: 1px solid #141414;
+  background: var(--ds-color-bg-canvas);
+  border-right: 1px solid var(--ds-color-border-subtle);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -113,7 +113,7 @@
   line-height: 0.95;
   text-transform: uppercase;
   margin: 0;
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
 
 .asideTitleAccent {
@@ -122,7 +122,7 @@
 
 .asideDesc {
   font-size: 0.95rem;
-  color: #555;
+  color: var(--ds-color-text-editorial-muted);
   line-height: 1.6;
   margin: 0;
   max-width: 340px;
@@ -131,7 +131,7 @@
 .asideDivider {
   width: 40px;
   height: 2px;
-  background: #1e1e1e;
+  background: var(--ds-color-border-editorial-mid);
 }
 
 .asideFeatures {
@@ -148,7 +148,7 @@
   align-items: center;
   gap: 0.6rem;
   font-size: 0.85rem;
-  color: #666;
+  color: var(--ds-color-text-editorial-muted);
   font-weight: 600;
   letter-spacing: 0.02em;
 }
@@ -193,12 +193,12 @@
   letter-spacing: -0.02em;
   margin: 0 0 0.1rem;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
 
 .formSubtitle {
   font-size: 0.85rem;
-  color: #555;
+  color: var(--ds-color-text-editorial-muted);
   margin: 0 0 1.5rem;
 }
 
@@ -220,13 +220,13 @@
   font-weight: 800;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: #444;
+  color: var(--ds-color-text-editorial-muted);
 }
 
 .input {
-  background: #0e0e0e;
-  border: 1px solid #1e1e1e;
-  color: #fff;
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  color: var(--ds-color-text-primary);
   font-size: 0.95rem;
   padding: 0.75rem 1rem;
   outline: none;
@@ -237,20 +237,20 @@
 }
 
 .input::placeholder {
-  color: #2e2e2e;
+  color: var(--ds-color-text-editorial-subtle);
 }
 
 .input:focus {
-  border-color: #3a3a3a;
+  border-color: var(--ds-color-text-editorial-subtle);
 }
 
 .inputError {
-  border-color: #ff4444 !important;
+  border-color: var(--ds-color-red-400) !important;
 }
 
 .errorMsg {
   font-size: 0.65rem;
-  color: #ff4444;
+  color: var(--ds-color-red-400);
   font-weight: 600;
   letter-spacing: 0.05em;
 }
@@ -259,7 +259,7 @@
 .submitBtn {
   width: 100%;
   background: var(--ds-color-accent-primary);
-  color: #080808;
+  color: var(--ds-color-neutral-0);
   border: none;
   font-size: 0.72rem;
   font-weight: 900;
@@ -273,7 +273,7 @@
 }
 
 .submitBtn:hover {
-  background: #d9ff33;
+  filter: brightness(1.1);
 }
 
 .submitBtn:disabled {
@@ -284,7 +284,7 @@
 /* ── LINK ALTERNATIVO ────────────────── */
 .altLink {
   font-size: 0.78rem;
-  color: #444;
+  color: var(--ds-color-text-editorial-muted);
   text-align: center;
   margin: 0.3rem 0 0;
 }
@@ -303,7 +303,7 @@
 }
 
 .altLinkBtn:hover {
-  color: #d9ff33;
+  filter: brightness(1.1);
 }
 
 /* ── FOOTER NOTE ─────────────────────── */
@@ -320,7 +320,7 @@
 .apiError {
   background: rgba(255, 68, 68, 0.08);
   border: 1px solid rgba(255, 68, 68, 0.3);
-  color: #ff6666;
+  color: var(--ds-color-red-400);
   font-size: 0.78rem;
   font-weight: 600;
   padding: 0.7rem 1rem;

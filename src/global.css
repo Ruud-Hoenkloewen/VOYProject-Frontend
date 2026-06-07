@@ -37,3 +37,19 @@ body {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ── PAGE LOADER (App.jsx Suspense fallback) ──────────── */
+.page-loader {
+  min-height: 100vh;
+  background: var(--ds-color-bg-canvas);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.page-loader__text {
+  color: var(--ds-color-border-editorial-mid);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  font-family: var(--ds-font-family-mono);
+}
