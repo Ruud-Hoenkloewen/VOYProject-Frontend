@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { getProfileByUsername, GRADIENTS } from "../../services/userService";
+import { getProfileByUsername } from "../../services/userService";
 import {
   Button,
   Typography,
@@ -166,7 +166,7 @@ export default function ProfilePage() {
   }
 
   // Fallback de banner gradiente (diseño oscuro elegante)
-  const bannerBackground = GRADIENTS[profile.bannerGradiente] || profile.bannerGradiente || "linear-gradient(135deg, var(--ds-color-neutral-200) 0%, var(--ds-color-neutral-300) 100%)";
+  const bannerBackground = profile.bannerGradiente || "linear-gradient(135deg, var(--ds-color-neutral-200) 0%, var(--ds-color-neutral-300) 100%)";
   const initials = profile.nombre ? profile.nombre.charAt(0).toUpperCase() : profile.username.charAt(0).toUpperCase();
 
   return (
