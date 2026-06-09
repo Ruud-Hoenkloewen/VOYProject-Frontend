@@ -46,10 +46,18 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener('voy:unauthorized', logout);
   }, [logout]);
 
+  /**
+   * Actualiza los datos del usuario logueado en el estado y localStorage.
+   */
+  const updateUser = useCallback((newUserData) => {
+    localStorage.setItem(USER_KEY, JSON.stringify(newUserData));
+    setUser(newUserData);
+  }, []);
+
   const isAuthenticated = Boolean(token);
 
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
