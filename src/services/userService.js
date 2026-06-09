@@ -1,0 +1,130 @@
+/**
+ * userService — llamadas mockeadas a los endpoints de perfil de usuario.
+ * Simula la obtención de perfiles desde el backend.
+ */
+
+// Retraso para simular llamada de red
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * getProfileByUsername — busca y retorna los perfiles mockeados para diferentes roles
+ * @param {string} username - Nombre de usuario
+ * @returns {Promise<object>} Perfil de usuario o null si no se encuentra
+ */
+export const getProfileByUsername = async (username) => {
+  await delay(400); // Simulamos latencia
+  
+  if (!username) return null;
+  const formattedUsername = username.toLowerCase().trim();
+
+  // Comprobar si coincide con el usuario actualmente logueado en la sesión de localStorage
+  try {
+    const rawUser = localStorage.getItem('voy_user');
+    if (rawUser) {
+      const loggedUser = JSON.parse(rawUser);
+      // Generar slug del nombre del usuario logueado
+      const loggedUsername = loggedUser.nombre ? loggedUser.nombre.toLowerCase().replace(/\s+/g, '') : '';
+      if (formattedUsername === loggedUsername) {
+        return {
+          _id: loggedUser._id,
+          nombre: loggedUser.nombre,
+          username: loggedUsername,
+          rol: "fan", // Por defecto los registrados en frontend son tipo fan
+          bannerGradiente: null, // Fallback
+          avatarColor: "#22d3ee", // Cyan para resaltar que es dinámico/actual
+          bio: "¡Bienvenido/a a VOY! Editá tu perfil para contarnos un poco sobre tu pasión por la música.",
+          ubicacion: "San Miguel de Tucumán, Argentina",
+          redes: [],
+          seguidoresCount: 0,
+          siguiendoCount: 0,
+          eventosGuardados: 0,
+          generosFavoritos: 0
+        };
+      }
+    }
+  } catch (err) {
+    console.error("Error al leer usuario logueado en userService:", err);
+  }
+
+  // Perfiles pre-configurados para demostración y testing
+  if (formattedUsername === 'ironben04') {
+    return {
+      nombre: "IRONBEN04",
+      username: "ironben04",
+      rol: "fan",
+      bannerGradiente: "linear-gradient(90deg, #10121a 0%, #242836 100%)",
+      avatarColor: "#a3e635", // Verde limón (según mockup)
+      bio: "Sin bio todavía. Editá tu perfil para contarle algo a la comunidad.",
+      ubicacion: "San Miguel de Tucumán, Argentina",
+      redes: [
+        { plataforma: "instagram", url: "https://instagram.com/ironben04" },
+        { plataforma: "twitter", url: "https://twitter.com/ironben04" }
+      ],
+      seguidoresCount: 12,
+      siguiendoCount: 24,
+      eventosGuardados: 0,
+      generosFavoritos: 0
+    };
+  }
+
+  if (formattedUsername === 'duki') {
+    return {
+      nombre: "Mauro Lombardo",
+      username: "duki",
+      rol: "artista",
+      nombreArtistico: "Duki",
+      generos: ["TRAP", "ROCK", "ALTERNATIVO"],
+      bannerGradiente: "linear-gradient(90deg, #ff7bee 0%, #00ff9f 100%)",
+      avatarColor: "#ff7bee", // Fucsia
+      bio: "Desde el fin del mundo. Trayendo el trap de vuelta y apoyando el rock local.",
+      ubicacion: "Almagro, Buenos Aires",
+      redes: [
+        { plataforma: "instagram", url: "https://instagram.com/duki" },
+        { plataforma: "spotify", url: "https://open.spotify.com/artist/1Yj5paJWmUiHokFo24t3Pj" },
+        { plataforma: "youtube", url: "https://youtube.com/duki" }
+      ],
+      seguidoresCount: 1420500,
+      siguiendoCount: 420
+    };
+  }
+
+  if (formattedUsername === 'labohemia') {
+    return {
+      nombre: "La Bohemia Producciones",
+      username: "labohemia",
+      rol: "productor",
+      nombreProductora: "La Bohemia Producciones",
+      bannerGradiente: "linear-gradient(135deg, #10121a 0%, #ff7bee 100%)",
+      avatarColor: "#00ff9f", // Verde menta eléctrico
+      bio: "Productora independiente de eventos de rock y punk en Tucumán. Apoyando el underground desde 2018.",
+      ubicacion: "San Miguel de Tucumán, Argentina",
+      redes: [
+        { plataforma: "instagram", url: "https://instagram.com/la_bohemia_prod" },
+        { plataforma: "twitter", url: "https://twitter.com/la_bohemia" }
+      ],
+      seguidoresCount: 1250,
+      siguiendoCount: 180
+    };
+  }
+
+  // Si no coincide con ninguno, devolvemos null para simular un 404
+  return null;
+};
+
+/**
+ * getMyProfile — obtiene el perfil del usuario logueado en la sesión
+ * @returns {Promise<object>} Perfil de usuario o null si no está logueado
+ */
+export const getMyProfile = async () => {
+  await delay(300);
+  try {
+    const rawUser = localStorage.getItem('voy_user');
+    if (!rawUser) return null;
+    const user = JSON.parse(rawUser);
+    const username = user.nombre ? user.nombre.toLowerCase().replace(/\s+/g, '') : '';
+    return getProfileByUsername(username);
+  } catch (err) {
+    console.error("Error al obtener mi perfil en userService:", err);
+    return null;
+  }
+};

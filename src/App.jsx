@@ -12,6 +12,7 @@ const CheckoutPage         = lazy(() => import("./pages/checkout/CheckoutPage"))
 const CheckoutFormPage     = lazy(() => import("./pages/checkout/CheckoutFormPage"));
 const CheckoutPaymentPage  = lazy(() => import("./pages/checkout/CheckoutPaymentPage"));
 const PurchaseSuccessPage  = lazy(() => import("./pages/checkout/PurchaseSuccessPage"));
+const ProfilePage          = lazy(() => import("./pages/profile/ProfilePage"));
 
 /** Componente utilitario para resetear el scroll al principio al cambiar de ruta */
 function ScrollToTop() {
@@ -78,6 +79,7 @@ export default function App() {
             } />
             <Route path="/register"   element={<RegisterPage />} />
             <Route path="/login"      element={<ProtectedLoginRoute />} />
+            <Route path="/profile/:username" element={<ProfilePage />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
