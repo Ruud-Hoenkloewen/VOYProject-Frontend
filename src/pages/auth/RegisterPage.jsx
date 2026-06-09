@@ -47,7 +47,7 @@ export default function RegisterPage() {
     try {
       const data = await registerUser(form.name, form.email, form.password);
       login({ _id: data._id, nombre: data.nombre, email: data.email }, data.token);
-      navigate("/");
+      navigate("/onboarding");
     } catch (err) {
       const msg = err.response?.data?.mensaje || "Error al crear la cuenta. Intentá de nuevo.";
       setApiError(msg);
