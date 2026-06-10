@@ -20,16 +20,28 @@ export const unfollowUser = async (userId) => {
   return data;
 };
 
+/**
+ * PUT /api/users/me
+ * Actualiza el perfil del usuario autenticado.
+ */
 export const updateMyProfile = async (data) => {
   const { data: result } = await api.put('/users/me', data);
   return result;
 };
 
+/**
+ * GET /api/users/check-username?username=xxx
+ * Verifica si un username está disponible.
+ * Devuelve { available: true/false }
+ */
 export const checkUsername = async (username) => {
   const { data } = await api.get(`/users/check-username?username=${username}`);
   return data;
 };
 
+/**
+ * GRADIENTS y AVATAR_COLORS — constantes compartidas con el onboarding
+ */
 export const GRADIENTS = {
   g1: "linear-gradient(135deg, #C6F92B 0%, #A044FF 100%)",
   g2: "linear-gradient(135deg, #A044FF 0%, #FF2D78 100%)",

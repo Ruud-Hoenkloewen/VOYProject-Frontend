@@ -4,7 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 import { fetchEvents } from '../../services/eventService';
 import { getProfileByUsername, getMyProfile } from '../../services/userService';
 import { EventCard } from '../../design-system';
-import { TicketIcon, HeartIcon, FlameIcon, StarIcon, EditIcon, MapPinIcon } from '../../components/icons';
+import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon } from '../../components/icons';
+import FollowButton from '../../components/FollowButton/FollowButton';
 import styles from './ProfilePage.module.css';
 
 export default function ProfilePage() {
@@ -15,7 +16,6 @@ export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState('MI MOVIDA');
   const [recommendedEvents, setRecommendedEvents] = useState([]);
   
-  // Perfil público actual que estamos viendo
   const [profile, setProfile] = useState(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState(null);
@@ -35,11 +35,9 @@ export default function ProfilePage() {
       try {
         let data;
         if (isMyProfile) {
-          // Si estamos viendo nuestro perfil, intentamos traer /me para tener toda la info
           try {
             data = await getMyProfile();
           } catch (e) {
-            // Fallback si /me falla, intentar por username si lo tenemos
             if (username && username !== 'me') {
               data = await getProfileByUsername(username);
             } else {
@@ -47,7 +45,6 @@ export default function ProfilePage() {
             }
           }
         } else {
-          // Viendo el perfil de otra persona
           data = await getProfileByUsername(username);
         }
         setProfile(data);
@@ -65,7 +62,6 @@ export default function ProfilePage() {
   }, [username, isMyProfile]);
 
   useEffect(() => {
-    // Fetch some events for "PARA VOS" o similar
     fetchEvents()
       .then(events => {
         setRecommendedEvents(events.slice(0, 1));
@@ -90,16 +86,19 @@ export default function ProfilePage() {
     );
   }
 
-  // Parsear datos de forma segura
   const safeName = profile.nombre || profile.username || 'Usuario';
   const initial = safeName.charAt(0).toUpperCase();
   const displayUsername = profile.username ? `@${profile.username}` : `@${safeName.toLowerCase().replace(/\s/g, '')}`;
   const avatarColor = profile.avatarColor || 'var(--ds-color-accent-primary, #C6F92B)';
   const bannerGradient = profile.bannerGradiente || 'linear-gradient(90deg, #C6F92B 0%, #A044FF 100%)';
   
-  // Métricas
   const followersCount = profile.seguidores?.length || 0;
   const followingCount = profile.siguiendo?.length || 0;
+
+  // ¿El usuario logueado ya sigue a este perfil?
+  const isFollowing = profile.seguidores?.some(
+    (s) => s === user?._id || s._id === user?._id
+  ) ?? false;
 
   const handleLogout = () => {
     if (logout) {
@@ -111,7 +110,6 @@ export default function ProfilePage() {
   return (
     <div className={styles.pageRoot}>
       <div className={styles.headerContainer}>
-        {/* Header Opaco */}
         <div className={styles.navbarOpaque}>
           <Link to="/" className={styles.brandTextOnly}>
             VOY PROJECT
@@ -128,12 +126,10 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Banner con gradiente debajo del header */}
         <div className={styles.banner} style={{ background: bannerGradient }} />
       </div>
 
       <div className={styles.profileContent}>
-        {/* Header Profile Info */}
         <div className={styles.profileHeader}>
           <div className={styles.userInfoCol}>
             <div className={styles.avatarSquare} style={{ backgroundColor: avatarColor }}>
@@ -145,7 +141,6 @@ export default function ProfilePage() {
               <span className={styles.username}>{displayUsername}</span>
             </div>
 
-            {/* Ubicación y Bio */}
             {profile.ubicacion && (
               <div style={{ color: 'var(--ds-color-text-secondary)', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px' }}>
                 <MapPinIcon size={14} /> {profile.ubicacion}
@@ -158,7 +153,6 @@ export default function ProfilePage() {
               </p>
             )}
 
-            {/* Badges y Rol */}
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', marginTop: '8px' }}>
               <div className={styles.badgeFan}>
                 <TicketIcon size={14} /> {profile.rol ? profile.rol.toUpperCase() : 'FAN'}
@@ -170,7 +164,6 @@ export default function ProfilePage() {
               ))}
             </div>
 
-            {/* Stats (Seguidores / Redes) */}
             <div className={styles.userStatsRow}>
               <div style={{ display: 'flex', gap: '16px' }}>
                 <span style={{ fontSize: '14px' }}><strong className={styles.statNumber}>{followersCount}</strong> seguidores</span>
@@ -190,22 +183,26 @@ export default function ProfilePage() {
               )}
             </div>
             
-            {/* Action Button: Editar Perfil vs Seguir */}
+            {/* Action Button: Editar Perfil vs FollowButton */}
             <div style={{ marginTop: '16px' }}>
               {isMyProfile ? (
-                <button className={styles.editBtn} style={{ background: 'var(--ds-color-border)', border: 'none' }}>
+                <Link
+                  to="/profile/edit"
+                  className={styles.editBtn}
+                  style={{ background: 'var(--ds-color-border)', border: 'none', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
+                >
                   <EditIcon size={14} /> EDITAR PERFIL
-                </button>
+                </Link>
               ) : (
-                <button className={styles.editBtn} style={{ background: 'var(--ds-color-accent-primary)', color: '#000', border: 'none', fontWeight: 'bold' }}>
-                  <HeartIcon size={14} /> SEGUIR
-                </button>
+                <FollowButton
+                  userId={profile._id}
+                  isFollowing={isFollowing}
+                />
               )}
             </div>
 
           </div>
 
-          {/* Stats Boxes a la derecha (pueden ser dinámicas en el futuro) */}
           <div className={styles.statsBoxes}>
             <div className={styles.statBox}>
               <span className={`${styles.statBoxVal} ${styles.valSaved}`}>{profile.eventosGuardados?.length || 0}</span>
@@ -231,10 +228,8 @@ export default function ProfilePage() {
           ))}
         </div>
 
-        {/* Contenido de la Tab Activa */}
         {activeTab === 'MI MOVIDA' && (
           <>
-            {/* Eventos Guardados */}
             <div className={styles.sectionBlock}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>
@@ -244,7 +239,6 @@ export default function ProfilePage() {
                 <Link to="/events" className={styles.exploreLink}>Explorar &gt;</Link>
               </div>
 
-              {/* Empty state porque en Figma dice "0 EVENTOS GUARDADOS" */}
               <div className={styles.emptyState}>
                 <HeartIcon size={32} className={styles.emptyIcon} />
                 <span className={styles.emptyText}>Todavía no hay eventos guardados.</span>
@@ -252,7 +246,6 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Para Vos */}
             <div className={styles.sectionBlock}>
               <div className={styles.sectionHeader}>
                 <h2 className={styles.sectionTitle}>
