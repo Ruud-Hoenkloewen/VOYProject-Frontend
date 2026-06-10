@@ -1,0 +1,47 @@
+/* ─────────────────────────────────────────────────────
+   FollowButton.module.css
+───────────────────────────────────────────────────── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.4rem;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s, color 0.15s, opacity 0.15s;
+  white-space: nowrap;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Estado: NO seguís al usuario */
+.notFollowing {
+  background: #a3e635;
+  color: #000;
+  border: 1.5px solid #a3e635;
+}
+
+.notFollowing:hover:not(:disabled) {
+  background: #b3f745;
+  border-color: #b3f745;
+}
+
+/* Estado: SÍ seguís al usuario */
+.following {
+  background: transparent;
+  color: #a3e635;
+  border: 1.5px solid #a3e635;
+}
+
+.following:hover:not(:disabled) {
+  background: rgba(163, 230, 53, 0.08);
+}
