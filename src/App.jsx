@@ -80,6 +80,7 @@ export default function App() {
             <Route path="/profile/:username" element={<ProfilePage />} />
             <Route path="/register"   element={<RegisterPage />} />
             <Route path="/login"      element={<ProtectedLoginRoute />} />
+            <Route path="/profile/:username" element={<ProfilePage />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
