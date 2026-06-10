@@ -1,0 +1,449 @@
+/* ─────────────────────────────────────────────────────
+   OnboardingPage.module.css
+   Wizard de onboarding — paleta editorial underground
+   Negro #080808 · lime #00ff9f · blanco
+───────────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap');
+
+/* ── BASE ──────────────────────────────────────── */
+.page {
+  position: relative;
+  min-height: 100vh;
+  background: #080808;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+.grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+}
+
+/* ── NAV ───────────────────────────────────────── */
+.nav {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  padding: 1.2rem 2.5rem;
+  border-bottom: 1px solid #141414;
+}
+
+.navLogo {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.navLogoBox {
+  width: 28px;
+  height: 28px;
+  background: #00ff9f;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 900;
+  border-radius: 4px;
+  line-height: 1;
+}
+
+/* ── MAIN ──────────────────────────────────────── */
+.main {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1.5rem 4rem;
+}
+
+/* ── STEPPER ───────────────────────────────────── */
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 3rem;
+}
+
+.stepperItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.stepperIcon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  border: 1.5px solid #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+  background: transparent;
+  color: #666;
+}
+
+.stepperActive {
+  border-color: #a3e635;
+  background: #a3e635;
+  color: #000;
+  font-size: 1.1rem;
+}
+
+.stepperDone {
+  border-color: #a3e635;
+  background: transparent;
+  color: #a3e635;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.stepperPending {
+  border-color: #333;
+  color: #444;
+}
+
+.stepperLabel {
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #555;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.stepperLabelActive {
+  color: #ccc;
+}
+
+.stepperLine {
+  position: absolute;
+  top: 22px;
+  left: calc(100% + 0px);
+  width: 80px;
+  height: 1.5px;
+  background: #2a2a2a;
+  z-index: -1;
+}
+
+.stepperLineDone {
+  background: #a3e635;
+}
+
+/* ── STEP CONTAINER ───────────────────────────── */
+.stepContainer {
+  width: 100%;
+  max-width: 540px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ── AVATAR ───────────────────────────────────── */
+.avatar {
+  width: 64px;
+  height: 64px;
+  background: #a3e635;
+  color: #000;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin-bottom: 1rem;
+}
+
+/* ── TÍTULOS ──────────────────────────────────── */
+.stepTitle {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-align: center;
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+}
+
+.stepTitleMusica {
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-align: center;
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.musicEmoji {
+  font-size: 1.2rem;
+}
+
+.stepSubtitle {
+  font-size: 0.85rem;
+  color: #777;
+  margin: 0 0 2.2rem;
+  text-align: center;
+}
+
+/* ── FIELD GROUP ──────────────────────────────── */
+.fieldGroup {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.4rem;
+  position: relative;
+}
+
+.label {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: #888;
+  text-transform: uppercase;
+}
+
+.textarea {
+  width: 100%;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.9rem 1rem;
+  resize: none;
+  outline: none;
+  transition: border-color 0.15s;
+  box-sizing: border-box;
+}
+
+.textarea::placeholder { color: #444; }
+
+.textarea:focus {
+  border-color: #a3e635;
+}
+
+.charCount {
+  font-size: 0.65rem;
+  color: #555;
+  text-align: right;
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  transition: border-color 0.15s;
+}
+
+.inputWrapper:focus-within {
+  border-color: #a3e635;
+}
+
+.inputPrefix {
+  padding: 0 0 0 1rem;
+  color: #555;
+  font-size: 0.95rem;
+  user-select: none;
+}
+
+.input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  padding: 0.9rem 1rem 0.9rem 0.35rem;
+}
+
+.input::placeholder { color: #444; }
+
+/* ── SECCIÓN CHIPS ────────────────────────────── */
+.section {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.sectionLabel {
+  display: block;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.chipGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 4px;
+  color: #ccc;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  padding: 0.45rem 0.85rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.chip:hover {
+  border-color: #555;
+  color: #fff;
+}
+
+.chipActive {
+  border-color: #a3e635;
+  background: rgba(163, 230, 53, 0.12);
+  color: #fff;
+}
+
+.validationHint {
+  font-size: 0.75rem;
+  color: #ff3f48;
+  margin: 0.5rem 0 0;
+}
+
+/* ── BOTONES ──────────────────────────────────── */
+.btnPrimary {
+  width: 100%;
+  background: #a3e635;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  padding: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: background 0.15s;
+  margin-top: 0.25rem;
+}
+
+.btnPrimary:hover:not(:disabled) {
+  background: #b3f745;
+}
+
+.btnPrimary:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.btnSkip {
+  background: transparent;
+  border: none;
+  color: #555;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  cursor: pointer;
+  margin-top: 1rem;
+  padding: 0.3rem;
+  transition: color 0.15s;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.btnSkip:hover {
+  color: #888;
+}
+
+.btnRow {
+  width: 100%;
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.btnBack {
+  flex: 1;
+  background: transparent;
+  border: 1px solid #2a2a2a;
+  border-radius: 6px;
+  color: #ccc;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 1rem;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: border-color 0.15s;
+}
+
+.btnBack:hover {
+  border-color: #555;
+  color: #fff;
+}
+
+.btnRow .btnPrimary {
+  flex: 2;
+}
+
+/* ── SAVING ───────────────────────────────────── */
+.savingMsg {
+  color: #777;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-top: 4rem;
+}
+
+/* ── RESPONSIVE ───────────────────────────────── */
+@media (max-width: 600px) {
+  .stepperLine {
+    width: 48px;
+  }
+
+  .main {
+    padding: 2rem 1rem 3rem;
+  }
+
+  .stepTitle,
+  .stepTitleMusica {
+    font-size: 1.15rem;
+  }
+}

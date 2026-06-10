@@ -12,6 +12,7 @@ const CheckoutPage         = lazy(() => import("./pages/checkout/CheckoutPage"))
 const CheckoutFormPage     = lazy(() => import("./pages/checkout/CheckoutFormPage"));
 const CheckoutPaymentPage  = lazy(() => import("./pages/checkout/CheckoutPaymentPage"));
 const PurchaseSuccessPage  = lazy(() => import("./pages/checkout/PurchaseSuccessPage"));
+const OnboardingPage       = lazy(() => import("./pages/onboarding/OnboardingPage"));
 
 /** Componente utilitario para resetear el scroll al principio al cambiar de ruta */
 function ScrollToTop() {
@@ -50,6 +51,18 @@ function ProtectedRoute({ children }) {
 }
 
 /**
+ * Ruta de onboarding — solo accesible para usuarios autenticados
+ * que no hayan completado el onboarding todavía.
+ */
+function OnboardingRoute() {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  const done = localStorage.getItem("onboardingDone") === "true";
+  if (done) return <Navigate to="/" replace />;
+  return <OnboardingPage />;
+}
+
+/**
  * Cada página gestiona su propio header:
  * - LandingPage      → EditorialHeader con nav links
  * - EventsPage       → Navbar con buscador
@@ -80,6 +93,7 @@ export default function App() {
             } />
             <Route path="/register"   element={<RegisterPage />} />
             <Route path="/login"      element={<ProtectedLoginRoute />} />
+            <Route path="/onboarding" element={<OnboardingRoute />} />
           </Routes>
         </Suspense>
       </BrowserRouter>
