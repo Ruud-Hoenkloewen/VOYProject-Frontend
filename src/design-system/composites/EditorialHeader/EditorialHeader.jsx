@@ -30,7 +30,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         setHidden(false);
       } else if (delta > 6) {
         setHidden(true);
-        setMenuOpen(false); // cerrar menu al scrollear
+        setMenuOpen(false);
       } else if (delta < -6) {
         setHidden(false);
       }
@@ -42,7 +42,6 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Bloquear scroll del body cuando el menú está abierto
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };
@@ -91,7 +90,16 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         {/* CTA / Usuario — desktop */}
         {isAuthenticated ? (
           <div className={styles.userArea}>
-            <span className={styles.userName}>◆ {user?.nombre}</span>
+            <Link to={`/profile/${user?._id}`} className={styles.userWidget}>
+              <span className={styles.userAvatar}>
+                {user?.nombre?.charAt(0).toUpperCase()}
+              </span>
+              <div className={styles.userInfo}>
+                <span className={styles.userGreeting}>BUENAS TARDES</span>
+                <span className={styles.userNombre}>{user?.nombre?.toUpperCase()} ◆</span>
+              </div>
+              <span className={styles.userPerfil}>PERFIL &gt;</span>
+            </Link>
             <button className={styles.cta} onClick={handleLogout}>SALIR</button>
           </div>
         ) : (
