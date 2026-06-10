@@ -356,7 +356,7 @@ export default function OnboardingPage() {
     setSaving(true);
     try {
       await saveProfileData(form);
-      const result = await updateMyProfile(form.avatarColor, form.gradientKey);
+      const result = await updateMyProfile({ avatarColor: form.avatarColor, bannerGradiente: form.gradientKey });
       updateUser(result.user);
       localStorage.setItem("onboardingDone", "true");
       setShowWelcomeOverlay(true);

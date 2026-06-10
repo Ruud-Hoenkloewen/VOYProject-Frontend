@@ -2,11 +2,42 @@ import { useState, useEffect } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { fetchEvents } from '../../services/eventService';
-import { getProfileByUsername, getMyProfile } from '../../services/userService';
+import { getProfileByUsername, getMyProfile, GRADIENTS } from '../../services/userService';
 import { EventCard } from '../../design-system';
 import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon } from '../../components/icons';
 import FollowButton from '../../components/FollowButton/FollowButton';
 import styles from './ProfilePage.module.css';
+
+const InstagramSVG = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+  </svg>
+);
+
+const SpotifySVG = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="10"/>
+    <path d="M8 11.5c2.5-1.5 5.5-1.5 8 0"/>
+    <path d="M9 14c2-1 4-1 6 0"/>
+    <path d="M7 9c3-2 7-2 10 0"/>
+  </svg>
+);
+
+const YoutubeSVG = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 0 0-1.95 1.96A29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
+    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/>
+  </svg>
+);
+
+const LinkSVG = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+  </svg>
+);
 
 export default function ProfilePage() {
   const { user, isAuthenticated, logout } = useAuth();
@@ -90,7 +121,7 @@ export default function ProfilePage() {
   const initial = safeName.charAt(0).toUpperCase();
   const displayUsername = profile.username ? `@${profile.username}` : `@${safeName.toLowerCase().replace(/\s/g, '')}`;
   const avatarColor = profile.avatarColor || 'var(--ds-color-accent-primary, #C6F92B)';
-  const bannerGradient = profile.bannerGradiente || 'linear-gradient(90deg, #C6F92B 0%, #A044FF 100%)';
+  const bannerGradient = profile.bannerGradiente ? GRADIENTS[profile.bannerGradiente] : 'linear-gradient(90deg, #C6F92B 0%, #A044FF 100%)';
   
   const followersCount = profile.seguidores?.length || 0;
   const followingCount = profile.siguiendo?.length || 0;
@@ -170,17 +201,28 @@ export default function ProfilePage() {
                 <span style={{ fontSize: '14px' }}><strong className={styles.statNumber}>{followingCount}</strong> siguiendo</span>
               </div>
 
-              {profile.redesSociales?.instagram && (
-                <a 
-                  href={profile.redesSociales.instagram.startsWith('http') ? profile.redesSociales.instagram : `https://instagram.com/${profile.redesSociales.instagram.replace('@','')}`} 
-                  target="_blank" 
-                  rel="noreferrer"
-                  className={styles.socialBtn}
-                >
-                  <span style={{ fontSize: '14px' }}>&#64;</span>
-                  {profile.redesSociales.instagram.replace('@','')}
-                </a>
-              )}
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {profile.redesSociales?.instagram && (
+                  <a href={profile.redesSociales.instagram.startsWith('http') ? profile.redesSociales.instagram : `https://instagram.com/${profile.redesSociales.instagram.replace('@','')}`} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Instagram">
+                    <InstagramSVG />
+                  </a>
+                )}
+                {profile.redesSociales?.spotify && (
+                  <a href={profile.redesSociales.spotify} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Spotify">
+                    <SpotifySVG />
+                  </a>
+                )}
+                {profile.redesSociales?.youtube && (
+                  <a href={profile.redesSociales.youtube} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Youtube">
+                    <YoutubeSVG />
+                  </a>
+                )}
+                {profile.redesSociales?.web && (
+                  <a href={profile.redesSociales.web} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Web">
+                    <LinkSVG />
+                  </a>
+                )}
+              </div>
             </div>
             
             {/* Action Button: Editar Perfil vs FollowButton */}
