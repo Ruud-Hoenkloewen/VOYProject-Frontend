@@ -147,11 +147,28 @@ export default function ProfilePage() {
           </Link>
           
           <div className={styles.navActions}>
-            <Link to="/events" className={styles.navLink}>CARTELERA</Link>
-            
+            {isMyProfile && (
+              <Link
+                to="/profile/edit"
+                className={styles.editBtn}
+              >
+                <EditIcon size={14} /> EDITAR PERFIL
+              </Link>
+            )}
             {isAuthenticated && (
-              <button className={styles.logoutIconBtn} onClick={handleLogout} aria-label="Cerrar sesión">
-                <span style={{ fontSize: '20px' }}>&rarr;</span>
+              <button
+                className={styles.logoutBtn}
+                onClick={handleLogout}
+                aria-label="Cerrar sesión"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"
+                  aria-hidden="true">
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                CERRAR SESIÓN
               </button>
             )}
           </div>
@@ -227,15 +244,7 @@ export default function ProfilePage() {
             
             {/* Action Button: Editar Perfil vs FollowButton */}
             <div style={{ marginTop: '16px' }}>
-              {isMyProfile ? (
-                <Link
-                  to="/profile/edit"
-                  className={styles.editBtn}
-                  style={{ background: 'var(--ds-color-border)', border: 'none', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}
-                >
-                  <EditIcon size={14} /> EDITAR PERFIL
-                </Link>
-              ) : (
+              {!isMyProfile && (
                 <FollowButton
                   userId={profile._id}
                   isFollowing={isFollowing}

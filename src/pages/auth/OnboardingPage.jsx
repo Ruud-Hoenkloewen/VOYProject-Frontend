@@ -8,6 +8,14 @@ import { MapPinIcon } from "../../components/icons";
 import api from "../../services/api";
 import styles from "./OnboardingPage.module.css";
 
+const InstagramSVG = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
+    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
+  </svg>
+);
+
 // ── Datos ────────────────────────────────────────────────────────────
 const GENEROS = [
   "PUNK", "METAL", "HARDCORE", "GRUNGE", "ROCK", "INDIE",
@@ -63,6 +71,77 @@ function Stepper({ current }) {
   );
 }
 
+// ── Live Preview ────────────────────────────────────────────────────────
+function LivePreview({ data }) {
+  const { user } = useAuth();
+  const initials  = user?.nombre ? user.nombre.charAt(0).toUpperCase() : "U";
+  let userHandle = user?.nombre ? user.nombre.toLowerCase().replace(/\s+/g, "") : "usuario";
+  if (data?.instagram) {
+    userHandle = data.instagram.replace('@', '');
+  }
+  const userBio   = data.bio || user?.bio || "Sin bio todavía. Editá tu perfil para contarle algo a la comunidad.";
+
+  return (
+    <aside className={styles.previewSection}>
+      <div className={styles.previewSticky}>
+        <Typography variant="caption" className={styles.previewTitle}>VISTA PREVIA EN TIEMPO REAL</Typography>
+        <Card className={styles.miniProfile}>
+          <div
+            className={styles.miniBanner}
+            style={{ background: GRADIENTS[data.gradientKey] }}
+          />
+          <div className={styles.miniContent}>
+            <div
+              className={styles.miniAvatar}
+              style={{ backgroundColor: data.avatarColor }}
+            >
+              <span className={styles.miniAvatarText}>{initials}</span>
+            </div>
+            <div className={styles.miniDetails}>
+              <div className={styles.miniNameRow}>
+                <span className={styles.miniName}>{user?.nombre || "TU NOMBRE"}</span>
+                <span className={styles.miniBadge}>FAN</span>
+              </div>
+              <div className={styles.instagramPreviewBtn}>
+                <InstagramSVG />
+                <span>{userHandle}</span>
+              </div>
+              <p className={styles.miniBio}>{userBio}</p>
+              <div className={styles.miniLocation}>
+                <MapPinIcon size={12} className={styles.locationPin} />
+                <span>San Miguel de Tucumán, Argentina</span>
+              </div>
+              {data.generos.length > 0 && (
+                <div style={{ marginTop: '16px' }}>
+                  <span className={styles.appearanceLabel} style={{ marginBottom: '8px', display: 'block', fontSize: '10px', fontWeight: 800, color: 'var(--ds-color-editorial-subtle)' }}>GÉNEROS</span>
+                  <div className={styles.chipGrid}>
+                    {data.generos.map((g) => (
+                      <span key={g} className={`${styles.chip} ${styles.chipActiveGenre}`} style={{ cursor: 'default', fontSize: '0.65rem', padding: '3px 10px' }}>{g}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {data.vibes.length > 0 && (
+                <div style={{ marginTop: '12px' }}>
+                  <span className={styles.appearanceLabel} style={{ marginBottom: '8px', display: 'block', fontSize: '10px', fontWeight: 800, color: 'var(--ds-color-editorial-subtle)' }}>VIBES</span>
+                  <div className={styles.chipGrid}>
+                    {data.vibes.map((v) => (
+                      <span key={v} className={`${styles.chip} ${styles.chipActiveVibe}`} style={{ cursor: 'default', fontSize: '0.65rem', padding: '3px 10px' }}>{v}</span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </Card>
+        <p className={styles.previewCaption}>
+          * Podrás volver a cambiar estos colores y la portada en cualquier momento desde los ajustes de tu perfil.
+        </p>
+      </div>
+    </aside>
+  );
+}
+
 // ── Paso 1: Tu Perfil ─────────────────────────────────────────────────
 function StepPerfil({ data, onChange, onNext, onSkip }) {
   const { user } = useAuth();
@@ -70,44 +149,55 @@ function StepPerfil({ data, onChange, onNext, onSkip }) {
   const initial = nombre.charAt(0).toUpperCase();
 
   return (
-    <div className={styles.stepContainer}>
-      <div className={styles.avatar}>{initial}</div>
-      <h2 className={styles.stepTitle}>HOLA, {nombre.toUpperCase()}</h2>
-      <p className={styles.stepSubtitle}>Contanos un poco de vos.</p>
+    <div className={styles.gridContainer}>
+      <section className={styles.controlsSection}>
+        <div className={styles.controlsCard}>
+          <Typography variant="caption" className={styles.eyebrow}>PASO 1 — TU PERFIL</Typography>
+          <h1 className={styles.title}>HOLA, {nombre.toUpperCase()}</h1>
+          <p className={styles.subtitle}>Contanos un poco de vos.</p>
 
-      <div className={styles.fieldGroup}>
-        <label className={styles.label}>BIO</label>
-        <textarea
-          className={styles.textarea}
-          placeholder="Qué géneros te mueven, en qué shows te encontramos..."
-          maxLength={150}
-          value={data.bio}
-          onChange={(e) => onChange("bio", e.target.value)}
-          rows={4}
-        />
-        <span className={styles.charCount}>{data.bio.length}/150</span>
-      </div>
+          <div className={styles.divider} />
 
-      <div className={styles.fieldGroup}>
-        <label className={styles.label}>INSTAGRAM</label>
-        <div className={styles.inputWrapper}>
-          <span className={styles.inputPrefix}>@</span>
-          <input
-            type="text"
-            className={styles.input}
-            placeholder="tu_usuario"
-            value={data.instagram}
-            onChange={(e) => onChange("instagram", e.target.value)}
-          />
+          <div className={styles.fieldGroup}>
+            <Typography variant="label" className={styles.label}>BIO</Typography>
+            <textarea
+              className={styles.textarea}
+              placeholder="Qué géneros te mueven, en qué shows te encontramos..."
+              maxLength={150}
+              value={data.bio}
+              onChange={(e) => onChange("bio", e.target.value)}
+              rows={4}
+            />
+            <span className={styles.charCount}>{data.bio.length}/150</span>
+          </div>
+
+          <div className={styles.fieldGroup} style={{ marginTop: '16px' }}>
+            <Typography variant="label" className={styles.label}>INSTAGRAM</Typography>
+            <div className={styles.inputWrapper}>
+              <span className={styles.inputPrefix}>@</span>
+              <input
+                type="text"
+                className={styles.input}
+                placeholder="tu_usuario"
+                value={data.instagram}
+                onChange={(e) => onChange("instagram", e.target.value)}
+              />
+            </div>
+          </div>
+
+          <div className={styles.actionRow}>
+            <div className={styles.btnRow}>
+              <Button variant="primary" style={{ flex: 1 }} onClick={onNext} fullWidth>
+                SIGUIENTE →
+              </Button>
+            </div>
+            <button className={styles.btnSkip} onClick={onSkip}>
+              Saltar este paso
+            </button>
+          </div>
         </div>
-      </div>
-
-      <button className={styles.btnPrimary} onClick={onNext}>
-        SIGUIENTE →
-      </button>
-      <button className={styles.btnSkip} onClick={onSkip}>
-        Saltar
-      </button>
+      </section>
+      <LivePreview data={data} />
     </div>
   );
 }
@@ -131,60 +221,64 @@ function StepMusica({ data, onChange, onNext, onBack, onSkip }) {
   }
 
   return (
-    <div className={styles.stepContainer}>
-      <h2 className={styles.stepTitleMusica}>
-        <span className={styles.musicEmoji}>🎵</span> ¿QUÉ MÚSICA TE MUEVE?
-      </h2>
-      <p className={styles.stepSubtitle}>Elegí los géneros y vibes que van con vos.</p>
+    <div className={styles.gridContainer}>
+      <section className={styles.controlsSection}>
+        <div className={styles.controlsCard}>
+          <Typography variant="caption" className={styles.eyebrow}>PASO 2 — TU MÚSICA</Typography>
+          <h1 className={styles.title}>¿QUÉ MÚSICA TE MUEVE?</h1>
+          <p className={styles.subtitle}>Elegí los géneros y vibes que van con vos.</p>
 
-      <div className={styles.section}>
-        <span className={styles.sectionLabel}>GÉNEROS</span>
-        <div className={styles.chipGrid}>
-          {GENEROS.map((g) => (
-            <button
-              key={g}
-              className={`${styles.chip} ${data.generos.includes(g) ? styles.chipActive : ""}`}
-              onClick={() => toggleGenero(g)}
-              type="button"
-            >
-              {g}
+          <div className={styles.divider} />
+
+          <div className={styles.sectionField}>
+            <Typography variant="label" className={styles.sectionLabel}>GÉNEROS</Typography>
+            <div className={styles.chipGrid}>
+              {GENEROS.map((g) => (
+                <button
+                  key={g}
+                  className={`${styles.chip} ${data.generos.includes(g) ? styles.chipActiveGenre : ""}`}
+                  onClick={() => toggleGenero(g)}
+                  type="button"
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+            {data.generos.length === 0 && (
+              <p className={styles.validationHint}>Seleccioná al menos 1 género para continuar.</p>
+            )}
+          </div>
+
+          <div className={styles.sectionField}>
+            <Typography variant="label" className={styles.sectionLabel}>TU VIBE EN LOS SHOWS</Typography>
+            <div className={styles.chipGrid}>
+              {VIBES.map((v) => (
+                <button
+                  key={v.label}
+                  className={`${styles.chip} ${data.vibes.includes(v.label) ? styles.chipActiveVibe : ""}`}
+                  onClick={() => toggleVibe(v.label)}
+                  type="button"
+                >
+                  {v.emoji} {v.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className={styles.actionRow}>
+            <div className={styles.btnRow}>
+              <button className={styles.btnBack} onClick={onBack}>VOLVER</button>
+              <Button variant="primary" onClick={onNext} disabled={!canAdvance} fullWidth>
+                SIGUIENTE →
+              </Button>
+            </div>
+            <button className={styles.btnSkip} onClick={onSkip}>
+              Saltar este paso
             </button>
-          ))}
+          </div>
         </div>
-        {data.generos.length === 0 && (
-          <p className={styles.validationHint}>Seleccioná al menos 1 género para continuar.</p>
-        )}
-      </div>
-
-      <div className={styles.section}>
-        <span className={styles.sectionLabel}>TU VIBE EN LOS SHOWS</span>
-        <div className={styles.chipGrid}>
-          {VIBES.map((v) => (
-            <button
-              key={v.label}
-              className={`${styles.chip} ${data.vibes.includes(v.label) ? styles.chipActive : ""}`}
-              onClick={() => toggleVibe(v.label)}
-              type="button"
-            >
-              {v.emoji} {v.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className={styles.btnRow}>
-        <button className={styles.btnBack} onClick={onBack}>VOLVER</button>
-        <button
-          className={styles.btnPrimary}
-          onClick={onNext}
-          disabled={!canAdvance}
-        >
-          SIGUIENTE →
-        </button>
-      </div>
-      <button className={styles.btnSkip} onClick={onSkip}>
-        Saltar
-      </button>
+      </section>
+      <LivePreview data={data} />
     </div>
   );
 }
@@ -268,43 +362,7 @@ function StepEstilo({ data, onChange, onConfirm, onBack, submitting }) {
         </div>
       </section>
 
-      {/* COLUMNA DERECHA — LIVE PREVIEW */}
-      <aside className={styles.previewSection}>
-        <div className={styles.previewSticky}>
-          <Typography variant="caption" className={styles.previewTitle}>VISTA PREVIA EN TIEMPO REAL</Typography>
-
-          <Card className={styles.miniProfile}>
-            <div
-              className={styles.miniBanner}
-              style={{ background: GRADIENTS[data.gradientKey] }}
-            />
-            <div className={styles.miniContent}>
-              <div
-                className={styles.miniAvatar}
-                style={{ backgroundColor: data.avatarColor }}
-              >
-                <span className={styles.miniAvatarText}>{initials}</span>
-              </div>
-              <div className={styles.miniDetails}>
-                <div className={styles.miniNameRow}>
-                  <span className={styles.miniName}>{user?.nombre || "TU NOMBRE"}</span>
-                  <span className={styles.miniBadge}>FAN</span>
-                </div>
-                <span className={styles.miniHandle}>@{userHandle}</span>
-                <p className={styles.miniBio}>{userBio}</p>
-                <div className={styles.miniLocation}>
-                  <MapPinIcon size={12} className={styles.locationPin} />
-                  <span>San Miguel de Tucumán, Argentina</span>
-                </div>
-              </div>
-            </div>
-          </Card>
-
-          <p className={styles.previewCaption}>
-            * Podrás volver a cambiar estos colores y la portada en cualquier momento desde los ajustes de tu perfil.
-          </p>
-        </div>
-      </aside>
+      <LivePreview data={data} />
 
     </div>
   );
@@ -340,7 +398,7 @@ export default function OnboardingPage() {
       const payload = {
         bio: data.bio,
         redesSociales: { instagram: data.instagram },
-        generosPreferidos: data.generos,
+        generosMusicales: data.generos,
         vibeEnShows: data.vibes,
       };
       await api.put("/users/me", payload);
@@ -357,12 +415,12 @@ export default function OnboardingPage() {
     try {
       await saveProfileData(form);
       const result = await updateMyProfile({ avatarColor: form.avatarColor, bannerGradiente: form.gradientKey });
-      updateUser(result.user);
+      updateUser(result.user || result);
       localStorage.setItem("onboardingDone", "true");
       setShowWelcomeOverlay(true);
     } catch (err) {
-      console.error("[Onboarding] Error al guardar estilo:", err);
-      alert("Hubo un problema al guardar tus preferencias. Por favor intentá de nuevo.");
+      console.error("[Onboarding] Error al guardar estilo:", err.response?.data || err);
+      alert(`Hubo un problema al guardar tus preferencias: ${err.response?.data?.error || err.message}`);
     } finally {
       setSaving(false);
     }
@@ -392,22 +450,11 @@ export default function OnboardingPage() {
           <LogoVoy />
         </div>
         <div className={styles.stepsIndicator}>
-          <span className={step > 0 ? styles.stepDone : styles.stepActive}>
-            {step > 0 ? "Perfil ✓" : "Perfil ●"}
-          </span>
-          <span className={styles.stepDivider}>—</span>
-          <span className={step > 1 ? styles.stepDone : step === 1 ? styles.stepActive : styles.stepPending}>
-            {step > 1 ? "Música ✓" : "Música"}
-          </span>
-          <span className={styles.stepDivider}>—</span>
-          <span className={step === 2 ? styles.stepActive : styles.stepPending}>
-            Tu Estilo {step === 2 ? "●" : ""}
-          </span>
+          Estás actualmente: <span className={styles.stepActive}>creando tu perfil.</span>
         </div>
       </nav>
 
       <main className={styles.main}>
-        <Stepper current={step} />
 
         {saving ? (
           <div className={styles.savingMsg}>Guardando tu perfil...</div>
@@ -440,27 +487,39 @@ export default function OnboardingPage() {
       {/* OVERLAY DE BIENVENIDA */}
       {showWelcomeOverlay && (
         <div className={styles.overlay} role="dialog" aria-modal="true">
-          <div className={styles.welcomeCard}>
+          <div className={styles.welcomeCardDark}>
+            <div className={styles.topGradientBar} />
             <div className={styles.overlayGrain} />
-            <div className={styles.welcomeHeader}>
-              <div className={styles.lightningIcon} aria-hidden="true">⚡</div>
-              <h2 className={styles.welcomeTitle}>¡BIENVENIDO/A! {user?.nombre?.toUpperCase()}</h2>
+            
+            <div className={styles.lightningBox} style={{ backgroundColor: form.avatarColor, borderColor: form.avatarColor }}>
+              <div className={styles.lightningIcon} aria-hidden="true" style={{ animation: 'none', color: '#111', textShadow: 'none', fontSize: '2.5rem', fontWeight: 900 }}>
+                {user?.nombre ? user.nombre.charAt(0).toUpperCase() : "U"}
+              </div>
             </div>
-            <p className={styles.welcomeDescription}>
-              Tu cuenta ha sido creada e inicializada con éxito. Ahora tu perfil tiene su estilo propio y estás listo para sumergirte en la escena underground tucumana.
+
+            <p className={styles.welcomeEyebrow} style={{ letterSpacing: '0.15em' }}>¡BIENVENIDO/A!</p>
+            <h1 className={styles.welcomeGiantNumber} style={{ fontSize: 'clamp(2rem, 6vw, 4rem)', wordBreak: 'break-word', padding: '0 10px' }}>
+              {user?.nombre ? user.nombre.split(' ')[0].toUpperCase() : "USUARIO"}
+            </h1>
+            
+            <p className={styles.welcomeDescriptionDark}>
+              Tu perfil está listo. Acá vas a poder personalizar todo, seguir artistas y llevar el registro de tus shows.
             </p>
-            <div className={styles.welcomeActions}>
+
+            <div className={styles.welcomeActionsRow}>
               <Button
-                variant="primary"
+                variant="ghost"
                 onClick={() => navigate("/events")}
-                className={styles.welcomeBtn}
+                className={`${styles.welcomeBtn} ${styles.btnExplorar}`}
+                style={{ flex: 1 }}
               >
                 EXPLORAR EVENTOS
               </Button>
               <Button
-                variant="secondary"
-                onClick={() => navigate(`/profile/${userHandle}`)}
-                className={styles.welcomeBtn}
+                variant="ghost"
+                onClick={() => navigate(`/profile/me`)}
+                className={`${styles.welcomeBtn} ${styles.btnPerfil}`}
+                style={{ flex: 1 }}
               >
                 VER MI PERFIL
               </Button>

@@ -40,6 +40,33 @@ export default function CheckoutPaymentPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
+  // Campos del mock de tarjeta (solo validación visual — el pago real va a MP)
+  const [cardFields, setCardFields] = useState({ titular: '', numero: '', vencimiento: '', cvv: '' });
+  const [cardErrors, setCardErrors] = useState({});
+
+  function handleCardField(field, value) {
+    setCardFields((prev) => ({ ...prev, [field]: value }));
+    if (cardErrors[field]) setCardErrors((prev) => ({ ...prev, [field]: '' }));
+  }
+
+  function validateCard() {
+    const errs = {};
+    if (!cardFields.titular.trim())      errs.titular     = 'Requerido';
+    if (cardFields.numero.replace(/\s/g, '').length < 13) errs.numero = 'Número inválido';
+    if (!/^\d{2}\/\d{2}$/.test(cardFields.vencimiento.trim())) errs.vencimiento = 'Formato MM/AA';
+    if (cardFields.cvv.length < 3)       errs.cvv         = 'Requerido';
+    setCardErrors(errs);
+    return Object.keys(errs).length === 0;
+  }
+
+  // ¿El form de tarjeta está completo? (para controlar el botón)
+  const isCardComplete =
+    paymentMethod !== 'Tarjeta de crédito / débito' ||
+    (cardFields.titular.trim() &&
+     cardFields.numero.replace(/\s/g, '').length >= 13 &&
+     /^\d{2}\/\d{2}$/.test(cardFields.vencimiento.trim()) &&
+     cardFields.cvv.length >= 3);
+
   // Carga el evento si llegamos por navegación directa
   useEffect(() => {
     if (!eventData && id) {
@@ -74,6 +101,7 @@ export default function CheckoutPaymentPage() {
   async function handleConfirmar(e) {
     e.preventDefault();
     if (!paymentMethod) return;
+    if (paymentMethod === 'Tarjeta de crédito / débito' && !validateCard()) return;
 
     setIsSubmitting(true);
     setErrorMsg('');
@@ -192,20 +220,65 @@ export default function CheckoutPaymentPage() {
               <div className={styles.cardMockGrid}>
                 <div className={styles.cardMockField}>
                   <label className={styles.cardMockLabel}>NOMBRE DEL TITULAR</label>
-                  <input type="text" className={styles.cardMockInput} placeholder="Tal como figura en la tarjeta" />
+                  <input
+                    type="text"
+                    className={`${styles.cardMockInput} ${cardErrors.titular ? styles.cardMockInputError : ''}`}
+                    placeholder="Tal como figura en la tarjeta"
+                    value={cardFields.titular}
+                    onChange={(e) => handleCardField('titular', e.target.value)}
+                    autoComplete="cc-name"
+                  />
+                  {cardErrors.titular && <span className={styles.cardFieldError}>{cardErrors.titular}</span>}
                 </div>
                 <div className={styles.cardMockField}>
                   <label className={styles.cardMockLabel}>NÚMERO DE TARJETA</label>
-                  <input type="text" className={styles.cardMockInput} placeholder="1234 5678 9012 3456" />
+                  <input
+                    type="text"
+                    className={`${styles.cardMockInput} ${cardErrors.numero ? styles.cardMockInputError : ''}`}
+                    placeholder="1234 5678 9012 3456"
+                    maxLength={19}
+                    value={cardFields.numero}
+                    onChange={(e) => {
+                      // Formato automático con espacios cada 4 dígitos
+                      const raw = e.target.value.replace(/\D/g, '');
+                      const formatted = raw.match(/.{1,4}/g)?.join(' ') ?? raw;
+                      handleCardField('numero', formatted);
+                    }}
+                    autoComplete="cc-number"
+                  />
+                  {cardErrors.numero && <span className={styles.cardFieldError}>{cardErrors.numero}</span>}
                 </div>
                 <div className={styles.cardMockFieldHalf}>
                   <div className={styles.cardMockField}>
                     <label className={styles.cardMockLabel}>VENCIMIENTO</label>
-                    <input type="text" className={styles.cardMockInput} placeholder="MM / AA" />
+                    <input
+                      type="text"
+                      className={`${styles.cardMockInput} ${cardErrors.vencimiento ? styles.cardMockInputError : ''}`}
+                      placeholder="MM/AA"
+                      maxLength={5}
+                      value={cardFields.vencimiento}
+                      onChange={(e) => {
+                        // Formato automático MM/AA
+                        const raw = e.target.value.replace(/\D/g, '');
+                        const formatted = raw.length > 2 ? `${raw.slice(0,2)}/${raw.slice(2,4)}` : raw;
+                        handleCardField('vencimiento', formatted);
+                      }}
+                      autoComplete="cc-exp"
+                    />
+                    {cardErrors.vencimiento && <span className={styles.cardFieldError}>{cardErrors.vencimiento}</span>}
                   </div>
                   <div className={styles.cardMockField}>
                     <label className={styles.cardMockLabel}>CVV</label>
-                    <input type="text" className={styles.cardMockInput} placeholder="123" />
+                    <input
+                      type="text"
+                      className={`${styles.cardMockInput} ${cardErrors.cvv ? styles.cardMockInputError : ''}`}
+                      placeholder="123"
+                      maxLength={4}
+                      value={cardFields.cvv}
+                      onChange={(e) => handleCardField('cvv', e.target.value.replace(/\D/g, ''))}
+                      autoComplete="cc-csc"
+                    />
+                    {cardErrors.cvv && <span className={styles.cardFieldError}>{cardErrors.cvv}</span>}
                   </div>
                 </div>
               </div>
@@ -238,7 +311,7 @@ export default function CheckoutPaymentPage() {
             <button
               type="submit"
               className={`${styles.ctaBtn} ${styles.confirmBtnViolet}`}
-              disabled={!paymentMethod || isSubmitting}
+              disabled={!paymentMethod || !isCardComplete || isSubmitting}
             >
               {isSubmitting ? 'PROCESANDO...' : 'CONFIRMAR COMPRA ✓'}
             </button>

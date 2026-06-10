@@ -40,7 +40,8 @@
   padding: 24px 40px;
   border-bottom: 1px solid var(--ds-color-editorial-border);
   background: var(--ds-color-brand-canvas);
-  position: relative;
+  position: sticky;
+  top: 0;
   z-index: 20;
 }
 
@@ -346,7 +347,13 @@
 
 .chip:hover { border-color: #555; color: #fff; }
 
-.chipActive {
+.chipActiveGenre {
+  border-color: #a044ff;
+  background: rgba(160, 68, 255, 0.12);
+  color: #fff;
+}
+
+.chipActiveVibe {
   border-color: #a3e635;
   background: rgba(163, 230, 53, 0.12);
   color: #fff;
@@ -391,6 +398,7 @@
   transition: color 0.15s;
   text-decoration: underline;
   text-underline-offset: 3px;
+  align-self: center;
 }
 
 .btnSkip:hover { color: #888; }
@@ -628,7 +636,7 @@
 }
 
 .miniBadge {
-  font-family: var(--ds-font-family-mono);
+  font-family: var(--ds-font-family-base);
   font-size: 0.55rem;
   font-weight: var(--ds-font-weight-bold);
   border: 1px solid var(--ds-color-brand-lime);
@@ -637,16 +645,24 @@
   border-radius: 1px;
 }
 
-.miniHandle {
-  font-family: var(--ds-font-family-mono);
+.instagramPreviewBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--ds-color-editorial-border-mid);
+  border-radius: 4px;
+  padding: 4px 8px;
+  margin-top: 6px;
+  width: fit-content;
+  font-family: var(--ds-font-family-base);
   font-size: 0.75rem;
-  color: var(--ds-color-brand-lime);
+  color: var(--ds-color-neutral-900);
 }
 
 .miniBio {
   font-size: 0.8rem;
   color: var(--ds-color-neutral-700);
-  font-style: italic;
   margin: 6px 0;
   line-height: var(--ds-line-height-normal);
 }
@@ -665,7 +681,6 @@
 .previewCaption {
   font-size: 0.75rem;
   color: var(--ds-color-neutral-500);
-  font-style: italic;
   line-height: var(--ds-line-height-normal);
   margin: 0;
 }
@@ -684,20 +699,19 @@
   animation: overlayFadeIn 0.3s var(--ds-motion-ease-out);
 }
 
-.welcomeCard {
-  max-width: 500px;
+.welcomeCardDark {
+  max-width: 540px;
   width: 100%;
-  background-color: var(--ds-color-neutral-50);
-  border: 1px solid var(--ds-color-brand-lime);
+  background-color: var(--ds-color-neutral-100);
   padding: 48px 40px;
-  border-radius: 2px;
+  border-radius: 4px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 20px;
   position: relative;
-  box-shadow: var(--ds-glow-primary);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
   animation: cardSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
@@ -710,51 +724,92 @@
   pointer-events: none;
 }
 
-.welcomeHeader {
+.topGradientBar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--ds-color-brand-lime), var(--ds-color-brand-fuchsia), var(--ds-color-brand-lime));
+}
+
+.lightningBox {
+  width: 64px;
+  height: 64px;
+  border: 1px solid var(--ds-color-brand-lime);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 12px;
+  justify-content: center;
+  margin-bottom: 8px;
 }
 
 .lightningIcon {
-  font-size: 3.5rem;
+  font-size: 2rem;
   color: var(--ds-color-brand-lime);
   text-shadow: var(--ds-glow-primary);
   animation: lightningPulse 2s infinite ease-in-out;
+}
+
+.welcomeEyebrow {
+  color: var(--ds-color-brand-fuchsia);
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.welcomeGiantNumber {
+  font-family: var(--ds-font-family-display);
+  font-size: 4rem;
+  font-weight: 900;
+  color: var(--ds-color-neutral-900);
+  margin: 0;
   line-height: 1;
 }
 
-.welcomeTitle {
-  font-family: var(--ds-font-family-display);
-  font-size: 1.85rem;
-  font-weight: var(--ds-font-weight-black);
-  color: var(--ds-color-neutral-900);
-  letter-spacing: var(--ds-tracking-wide);
-  margin: 0;
-  text-transform: uppercase;
-  line-height: var(--ds-line-height-tight);
-}
-
-.welcomeDescription {
+.welcomeDescriptionDark {
   font-size: 0.95rem;
   color: var(--ds-color-neutral-700);
   line-height: var(--ds-line-height-relaxed);
   margin: 0;
+  max-width: 85%;
 }
 
-.welcomeActions {
+.welcomeActionsRow {
   display: flex;
-  flex-direction: column;
-  gap: 12px;
+  flex-direction: row;
+  gap: 16px;
   width: 100%;
+  margin-top: 16px;
 }
 
 .welcomeBtn {
   font-family: var(--ds-font-family-display);
   font-weight: var(--ds-font-weight-bold);
-  font-size: 0.85rem;
+  font-size: 0.95rem !important;
   letter-spacing: var(--ds-tracking-wider);
+  padding: 18px 0 !important;
+}
+
+.btnExplorar {
+  background: var(--ds-color-neutral-200) !important;
+  color: var(--ds-color-neutral-700) !important;
+  border: 1px solid var(--ds-color-editorial-border-mid) !important;
+}
+.btnExplorar:hover {
+  background: var(--ds-color-neutral-300) !important;
+  color: #fff !important;
+}
+
+.btnPerfil {
+  background: var(--ds-color-brand-lime) !important;
+  color: #000 !important;
+  border: none !important;
+}
+.btnPerfil:hover {
+  background: #00cc7f !important;
 }
 
 /* ── ANIMACIONES ── */

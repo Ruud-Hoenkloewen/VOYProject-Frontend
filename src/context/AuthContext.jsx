@@ -50,9 +50,24 @@ export function AuthProvider({ children }) {
    * Actualiza los datos del usuario logueado en el estado y localStorage.
    */
   const updateUser = useCallback((newUserData) => {
+    if (!newUserData) return;
     localStorage.setItem(USER_KEY, JSON.stringify(newUserData));
     setUser(newUserData);
   }, []);
+
+  /** Si hay token pero no hay usuario (ej. bug anterior o storage parcial), recuperarlo */
+  useEffect(() => {
+    if (token && !user) {
+      import('../services/userService').then(({ getMyProfile }) => {
+        getMyProfile().then(data => {
+          updateUser(data);
+        }).catch(err => {
+          console.error("Error recuperando usuario:", err);
+          logout();
+        });
+      });
+    }
+  }, [token, user, updateUser, logout]);
 
   const isAuthenticated = Boolean(token);
 

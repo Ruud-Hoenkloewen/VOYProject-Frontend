@@ -5,7 +5,6 @@
   font-weight: var(--ds-font-weight-bold);
   letter-spacing: 0.02em;
   cursor: pointer;
-  transform: skewX(-15deg);
   transition: background var(--ds-motion-base) var(--ds-easing-standard),
     color var(--ds-motion-base) var(--ds-easing-standard),
     border-color var(--ds-motion-base) var(--ds-easing-standard),
@@ -14,7 +13,6 @@
 
 .inner {
   display: inline-block;
-  transform: skewX(15deg);
 }
 
 .button:focus-visible {
@@ -23,7 +21,7 @@
 }
 
 .button:active {
-  transform: skewX(-15deg) translateY(1px);
+  transform: translateY(1px);
 }
 
 .sm {
