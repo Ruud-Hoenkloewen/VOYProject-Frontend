@@ -15,3 +15,17 @@ export const createOrder = async (orderData) => {
     throw error;
   }
 };
+
+/**
+ * createPaymentPreference - crea una preferencia de pago en Mercado Pago
+ * POST /api/payments/create-preference
+ */
+export const createPaymentPreference = async (paymentData) => {
+  try {
+    const { data } = await api.post("/payments/create-preference", paymentData);
+    return data;
+  } catch (error) {
+    console.error("Error creating payment preference:", error);
+    throw error;
+  }
+};

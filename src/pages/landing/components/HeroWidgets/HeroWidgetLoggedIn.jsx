@@ -25,7 +25,7 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
               </span>
             </div>
           </div>
-          <Link to="/profile" className={styles.hwProfileLink}>PERFIL &gt;</Link>
+          <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}`} className={styles.hwProfileLink}>PERFIL &gt;</Link>
         </div>
 
         {/* Stats Row */}
@@ -48,7 +48,7 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
         <div className={styles.hwSection}>
           <div className={styles.hwSectionHeader}>
             <h3 className={styles.hwSectionTitle}>MIS ENTRADAS</h3>
-            <Link to="/profile/tickets" className={styles.hwSectionLink}>VER BILLETERA</Link>
+            <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}`} className={styles.hwSectionLink}>VER BILLETERA</Link>
           </div>
           <div className={styles.hwTicketEmpty}>
             <span className={styles.hwTicketEmptyIcon}><TicketIcon /></span>
@@ -60,7 +60,7 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
         <div className={styles.hwSection}>
           <div className={styles.hwSectionHeader}>
             <h3 className={styles.hwSectionTitle}>COMUNIDAD</h3>
-            <Link to="/profile/following" className={styles.hwSectionLink}>VER TODOS</Link>
+            <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}`} className={styles.hwSectionLink}>VER TODOS</Link>
           </div>
           <div className={styles.hwCommunity}>
             <div className={styles.hwAvatarGroup}>

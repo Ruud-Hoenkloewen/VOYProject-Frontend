@@ -1,7 +1,7 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchEventById } from '../../services/eventService';
-import { createOrder } from '../../services/orderService';
+import { createOrder, createPaymentPreference } from '../../services/orderService';
 import CheckoutLayout from '../../components/checkout/CheckoutLayout';
 import styles from './CheckoutPaymentPage.module.css';
 
@@ -91,6 +91,19 @@ export default function CheckoutPaymentPage() {
     };
 
     try {
+      if (paymentMethod === 'Tarjeta de crédito / débito') {
+        const mpPayload = {
+          eventId: eventData?.id || eventData?._id, // Aseguramos usar el ID correcto
+          cantidad,
+          datosComprador: compradorData,
+        };
+        const mpResponse = await createPaymentPreference(mpPayload);
+        if (mpResponse && mpResponse.initPoint) {
+          window.location.href = mpResponse.initPoint;
+          return; // Detenemos la ejecución aquí porque el navegador va a redirigir a MP
+        }
+      }
+
       const response = await createOrder(payload);
       const orderId = response?.orderId || response?.order?._id || `VOY-${Math.floor(100000 + Math.random() * 900000)}`;
 
@@ -105,7 +118,7 @@ export default function CheckoutPaymentPage() {
         },
       });
     } catch (err) {
-      console.warn('[CheckoutPaymentPage] Error creando orden, procediendo con mock para pruebas frontend:', err);
+      console.warn('[CheckoutPaymentPage] Error creando orden, procediendo con mock para pruebas frontend:', err.response?.data || err.message || err);
       // Fallback para desarrollo frontend si el backend aún no está listo
       const mockOrderId = `VOY-${Math.floor(100000 + Math.random() * 900000)}`;
       navigate('/compra/confirmacion', {

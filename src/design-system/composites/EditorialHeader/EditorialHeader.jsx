@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import LogoVoy from "../../../components/LogoVoy/LogoVoy";
+import UserAvatar from "../../../components/UserAvatar/UserAvatar";
 import styles from "./EditorialHeader.module.css";
 
 /**
@@ -91,8 +92,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         {/* CTA / Usuario — desktop */}
         {isAuthenticated ? (
           <div className={styles.userArea}>
-            <span className={styles.userName}>◆ {user?.nombre}</span>
-            <button className={styles.cta} onClick={handleLogout}>SALIR</button>
+            <UserAvatar />
           </div>
         ) : (
           <Link to={ctaTo} className={`${styles.cta} ${styles.ctaDesktop}`}>
