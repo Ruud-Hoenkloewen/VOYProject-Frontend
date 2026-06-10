@@ -54,7 +54,7 @@ export default function DesignSystemPreview() {
       <Stack gap="lg" className={styles.page}>
         <section className={styles.section}>
           <Typography variant="display">Design System Preview</Typography>
-          <Typography variant="caption">Undertuc Ticketing - documentacion visual unificada</Typography>
+          <Typography variant="caption">VOY Project — Documentación Visual Unificada</Typography>
         </section>
 
         <section className={styles.section}>

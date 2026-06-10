@@ -1,0 +1,79 @@
+.logoContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.logoContainer:hover {
+  opacity: 0.85;
+}
+
+.logoContainer:active {
+  transform: scale(0.97);
+}
+
+.ticketMark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 26px;
+  padding: 0 10px;
+  background-color: var(--ds-color-accent-secondary);
+  color: var(--ds-color-bg-canvas);
+  
+  /* Ticket cutout effect using CSS masks */
+  mask-image: radial-gradient(circle at 0 50%, transparent 4px, black 4.5px),
+              radial-gradient(circle at 100% 50%, transparent 4px, black 4.5px);
+  mask-size: 51% 100%;
+  mask-repeat: no-repeat;
+  mask-position: left, right;
+  -webkit-mask-image: radial-gradient(circle at 0 50%, transparent 4px, black 4.5px),
+                      radial-gradient(circle at 100% 50%, transparent 4px, black 4.5px);
+  -webkit-mask-size: 51% 100%;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: left, right;
+  
+  /* Inner dashed line for stub */
+  border-right: 1.5px dashed rgba(10, 11, 16, 0.3);
+}
+
+.ticketLetter {
+  font-family: var(--ds-font-family-display);
+  font-weight: 900;
+  font-size: 14px;
+  letter-spacing: 1px;
+}
+
+.ticketDash {
+  width: 1.5px;
+  height: 14px;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(10, 11, 16, 0.5),
+    rgba(10, 11, 16, 0.5) 2px,
+    transparent 2px,
+    transparent 4px
+  );
+  margin: 0 4px;
+}
+
+.logoText {
+  display: flex;
+  align-items: baseline;
+}
+
+.logoProject {
+  font-family: var(--ds-font-family-mono);
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--ds-color-text-primary);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.logoContainer:hover .logoProject {
+  color: var(--ds-color-accent-secondary);
+}

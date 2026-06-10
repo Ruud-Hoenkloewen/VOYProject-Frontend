@@ -72,14 +72,14 @@
 }
 
 .select {
-  background: var(--ds-color-bg-editorial-surface, #0f0f0f);
-  border: 1px solid var(--ds-color-border-editorial-mid, #2a2a2a);
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-editorial-mid);
   color: var(--ds-color-text-primary);
   font-size: 0.9rem;
   padding: 0.8rem 1rem;
   padding-right: 2.5rem;
   outline: none;
-  font-family: inherit;
+  font-family: var(--ds-font-family-base);
   transition: border-color 0.2s, background-color 0.2s;
   width: 100%;
   box-sizing: border-box;
@@ -91,16 +91,16 @@
 
 .select:focus {
   border-color: var(--ds-color-text-secondary);
-  background: #121212;
+  background: var(--ds-color-bg-surface-muted);
 }
 
 .selectPlaceholder {
-  color: var(--ds-color-text-editorial-muted, #666666);
+  color: var(--ds-color-text-editorial-muted);
 }
 
 .select option {
-  background: #0f0f0f;
-  color: #fff;
+  background: var(--ds-color-bg-surface);
+  color: var(--ds-color-text-primary);
   padding: 10px;
 }
 
@@ -110,6 +110,105 @@
   font-size: 0.6rem;
   color: var(--ds-color-text-secondary);
   pointer-events: none;
+}
+
+/* Mock UI de Tarjeta / QR */
+.cardMockBox {
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  background: var(--ds-color-bg-surface);
+  padding: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.cardMockHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+  color: var(--ds-color-text-primary);
+}
+
+.cardMockIcon {
+  color: var(--ds-color-magenta-400);
+}
+
+.cardMockTitle {
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+}
+
+.cardMockGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardMockField {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.cardMockFieldHalf {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.cardMockLabel {
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+  color: var(--ds-color-text-editorial-muted);
+  text-transform: uppercase;
+}
+
+.cardMockInput {
+  background: transparent;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  padding: 0.8rem 1rem;
+  color: var(--ds-color-text-primary);
+  font-family: var(--ds-font-family-base);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.cardMockInput::placeholder {
+  color: var(--ds-color-text-editorial-muted);
+}
+
+.cardMockInput:focus {
+  border-color: var(--ds-color-text-editorial-subtle);
+}
+
+/* QR Placeholder */
+.qrSubtitle {
+  font-size: 0.85rem;
+  color: var(--ds-color-text-editorial-subtle);
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+
+.qrPlaceholderBox {
+  width: 200px;
+  height: 200px;
+  border: 1px dashed var(--ds-color-border-editorial-mid);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--ds-color-text-editorial-muted);
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.75rem;
+}
+
+.qrPlaceholderIcon {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--ds-color-text-editorial-muted);
+  border-radius: 4px;
 }
 
 /* Botonera de acciones */
@@ -130,7 +229,7 @@
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--ds-font-family-base);
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   display: flex;
   align-items: center;
@@ -150,14 +249,14 @@
 
 .ctaBtn {
   padding: 1rem;
-  color: #000;
+  color: var(--ds-color-neutral-0);
   border: none;
   font-size: 0.85rem;
   font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   cursor: pointer;
-  font-family: inherit;
+  font-family: var(--ds-font-family-base);
   transition: background-color 0.2s, opacity 0.2s;
   display: flex;
   align-items: center;
@@ -166,16 +265,18 @@
 
 /* Botón Violeta para la acción irreversible */
 .confirmBtnViolet {
-  background-color: #8b5cf6; /* Violeta/Púrpura */
-  color: #ffffff;
+  background-color: var(--ds-color-magenta-400);
+  color: var(--ds-color-text-primary);
 }
 
 .confirmBtnViolet:hover:not(:disabled) {
-  background-color: #a78bfa;
+  background-color: var(--ds-color-magenta-400);
+  opacity: 0.9;
 }
 
 .confirmBtnViolet:active:not(:disabled) {
-  background-color: #7c3aed;
+  background-color: var(--ds-color-magenta-400);
+  opacity: 0.8;
 }
 
 .ctaBtn:disabled {
@@ -187,7 +288,7 @@
 .apiError {
   background: rgba(255, 68, 68, 0.08);
   border: 1px solid rgba(255, 68, 68, 0.3);
-  color: #ff6666;
+  color: var(--ds-color-red-400);
   font-size: 0.78rem;
   font-weight: 600;
   padding: 0.7rem 1rem;

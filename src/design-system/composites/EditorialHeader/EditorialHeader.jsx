@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
+import LogoVoy from "../../../components/LogoVoy/LogoVoy";
+import UserAvatar from "../../../components/UserAvatar/UserAvatar";
 import styles from "./EditorialHeader.module.css";
 
 /**
@@ -25,7 +27,6 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
     const onScroll = () => {
       const currentY = window.scrollY;
       const delta = currentY - lastScrollY.current;
-
       if (currentY < 10) {
         setHidden(false);
       } else if (delta > 6) {
@@ -34,10 +35,8 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
       } else if (delta < -6) {
         setHidden(false);
       }
-
       lastScrollY.current = currentY;
     };
-
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
@@ -66,10 +65,9 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         }}
       >
         {/* LOGO */}
-        <Link to="/" className={styles.logo} onClick={closeMenu}>
-          <span className={styles.logoBox}>V</span>
-          <span className={styles.logoText}>VOY PROJECT</span>
-        </Link>
+        <div onClick={closeMenu} style={{ cursor: "pointer" }}>
+          <LogoVoy />
+        </div>
 
         {/* NAV LINKS — desktop */}
         <nav className={styles.nav}>
@@ -90,17 +88,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         {/* CTA / Usuario — desktop */}
         {isAuthenticated ? (
           <div className={styles.userArea}>
-            <Link to={`/profile/${user?._id}`} className={styles.userWidget}>
-              <span className={styles.userAvatar}>
-                {user?.nombre?.charAt(0).toUpperCase()}
-              </span>
-              <div className={styles.userInfo}>
-                <span className={styles.userGreeting}>BUENAS TARDES</span>
-                <span className={styles.userNombre}>{user?.nombre?.toUpperCase()} ◆</span>
-              </div>
-              <span className={styles.userPerfil}>PERFIL &gt;</span>
-            </Link>
-            <button className={styles.cta} onClick={handleLogout}>SALIR</button>
+            <UserAvatar />
           </div>
         ) : (
           <Link to={ctaTo} className={`${styles.cta} ${styles.ctaDesktop}`}>

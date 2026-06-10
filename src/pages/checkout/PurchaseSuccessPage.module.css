@@ -1,341 +1,529 @@
 /* ─────────────────────────────────────────────────────────────────────────────
-   PurchaseSuccessPage.module.css — Paso 4: Confirmación (Ticket con QR)
-   Estética de entrada física troquelada con borde punteado underground.
+   PurchaseSuccessPage.module.css
+   Estilo completo matching Figma screens
  ───────────────────────────────────────────────────────────────────────────── */
 
-.container {
+.pageRoot {
+  background: var(--ds-color-bg-editorial);
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  padding: 4rem 2rem;
+  font-family: var(--ds-font-family-sans);
+}
+
+.toast {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  background: var(--ds-color-bg-surface-muted);
+  color: var(--ds-color-text-primary);
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  z-index: 9999;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Animaciones Generales */
+.animateFadeInUp {
+  opacity: 0;
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeInUp {
+  0% { opacity: 0; transform: translateY(20px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+/* Banner superior */
+.bannerContainer {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--ds-color-accent-primary);
+  background: rgba(163, 230, 53, 0.05); /* Mantengo el alpha para la caja */
+  padding: 1.5rem 2rem;
   width: 100%;
-  max-width: 480px;
-  margin: 0 auto;
-  position: relative;
+  max-width: 1400px;
+  margin-bottom: 3rem;
 }
 
-/* Header del éxito */
-.successHeader {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.checkCircle {
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  background: var(--ds-color-accent-primary);
-  color: #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-  box-shadow: 0 0 20px rgba(0, 255, 159, 0.2);
-}
-
-.successTitle {
+.bannerIcon {
+  color: var(--ds-color-accent-primary);
   font-size: 1.5rem;
-  font-weight: 900;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  color: var(--ds-color-text-primary);
-  margin: 0;
-}
-
-.successSubtitle {
-  font-size: 0.85rem;
-  color: var(--ds-color-text-secondary);
-  line-height: 1.6;
-  margin: 0;
-  max-width: 400px;
-}
-
-.emailHighlight {
-  color: var(--ds-color-text-primary);
-  font-weight: 700;
-}
-
-/* TICKET DIGITAL FÍSICO */
-.ticket {
-  width: 100%;
-  background: var(--ds-color-bg-surface);
-  border: 2px dashed var(--ds-color-border-editorial-mid, #2a2a2a);
-  position: relative;
+  margin-right: 1.5rem;
   display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
-/* Mitad Superior: Evento */
-.ticketTop {
-  padding: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.ticketLogo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.logoBox {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 20px;
-  height: 20px;
-  background: var(--ds-color-accent-primary);
-  color: #000;
-  font-size: 0.7rem;
-  font-weight: 900;
-}
-
-.logoText {
-  font-size: 0.65rem;
-  font-weight: 900;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--ds-color-text-primary);
-}
-
-.ticketDetails {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.eventName {
-  font-size: 1.3rem;
-  font-weight: 900;
-  text-transform: uppercase;
-  letter-spacing: 0.01em;
-  margin: 0;
-  color: var(--ds-color-text-primary);
-  line-height: 1.25;
-}
-
-.metaGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 1rem;
-}
-
-.metaCell {
+.bannerText {
   display: flex;
   flex-direction: column;
   gap: 0.2rem;
+  flex: 1;
 }
 
-.fullWidth {
-  grid-column: span 2;
-}
-
-.metaLabel {
-  font-size: 0.55rem;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-  color: var(--ds-color-text-muted);
-  text-transform: uppercase;
-}
-
-.metaValue {
-  font-size: 0.8rem;
-  font-weight: 700;
-  color: var(--ds-color-text-secondary);
-}
-
-/* Divisor Perforado (Troquel) */
-.ticketDivider {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  height: 20px;
-  margin: 0;
-}
-
-.notchLeft,
-.notchRight {
-  width: 20px;
-  height: 20px;
-  background-color: var(--ds-color-brand-canvas, #080808);
-  border-radius: 50%;
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-}
-
-.notchLeft {
-  left: -10px;
-  border-right: 2px dashed var(--ds-color-border-editorial-mid);
-}
-
-.notchRight {
-  right: -10px;
-  border-left: 2px dashed var(--ds-color-border-editorial-mid);
-}
-
-.dashedLine {
-  flex-grow: 1;
-  height: 1px;
-  border-bottom: 2px dashed var(--ds-color-border-editorial-mid);
-  margin: 0 10px;
-}
-
-/* Mitad Inferior: QR */
-.ticketBottom {
-  padding: 1.75rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
-  background: var(--ds-color-bg-surface-muted, #181b24);
-}
-
-.qrContainer {
-  padding: 0.75rem;
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid var(--ds-color-border-editorial-mid);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.orderInfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.orderLabel {
-  font-size: 0.55rem;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-  color: var(--ds-color-text-muted);
-}
-
-.orderId {
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: var(--ds-color-text-primary);
+.bannerTitle {
+  color: var(--ds-color-accent-primary);
+  font-family: var(--ds-font-family-display);
+  font-weight: 900;
+  font-size: 1.2rem;
   letter-spacing: 0.05em;
 }
 
-/* Acciones y Botones */
-.actions {
+.bannerSub {
+  color: var(--ds-color-accent-primary);
+  opacity: 0.8;
+  font-size: 0.9rem;
+}
+
+.bannerCheck {
+  color: var(--ds-color-accent-primary);
+  font-size: 1.5rem;
+}
+
+/* Encabezado */
+.successHeader {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  width: 100%;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 4rem;
 }
 
-.pdfBtn {
-  width: 100%;
-  padding: 1rem;
-  background: transparent;
+.checkCircle {
+  width: 64px;
+  height: 64px;
+  border: 2px solid var(--ds-color-accent-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.checkCircle span {
   color: var(--ds-color-accent-primary);
-  border: 1px solid var(--ds-color-accent-primary);
+  font-size: 2rem;
+}
+
+.orderLabel {
+  font-family: var(--ds-font-family-mono);
   font-size: 0.85rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.15em;
+  color: var(--ds-color-accent-secondary);
+  margin-bottom: 1rem;
   text-transform: uppercase;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background-color 0.2s, color 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.pdfBtn:hover {
-  background: var(--ds-color-accent-primary);
-  color: #000;
+.successTitle {
+  font-family: var(--ds-font-family-display);
+  font-size: 3.5rem;
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  color: var(--ds-color-text-primary);
+  margin: 0 0 1rem 0;
+  text-transform: uppercase;
 }
 
-.homeBtn {
+.successSubtitle {
+  color: var(--ds-color-text-editorial-subtle);
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Layout 2 Columnas */
+.twoColumnGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
   width: 100%;
-  padding: 1rem;
-  background: var(--ds-color-bg-surface-muted);
-  color: var(--ds-color-text-secondary);
-  border: none;
-  font-size: 0.85rem;
-  font-weight: 900;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  cursor: pointer;
-  font-family: inherit;
-  transition: background-color 0.2s, color 0.2s;
+  max-width: 1400px;
+  margin-bottom: 3rem;
+  align-items: stretch;
+}
+
+/* Contenedores de Sección */
+.sectionContainer {
+  width: 100%;
+  height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
 }
 
-.homeBtn:hover {
-  background: var(--ds-color-bg-surface);
-  color: var(--ds-color-text-primary);
-}
-
-/* Toast flotante de 'Próximamente' */
-.toast {
-  position: absolute;
-  top: -10px;
-  background: #121216;
-  border: 1px solid var(--ds-color-accent-primary);
-  color: var(--ds-color-text-primary);
-  font-size: 0.8rem;
-  font-weight: 700;
-  padding: 0.75rem 1.25rem;
+.sectionHeader {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
-  z-index: 100;
-  animation: fadeIn 0.2s ease-out;
-  border-radius: 4px;
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  color: var(--ds-color-text-editorial-muted);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
 }
 
-.toastIcon {
+.sectionIcon {
+  font-size: 1.2rem;
+}
+
+/* TICKET DIGITAL */
+.ticket {
+  display: flex;
+  flex: 1;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  border-top: 3px solid var(--ds-color-accent-primary);
+  background: var(--ds-color-bg-editorial);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 40px rgba(163, 230, 53, 0.05); /* Glow sutil */
+}
+
+.ticket::before {
+  content: '';
+  position: absolute;
+  top: -3px;
+  left: 0;
+  width: 50%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ds-color-accent-primary), var(--ds-color-accent-secondary));
+}
+
+.ticketMain {
+  flex: 1;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  border-right: 2px dashed var(--ds-color-border-editorial-mid);
+}
+
+.ticketGenres {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.genreChip {
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  color: var(--ds-color-accent-secondary);
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.7rem;
+  padding: 0.3rem 0.6rem;
+  text-transform: uppercase;
+}
+
+.ticketLabel {
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.75rem;
+  color: var(--ds-color-text-editorial-muted);
+  margin-bottom: 0.2rem;
+  letter-spacing: 0.05em;
+}
+
+.eventName {
+  font-family: var(--ds-font-family-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--ds-color-text-primary);
+  margin: 0 0 1.5rem 0;
+  text-transform: uppercase;
+}
+
+.ticketGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 1.5rem;
+  column-gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.ticketCol {
+  display: flex;
+  flex-direction: column;
+}
+
+.ticketColFull {
+  display: flex;
+  flex-direction: column;
+  grid-column: span 2;
+}
+
+.ticketValue {
+  color: var(--ds-color-text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.ticketValueAccent {
   color: var(--ds-color-accent-primary);
+  font-size: 1rem;
+  font-weight: 600;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+.ticketRef {
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.75rem;
+  color: var(--ds-color-text-editorial-muted);
+  margin-top: auto;
+  border-top: 1px dashed var(--ds-color-border-editorial-mid);
+  padding-top: 1rem;
+}
+
+.ticketStub {
+  width: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: var(--ds-color-bg-editorial);
+  gap: 1.5rem;
+}
+
+.qrContainer {
+  background: var(--ds-color-bg-surface-muted);
+  padding: 0.5rem;
+}
+
+.qrInstruction {
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.75rem;
+  color: var(--ds-color-text-editorial-subtle);
+  text-align: center;
+  line-height: 1.4;
+  letter-spacing: 0.1em;
+}
+
+/* COMPROBANTE DE COMPRA (RECIBO) */
+.receipt {
+  background: var(--ds-color-bg-editorial);
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3); /* Profundidad */
+}
+
+.receiptHeader {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.5rem;
+  border-bottom: 1px dashed var(--ds-color-border-editorial-mid);
+}
+
+.receiptCompany {
+  color: var(--ds-color-text-primary);
+  font-weight: 900;
+  font-size: 1.2rem;
+  margin-bottom: 0.3rem;
+  font-family: var(--ds-font-family-display);
+}
+
+.receiptSub {
+  font-family: var(--ds-font-family-mono);
+  color: var(--ds-color-text-editorial-muted);
+  font-size: 0.75rem;
+}
+
+.receiptOrder {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.75rem;
+  color: var(--ds-color-text-editorial-muted);
+  gap: 0.3rem;
+}
+
+.receiptOrderId {
+  color: var(--ds-color-accent-primary);
+  font-size: 1.1rem;
+}
+
+.receiptBody {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-bottom: 1px dashed var(--ds-color-border-editorial-mid);
+}
+
+.receiptRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.rl {
+  font-family: var(--ds-font-family-mono);
+  color: var(--ds-color-text-editorial-muted);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+}
+
+.rr {
+  color: var(--ds-color-text-primary);
+  font-size: 0.9rem;
+  text-align: right;
+}
+
+.receiptTotals {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.receiptRowTotal {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.rrTotal {
+  color: var(--ds-color-accent-primary);
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.receiptFooter {
+  padding: 1.5rem 2rem;
+  background: rgba(255,255,255,0.02);
+  border-top: 1px solid var(--ds-color-border-editorial-mid);
+  color: var(--ds-color-text-editorial-muted);
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.75rem;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+/* INSTRUCCIONES */
+.instructionsCard {
+  width: 100%;
+  max-width: 1400px;
+  background: var(--ds-color-bg-editorial);
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.instructionsTitle {
+  font-size: 1.2rem;
+  font-weight: 900;
+  color: var(--ds-color-text-primary);
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.instructionStep {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.stepNum {
+  font-family: var(--ds-font-family-display);
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--ds-color-text-editorial-muted);
+  margin-top: -0.2rem;
+}
+
+.stepTitle {
+  color: var(--ds-color-text-primary);
+  font-weight: 800;
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.stepDesc {
+  color: var(--ds-color-text-editorial-subtle);
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Botonera de acciones */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  width: 100%;
+  max-width: 1400px;
+}
+
+.pdfBtn {
+  background: transparent;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  color: var(--ds-color-text-primary);
+  padding: 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.pdfBtn:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.homeBtn {
+  background: var(--ds-color-accent-primary);
+  border: none;
+  color: var(--ds-color-neutral-0);
+  padding: 1.25rem;
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+.homeBtn:hover {
+  filter: brightness(1.1);
+}
+
+/* Mobile responsive */
+@media (max-width: 1024px) {
+  .twoColumnGrid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
   }
 }
 
-/* Responsive */
-@media (max-width: 480px) {
-  .ticketTop,
-  .ticketBottom {
-    padding: 1.25rem;
+@media (max-width: 768px) {
+  .ticket {
+    flex-direction: column;
   }
   
-  .eventName {
-    font-size: 1.15rem;
+  .ticketMain {
+    border-right: none;
+    border-bottom: 2px dashed var(--ds-color-border-editorial-mid);
   }
-
-  .metaValue {
-    font-size: 0.75rem;
+  
+  .ticketStub {
+    width: 100%;
   }
-
+  
+  .actions {
+    grid-template-columns: 1fr;
+  }
+  
   .successTitle {
-    font-size: 1.3rem;
+    font-size: 2.5rem;
   }
 }

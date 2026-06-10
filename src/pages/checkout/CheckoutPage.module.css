@@ -126,7 +126,7 @@
   width: 100%;
   padding: 1rem;
   background: var(--ds-color-accent-primary);
-  color: #000;
+  color: var(--ds-color-neutral-0);
   border: none;
   font-size: 0.85rem;
   font-weight: 900;
@@ -138,7 +138,7 @@
 }
 
 .ctaBtn:hover:not(:disabled) {
-  background: var(--ds-color-lime-300, #33ffb2);
+  filter: brightness(1.1);
 }
 
 .ctaBtn:disabled {

@@ -16,3 +16,18 @@ export const igSlug = (name) =>
     .replace(/[áàä]/g, "a").replace(/[éèë]/g, "e")
     .replace(/[íìï]/g, "i").replace(/[óòö]/g, "o")
     .replace(/[úùü]/g, "u");
+
+/**
+ * Formatea un monto en pesos argentinos.
+ * Centralizado para evitar duplicación (antes existía en 3 archivos).
+ * @param {number} amount
+ * @returns {string} Ej: "$ 7.999"
+ */
+export const formatPrice = (amount) => {
+  if (amount === 0) return "Gratis";
+  return new Intl.NumberFormat('es-AR', {
+    style: 'currency',
+    currency: 'ARS',
+    minimumFractionDigits: 0,
+  }).format(amount);
+};

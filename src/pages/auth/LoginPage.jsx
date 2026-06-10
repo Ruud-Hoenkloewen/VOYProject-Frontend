@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { loginUser } from "../../services/authService";
+import LogoVoy from "../../components/LogoVoy/LogoVoy";
+import { EyeIcon } from "../../components/icons";
 import styles from "./RegisterPage.module.css"; // Reutiliza el mismo diseño
 
 /**
@@ -65,10 +67,9 @@ export default function LoginPage() {
 
       {/* Nav mínima */}
       <nav className={styles.nav}>
-        <Link to="/" className={styles.navLogo}>
-          <span className={styles.navLogoBox}>V</span>
-          VOY PROJECT
-        </Link>
+        <div className={styles.navLogo}>
+          <LogoVoy />
+        </div>
       </nav>
 
       <main className={styles.main}>
@@ -140,7 +141,7 @@ export default function LoginPage() {
                     onClick={() => setShowPass((v) => !v)}
                     aria-label={showPass ? "Ocultar contraseña" : "Mostrar contraseña"}
                   >
-                    {showPass ? "🙈" : "👁️"}
+                    {showPass ? <EyeIcon /> : <EyeIcon />} {/* Using EyeIcon temporarily for both to clean emojis */}
                   </button>
                 </div>
                 {errors.password && <span className={styles.errorMsg}>{errors.password}</span>}

@@ -11,8 +11,8 @@
   /* Brand editorial — paleta underground */
   --ds-color-brand-canvas: #080808;   /* fondo más oscuro que neutral-0, editorial */
   --ds-color-brand-lime: #00ff9f;     /* Verde menta eléctrico */
-  --ds-color-brand-fuchsia: #00d1ff; /* Cyan editorial */
-  --ds-color-brand-fuchsia-dark: #0088cc; /* Cyan oscuro */
+  --ds-color-brand-fuchsia: #ff7bee; /* Rosa/Fucsia editorial */
+  --ds-color-brand-fuchsia-dark: #cc5abb; /* Rosa/Fucsia oscuro */
 
   /* Grises editoriales intermedios */
   --ds-color-editorial-border: #1a1a1a;  /* borde sutil sobre canvas editorial */
@@ -25,9 +25,21 @@
   --ds-color-lime-400: #00ff9f;
   --ds-color-lime-500: #00cc7f;
   
-  --ds-color-magenta-400: #33daff;
-  --ds-color-magenta-500: #00d1ff;
+  --ds-color-magenta-400: #ff9cf2;
+  --ds-color-magenta-500: #ff7bee;
+
+  /* Colores de Acento Globales */
+  --ds-color-accent-primary: var(--ds-color-brand-lime); /* Verde menta eléctrico */
+  --ds-color-accent-secondary: var(--ds-color-brand-fuchsia); /* Fucsia editorial */
+
+  /* Resplandores y Glows */
+  --ds-glow-primary: 0 0 15px rgba(0, 255, 159, 0.3);
+  --ds-glow-secondary: 0 0 15px rgba(255, 123, 238, 0.3);
 
   --ds-color-red-400: #ff3f48;
   --ds-color-yellow-300: #ffd84e;
+
+  /* Cyan */
+  --ds-color-cyan-400: #22d3ee;
+  --ds-color-cyan-300: #67e8f9;
 }

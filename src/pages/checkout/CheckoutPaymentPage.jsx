@@ -1,7 +1,7 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchEventById } from '../../services/eventService';
-import { createOrder } from '../../services/orderService';
+import { createOrder, createPaymentPreference } from '../../services/orderService';
 import CheckoutLayout from '../../components/checkout/CheckoutLayout';
 import styles from './CheckoutPaymentPage.module.css';
 
@@ -12,6 +12,13 @@ const CreditCardIcon = () => (
     style={{ display: 'block' }}>
     <rect width="20" height="14" x="2" y="5" rx="2" />
     <line x1="2" x2="22" y1="10" y2="10" />
+  </svg>
+);
+
+const CardIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="2" y="5" width="20" height="14" rx="2"/>
+    <line x1="2" y1="10" x2="22" y2="10"/>
   </svg>
 );
 
@@ -84,6 +91,19 @@ export default function CheckoutPaymentPage() {
     };
 
     try {
+      if (paymentMethod === 'Tarjeta de crédito / débito') {
+        const mpPayload = {
+          eventId: eventData?.id || eventData?._id, // Aseguramos usar el ID correcto
+          cantidad,
+          datosComprador: compradorData,
+        };
+        const mpResponse = await createPaymentPreference(mpPayload);
+        if (mpResponse && mpResponse.initPoint) {
+          window.location.href = mpResponse.initPoint;
+          return; // Detenemos la ejecución aquí porque el navegador va a redirigir a MP
+        }
+      }
+
       const response = await createOrder(payload);
       const orderId = response?.orderId || response?.order?._id || `VOY-${Math.floor(100000 + Math.random() * 900000)}`;
 
@@ -98,7 +118,7 @@ export default function CheckoutPaymentPage() {
         },
       });
     } catch (err) {
-      console.warn('[CheckoutPaymentPage] Error creando orden, procediendo con mock para pruebas frontend:', err);
+      console.warn('[CheckoutPaymentPage] Error creando orden, procediendo con mock para pruebas frontend:', err.response?.data || err.message || err);
       // Fallback para desarrollo frontend si el backend aún no está listo
       const mockOrderId = `VOY-${Math.floor(100000 + Math.random() * 900000)}`;
       navigate('/compra/confirmacion', {
@@ -156,12 +176,54 @@ export default function CheckoutPaymentPage() {
                 <option value="" disabled hidden>
                   Seleccionar método...
                 </option>
-                <option value="Transferencia bancaria">Transferencia bancaria</option>
-                <option value="Efectivo en el local">Efectivo en el local</option>
+                <option value="Tarjeta de crédito / débito">Tarjeta de crédito / débito</option>
+                <option value="Pago por QR">Pago por QR</option>
               </select>
               <div className={styles.selectChevron} aria-hidden="true">▼</div>
             </div>
           </div>
+
+          {paymentMethod === 'Tarjeta de crédito / débito' && (
+            <div className={styles.cardMockBox}>
+              <div className={styles.cardMockHeader}>
+                <span className={styles.cardMockIcon}><CardIcon /></span>
+                <span className={styles.cardMockTitle}>DATOS DE TARJETA</span>
+              </div>
+              <div className={styles.cardMockGrid}>
+                <div className={styles.cardMockField}>
+                  <label className={styles.cardMockLabel}>NOMBRE DEL TITULAR</label>
+                  <input type="text" className={styles.cardMockInput} placeholder="Tal como figura en la tarjeta" />
+                </div>
+                <div className={styles.cardMockField}>
+                  <label className={styles.cardMockLabel}>NÚMERO DE TARJETA</label>
+                  <input type="text" className={styles.cardMockInput} placeholder="1234 5678 9012 3456" />
+                </div>
+                <div className={styles.cardMockFieldHalf}>
+                  <div className={styles.cardMockField}>
+                    <label className={styles.cardMockLabel}>VENCIMIENTO</label>
+                    <input type="text" className={styles.cardMockInput} placeholder="MM / AA" />
+                  </div>
+                  <div className={styles.cardMockField}>
+                    <label className={styles.cardMockLabel}>CVV</label>
+                    <input type="text" className={styles.cardMockInput} placeholder="123" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {paymentMethod === 'Pago por QR' && (
+            <div className={styles.cardMockBox}>
+              <div className={styles.cardMockHeader}>
+                <span className={styles.cardMockTitle}>PAGO POR QR</span>
+              </div>
+              <p className={styles.qrSubtitle}>Escaneá el código QR con tu app de banco o billetera virtual (Mercado Pago, Uala, etc.).</p>
+              <div className={styles.qrPlaceholderBox}>
+                <div className={styles.qrPlaceholderIcon}></div>
+                <p>QR PRÓXIMAMENTE</p>
+              </div>
+            </div>
+          )}
 
           {/* Botonera de acciones */}
           <div className={styles.actions}>

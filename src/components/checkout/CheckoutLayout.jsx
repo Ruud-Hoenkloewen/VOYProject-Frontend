@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { formatPrice } from '../../utils/helpers';
 import styles from './CheckoutLayout.module.css';
 
 // ── Iconos inline ────────────────────────────────────────────────────────────
@@ -45,13 +46,7 @@ const STEPS = [
   { number: 4, label: 'CONFIRMACIÓN' },
 ];
 
-function fmt(amount) {
-  return new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    minimumFractionDigits: 0,
-  }).format(amount);
-}
+
 
 // ── Componente ────────────────────────────────────────────────────────────────
 /**
@@ -199,15 +194,15 @@ export default function CheckoutLayout({ currentStep, eventData, cantidad = 1, c
             <div className={styles.priceBreakdown}>
               <div className={styles.priceRow}>
                 <span>Entrada General × {cantidad}</span>
-                <span>{fmt(subtotal)}</span>
+                <span>{formatPrice(subtotal)}</span>
               </div>
               <div className={styles.priceRow}>
                 <span>Cargo por servicio</span>
-                <span>{fmt(cargoServicio)}</span>
+                <span>{formatPrice(cargoServicio)}</span>
               </div>
               <div className={`${styles.priceRow} ${styles.priceRowTotal}`}>
                 <span>TOTAL</span>
-                <span className={styles.totalAmount}>{fmt(total)}</span>
+                <span className={styles.totalAmount}>{formatPrice(total)}</span>
               </div>
             </div>
 

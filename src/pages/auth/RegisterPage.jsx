@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { registerUser } from "../../services/authService";
+import LogoVoy from "../../components/LogoVoy/LogoVoy";
 import styles from "./RegisterPage.module.css";
 
 /**
@@ -46,8 +47,6 @@ export default function RegisterPage() {
     try {
       const data = await registerUser(form.name, form.email, form.password);
       login({ _id: data._id, nombre: data.nombre, email: data.email }, data.token);
-      // Limpiar flag de onboarding para que el wizard se muestre al nuevo usuario
-      localStorage.removeItem("onboardingDone");
       navigate("/onboarding");
     } catch (err) {
       const msg = err.response?.data?.mensaje || "Error al crear la cuenta. Intentá de nuevo.";
@@ -63,10 +62,9 @@ export default function RegisterPage() {
 
       {/* Nav mínima */}
       <nav className={styles.nav}>
-        <Link to="/" className={styles.navLogo}>
-          <span className={styles.navLogoBox}>V</span>
-          VOY PROJECT
-        </Link>
+        <div className={styles.navLogo}>
+          <LogoVoy />
+        </div>
       </nav>
 
       <main className={styles.main}>

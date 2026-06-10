@@ -1,5 +1,7 @@
 import { NavLink, Link } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
+import { useAuth } from "../../../context/AuthContext";
+import UserAvatar from "../../../components/UserAvatar/UserAvatar";
 import styles from "./Navbar.module.css";
 
 /**
@@ -10,6 +12,8 @@ import styles from "./Navbar.module.css";
  * NO se usa en LandingPage — esta tiene su propio header editorial.
  */
 export default function Navbar() {
+  const { isAuthenticated } = useAuth();
+
   return (
     <header className={styles.root}>
       <Link to="/" className={styles.brand}>
@@ -30,8 +34,14 @@ export default function Navbar() {
         >
           Explorar Eventos
         </NavLink>
-        <Link to="/login" className={styles.actionGhost}>Ingresar</Link>
-        <Link to="/register" className={styles.actionPrimary}>Crear Evento</Link>
+        {isAuthenticated ? (
+          <UserAvatar />
+        ) : (
+          <>
+            <Link to="/login" className={styles.actionGhost}>Ingresar</Link>
+            <Link to="/register" className={styles.actionPrimary}>Crear Evento</Link>
+          </>
+        )}
       </nav>
     </header>
   );
