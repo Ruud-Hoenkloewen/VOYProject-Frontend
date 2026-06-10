@@ -1,9 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { TicketIcon, HeartIcon, ShareIcon } from "../../../../components/icons";
+import { shareEvent } from "../../../../utils/helpers";
 import styles from "../../EventDetailPage.module.css";
 
 export default function TicketCard({ eventData, isSoldOut, id }) {
   const navigate = useNavigate();
+  const handleShare = () => {
+    shareEvent({ ...eventData, id });
+  };
 
   return (
     <div className={styles.ticketCard}>
@@ -45,7 +49,7 @@ export default function TicketCard({ eventData, isSoldOut, id }) {
           <TicketIcon /> {isSoldOut ? "AGOTADO" : "COMPRAR ENTRADA"}
         </button>
         <button className={styles.outlineButton}><HeartIcon /> GUARDAR EVENTO</button>
-        <button className={styles.outlineButton}><ShareIcon /> COMPARTIR EVENTO</button>
+        <button className={styles.outlineButton} onClick={handleShare}><ShareIcon /> COMPARTIR EVENTO</button>
       </div>
 
       <p className={styles.termsText}>

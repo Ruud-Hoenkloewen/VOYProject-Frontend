@@ -31,3 +31,13 @@ export const formatPrice = (amount) => {
     minimumFractionDigits: 0,
   }).format(amount);
 };
+
+export const shareEvent = (event) => {
+  const url = `${window.location.origin}/events/${event?.id}`;
+
+  if (navigator.share) {
+    navigator.share({ title: event?.title, url });
+  } else {
+    navigator.clipboard.writeText(url);
+  }
+};
