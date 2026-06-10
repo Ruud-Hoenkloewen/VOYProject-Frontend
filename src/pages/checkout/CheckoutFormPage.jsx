@@ -143,7 +143,7 @@ export default function CheckoutFormPage() {
       cantidad={cantidad}
     >
       <div className={styles.stepCard}>
-        {{/* Título */}}
+        {/* Título */}
         <div className={styles.stepHeader}>
           <span className={styles.stepIcon}>👤</span>
           <h1 className={styles.stepTitle}>TUS DATOS</h1>
@@ -205,7 +205,7 @@ export default function CheckoutFormPage() {
             </div>
           </div>
 
-          {{/* Email */}}
+          {/* Email */}
           <div className={styles.field}>
             <label className={styles.label} htmlFor="email">
               CORREO ELECTRÓNICO
@@ -229,7 +229,7 @@ export default function CheckoutFormPage() {
             )}
           </div>
 
-          {{/* DNI */}}
+          {/* DNI */}
           <div className={styles.field}>
             <label className={styles.label} htmlFor="dni">
               DNI
@@ -255,7 +255,7 @@ export default function CheckoutFormPage() {
             )}
           </div>
 
-          {{/* Acciones */}}
+          {/* Acciones */}
           <div className={styles.actions}>
             <button
               type="button"
