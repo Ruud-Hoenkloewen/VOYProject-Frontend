@@ -27,24 +27,20 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
     const onScroll = () => {
       const currentY = window.scrollY;
       const delta = currentY - lastScrollY.current;
-
       if (currentY < 10) {
         setHidden(false);
       } else if (delta > 6) {
         setHidden(true);
-        setMenuOpen(false); // cerrar menu al scrollear
+        setMenuOpen(false);
       } else if (delta < -6) {
         setHidden(false);
       }
-
       lastScrollY.current = currentY;
     };
-
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Bloquear scroll del body cuando el menú está abierto
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => { document.body.style.overflow = ""; };

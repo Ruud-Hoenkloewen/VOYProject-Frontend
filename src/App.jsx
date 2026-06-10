@@ -12,14 +12,14 @@ const CheckoutPage         = lazy(() => import("./pages/checkout/CheckoutPage"))
 const CheckoutFormPage     = lazy(() => import("./pages/checkout/CheckoutFormPage"));
 const CheckoutPaymentPage  = lazy(() => import("./pages/checkout/CheckoutPaymentPage"));
 const PurchaseSuccessPage  = lazy(() => import("./pages/checkout/PurchaseSuccessPage"));
+const OnboardingPage       = lazy(() => import("./pages/auth/OnboardingPage"));
 const ProfilePage          = lazy(() => import("./pages/profile/ProfilePage"));
+const ProfileEditPage      = lazy(() => import("./pages/profile/ProfileEditPage"));
 
 /** Componente utilitario para resetear el scroll al principio al cambiar de ruta */
 function ScrollToTop() {
   const { pathname } = useLocation();
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return null;
 }
 
@@ -42,10 +42,20 @@ function ProtectedLoginRoute() {
 function ProtectedRoute({ children }) {
   const { isAuthenticated } = useAuth();
   const location = useLocation();
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
+  if (!isAuthenticated) return <Navigate to="/login" state={{ from: location }} replace />;
   return children;
+}
+
+/**
+ * Ruta de onboarding — solo accesible para usuarios autenticados
+ * que no hayan completado el onboarding todavía.
+ */
+function OnboardingRoute() {
+  const { isAuthenticated } = useAuth();
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  const done = localStorage.getItem("onboardingDone") === "true";
+  if (done) return <Navigate to="/" replace />;
+  return <OnboardingPage />;
 }
 
 /**
@@ -77,10 +87,13 @@ export default function App() {
             <Route path="/compra/confirmacion" element={
               <ProtectedRoute><PurchaseSuccessPage /></ProtectedRoute>
             } />
-            <Route path="/profile/:username" element={<ProfilePage />} />
             <Route path="/register"   element={<RegisterPage />} />
             <Route path="/login"      element={<ProtectedLoginRoute />} />
+            <Route path="/onboarding" element={<OnboardingRoute />} />
             <Route path="/profile/:username" element={<ProfilePage />} />
+            <Route path="/profile/edit" element={
+              <ProtectedRoute><ProfileEditPage /></ProtectedRoute>
+            } />
           </Routes>
         </Suspense>
       </BrowserRouter>
