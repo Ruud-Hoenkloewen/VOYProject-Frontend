@@ -88,7 +88,22 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         {/* CTA / Usuario — desktop */}
         {isAuthenticated ? (
           <div className={styles.userArea}>
-            <UserAvatar />
+            <Link
+              to={`/profile/${user?.username || user?._id || 'me'}`}
+              className={styles.userWidget}
+            >
+              <div
+                className={styles.userAvatar}
+                style={{ backgroundColor: user?.avatarColor || 'var(--ds-color-brand-lime)' }}
+              >
+                {(user?.nombre || user?.username || 'U').charAt(0).toUpperCase()}
+              </div>
+              <div className={styles.userInfo}>
+                <span className={styles.userNombre}>
+                  {(user?.nombre || user?.username || 'Usuario').toUpperCase()}
+                </span>
+              </div>
+            </Link>
           </div>
         ) : (
           <Link to={ctaTo} className={`${styles.cta} ${styles.ctaDesktop}`}>

@@ -181,6 +181,22 @@
   border-color: var(--ds-color-text-editorial-subtle);
 }
 
+.cardMockInputError {
+  border-color: rgba(255, 68, 68, 0.6);
+}
+
+.cardMockInputError:focus {
+  border-color: rgba(255, 68, 68, 0.9);
+}
+
+.cardFieldError {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--ds-color-red-400, #ff4d4d);
+  letter-spacing: 0.05em;
+  margin-top: 0.1rem;
+}
+
 /* QR Placeholder */
 .qrSubtitle {
   font-size: 0.85rem;
