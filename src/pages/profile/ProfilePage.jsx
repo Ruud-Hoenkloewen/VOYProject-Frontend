@@ -46,6 +46,9 @@ export default function ProfilePage() {
   
   const [activeTab, setActiveTab] = useState('MI MOVIDA');
   const [recommendedEvents, setRecommendedEvents] = useState([]);
+  const [allEvents, setAllEvents] = useState([]);
+  const [favoriteEvents, setFavoriteEvents] = useState([]);
+  const [orders, setOrders] = useState([]);
   
   const [profile, setProfile] = useState(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
@@ -95,10 +98,25 @@ export default function ProfilePage() {
   useEffect(() => {
     fetchEvents()
       .then(events => {
-        setRecommendedEvents(events.slice(0, 1));
+        setAllEvents(events);
+        setRecommendedEvents(events.slice(0, 4));
       })
       .catch(console.error);
   }, []);
+
+  useEffect(() => {
+    if (profile?.favoritos && allEvents.length > 0) {
+      setFavoriteEvents(allEvents.filter(e => profile.favoritos.includes(e.id)));
+    }
+  }, [profile, allEvents]);
+
+  useEffect(() => {
+    if (isMyProfile && activeTab === 'HISTORIAL' && orders.length === 0) {
+      import('../../services/orderService').then(({ getMyOrders }) => {
+        getMyOrders().then(setOrders).catch(console.error);
+      });
+    }
+  }, [isMyProfile, activeTab, orders.length]);
 
   if (isLoadingProfile) {
     return (
@@ -256,7 +274,7 @@ export default function ProfilePage() {
 
           <div className={styles.statsBoxes}>
             <div className={styles.statBox}>
-              <span className={`${styles.statBoxVal} ${styles.valSaved}`}>{profile.eventosGuardados?.length || 0}</span>
+              <span className={`${styles.statBoxVal} ${styles.valSaved}`}>{profile.favoritos?.length || 0}</span>
               <span className={styles.statBoxLabel}>EVENTOS<br/>GUARDADOS</span>
             </div>
             <div className={styles.statBox}>
@@ -290,11 +308,22 @@ export default function ProfilePage() {
                 <Link to="/events" className={styles.exploreLink}>Explorar &gt;</Link>
               </div>
 
-              <div className={styles.emptyState}>
-                <HeartIcon size={32} className={styles.emptyIcon} />
-                <span className={styles.emptyText}>Todavía no hay eventos guardados.</span>
-                <Link to="/events" className={styles.emptyLink}>Explorar cartelera &rarr;</Link>
-              </div>
+              {favoriteEvents.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <HeartIcon size={32} className={styles.emptyIcon} />
+                  <span className={styles.emptyText}>Todavía no hay eventos guardados.</span>
+                  <Link to="/events" className={styles.emptyLink}>Explorar cartelera &rarr;</Link>
+                </div>
+              ) : (
+                <div className={styles.eventsGrid}>
+                  {favoriteEvents.map(evt => (
+                    <EventCard 
+                      key={evt.id} 
+                      {...evt}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className={styles.sectionBlock}>
@@ -309,21 +338,127 @@ export default function ProfilePage() {
                 {recommendedEvents.map(evt => (
                   <EventCard 
                     key={evt.id} 
-                    id={evt.id}
-                    title={evt.title}
-                    date={evt.date}
-                    time={evt.time}
-                    venue={evt.venue}
-                    price={evt.price}
-                    genres={evt.genres}
-                    status={evt.status}
-                    statusTone={evt.statusTone}
-                    imageUrl={evt.imageUrl}
+                    {...evt}
                   />
                 ))}
               </div>
             </div>
           </>
+        )}
+
+        {activeTab === 'GUSTOS' && (
+          <div className={styles.sectionBlock}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>GUSTOS Y VIBES</h2>
+            </div>
+            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '16px' }}>
+              {profile.vibeEnShows && profile.vibeEnShows.length > 0 ? (
+                profile.vibeEnShows.map(vibe => (
+                  <div key={vibe} className={styles.pogoBadge} style={{ border: '1px solid var(--ds-color-text-secondary)', color: 'var(--ds-color-text-primary)' }}>
+                    {vibe}
+                  </div>
+                ))
+              ) : (
+                <div className={styles.emptyState} style={{ width: '100%' }}>
+                  <span className={styles.emptyText}>No configuraste tus gustos musicales todavía.</span>
+                  {isMyProfile && <Link to="/profile/edit" className={styles.emptyLink}>Editar Perfil &rarr;</Link>}
+                </div>
+              )}
+            </div>
+            {profile.generosMusicales && profile.generosMusicales.length > 0 && (
+               <div style={{marginTop: '24px'}}>
+                  <h3 style={{fontSize: '12px', marginBottom: '12px', color: 'var(--ds-color-text-secondary)', letterSpacing: '0.1em', fontWeight: 800}}>GÉNEROS</h3>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {profile.generosMusicales.map(g => (
+                    <div key={g} className={styles.pogoBadge} style={{ border: '1px solid var(--ds-color-text-secondary)', color: 'var(--ds-color-text-primary)' }}>
+                      {g}
+                    </div>
+                  ))}
+                  </div>
+               </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'HISTORIAL' && (
+          <div className={styles.sectionBlock}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>HISTORIAL DE COMPRAS</h2>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '16px' }}>
+              {orders.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <TicketIcon size={32} className={styles.emptyIcon} />
+                  <span className={styles.emptyText}>Aún no tienes compras realizadas.</span>
+                </div>
+              ) : (
+                orders.map(order => {
+                  const isPagada = order.estadoPago === 'PAGADA';
+                  const badgeBg = isPagada ? '#C6F92B' : (order.estadoPago === 'RECHAZADA' ? '#FF4444' : '#FFAA00');
+                  const badgeColor = '#000';
+                  
+                  return (
+                    <div key={order._id} style={{ 
+                      background: 'var(--ds-color-bg-surface)', 
+                      border: `1px solid ${isPagada ? 'var(--ds-color-accent-primary)' : 'var(--ds-color-border-editorial)'}`, 
+                      padding: '20px', 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      gap: '16px',
+                      borderRadius: '8px'
+                    }}>
+                      {/* Fila superior: ID y Estado */}
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid var(--ds-color-border-editorial-mid)', paddingBottom: '12px' }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <span style={{ fontSize: '12px', fontFamily: 'var(--ds-font-family-mono)', color: 'var(--ds-color-text-primary)', fontWeight: 'bold' }}>
+                            {order.numeroOrden}
+                          </span>
+                          <span style={{ fontSize: '12px', color: 'var(--ds-color-text-secondary)' }}>
+                            Comprado el: {new Date(order.createdAt).toLocaleString('es-AR', { dateStyle: 'short', timeStyle: 'short' })}
+                          </span>
+                        </div>
+                        <span style={{ 
+                          fontSize: '11px', fontWeight: 800, padding: '6px 12px', borderRadius: '20px', letterSpacing: '0.05em',
+                          backgroundColor: badgeBg,
+                          color: badgeColor,
+                          boxShadow: isPagada ? '0 0 10px rgba(198, 249, 43, 0.4)' : 'none'
+                        }}>
+                          {order.estadoPago}
+                        </span>
+                      </div>
+                      
+                      {/* Detalles del Evento */}
+                      <div>
+                        <h3 style={{ fontSize: '18px', margin: '0 0 8px 0', color: 'var(--ds-color-text-primary)' }}>{order.eventId?.nombre || 'Evento Desconocido'}</h3>
+                        <p style={{ fontSize: '14px', margin: 0, color: 'var(--ds-color-text-secondary)', display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <span>📅 Fecha del evento: {order.eventId?.fecha ? new Date(order.eventId.fecha).toLocaleDateString() : 'Por confirmar'}</span>
+                          <span>📍 Lugar: {order.eventId?.lugar || 'Por confirmar'}</span>
+                        </p>
+                      </div>
+
+                      {/* Resumen de la compra */}
+                      <div style={{ 
+                        display: 'flex', justifyContent: 'space-between', alignItems: 'center', 
+                        paddingTop: '16px', borderTop: '1px dotted var(--ds-color-border-editorial-mid)' 
+                      }}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                          <span style={{ fontSize: '14px', color: 'var(--ds-color-text-primary)', fontWeight: 'bold' }}>
+                            {order.cantidad} x Entrada{order.cantidad > 1 ? 's' : ''}
+                          </span>
+                          <span style={{ fontSize: '12px', color: 'var(--ds-color-text-secondary)', textTransform: 'uppercase' }}>
+                            Método: {order.metodoPago || 'No especificado'}
+                          </span>
+                        </div>
+                        <strong style={{ fontSize: '24px', color: 'var(--ds-color-text-primary)' }}>
+                          ${order.total}
+                        </strong>
+                      </div>
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

@@ -63,53 +63,49 @@
   color: var(--ds-color-text-secondary);
 }
 
-/* Contenedor del select personalizado */
-.selectWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 100%;
+/* Tarjetas de método de pago */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+  margin-top: 0.5rem;
 }
 
-.select {
+.paymentCard {
   background: var(--ds-color-bg-surface);
   border: 1px solid var(--ds-color-border-editorial-mid);
-  color: var(--ds-color-text-primary);
-  font-size: 0.9rem;
-  padding: 0.8rem 1rem;
-  padding-right: 2.5rem;
-  outline: none;
-  font-family: var(--ds-font-family-base);
-  transition: border-color 0.2s, background-color 0.2s;
-  width: 100%;
-  box-sizing: border-box;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   cursor: pointer;
+  transition: all 0.2s ease;
+  color: var(--ds-color-text-secondary);
 }
 
-.select:focus {
-  border-color: var(--ds-color-text-secondary);
+.paymentCard:hover {
+  border-color: var(--ds-color-text-editorial-subtle);
   background: var(--ds-color-bg-surface-muted);
 }
 
-.selectPlaceholder {
-  color: var(--ds-color-text-editorial-muted);
-}
-
-.select option {
-  background: var(--ds-color-bg-surface);
+.paymentCardActive {
+  border-color: var(--ds-color-magenta-400);
   color: var(--ds-color-text-primary);
-  padding: 10px;
+  background: rgba(255, 45, 120, 0.05);
 }
 
-.selectChevron {
-  position: absolute;
-  right: 1rem;
-  font-size: 0.6rem;
-  color: var(--ds-color-text-secondary);
-  pointer-events: none;
+.paymentCardActive svg {
+  color: var(--ds-color-magenta-400);
+}
+
+.paymentCardTitle {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 /* Mock UI de Tarjeta / QR */

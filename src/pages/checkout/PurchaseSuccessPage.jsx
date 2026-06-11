@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { MailIcon } from '../../components/icons';
@@ -12,6 +12,11 @@ import styles from './PurchaseSuccessPage.module.css';
 export default function PurchaseSuccessPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+
+  const collectionStatus = searchParams.get('collection_status'); // 'approved', 'pending', 'rejected'
+  const isRejected = collectionStatus === 'rejected';
+  const isPending = collectionStatus === 'pending';
 
   const eventData     = location.state?.eventData ?? null;
   const cantidad      = location.state?.cantidad ?? 1;
@@ -72,12 +77,26 @@ export default function PurchaseSuccessPage() {
 
       {/* Encabezado */}
       <div className={`${styles.successHeader} ${styles.animateFadeInUp}`} style={{ animationDelay: '0.2s' }}>
-        <div className={styles.checkCircle}>
-          <span>✓</span>
+        <div className={styles.checkCircle} style={{ 
+          backgroundColor: isRejected ? 'var(--ds-color-red-400)' : 
+                          isPending ? 'var(--ds-color-warning-400)' : 
+                          'var(--ds-color-accent-primary)'
+        }}>
+          <span>{isRejected ? '✗' : isPending ? '!' : '✓'}</span>
         </div>
-        <div className={styles.orderLabel}>COMPRA CONFIRMADA • {orderId}</div>
-        <h1 className={styles.successTitle}>¡NOS VEMOS<br/>EN LA MOVIDA!</h1>
-        <p className={styles.successSubtitle}>Guardá esta página o revisá tu correo cuando quieras.</p>
+        <div className={styles.orderLabel}>
+          {isRejected ? 'COMPRA FALLIDA' : isPending ? 'COMPRA EN PROCESO' : 'COMPRA CONFIRMADA'} • {orderId}
+        </div>
+        <h1 className={styles.successTitle}>
+          {isRejected ? 'PAGO RECHAZADO' : 
+           isPending ? 'PAGO PENDIENTE' : 
+           <><>¡NOS VEMOS</><br/>EN LA MOVIDA!</>}
+        </h1>
+        <p className={styles.successSubtitle}>
+          {isRejected ? 'Hubo un problema con tu pago. Por favor intentá con otro método.' : 
+           isPending ? 'Tu pago está siendo procesado. Te avisaremos por correo cuando se acredite.' : 
+           'Guardá esta página o revisá tu correo cuando quieras.'}
+        </p>
       </div>
 
       {/* DOS COLUMNAS: TICKET A LA IZQUIERDA, RECIBO A LA DERECHA */}

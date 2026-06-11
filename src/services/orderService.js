@@ -17,6 +17,21 @@ export const createOrder = async (orderData) => {
 };
 
 /**
+ * getMyOrders — obtiene las órdenes del usuario logueado
+ * GET /api/orders/mis-ordenes
+ * @returns {Array} Lista de órdenes
+ */
+export const getMyOrders = async () => {
+  try {
+    const { data } = await api.get("/orders/mis-ordenes");
+    return data;
+  } catch (error) {
+    console.error("Error fetching my orders:", error);
+    throw error;
+  }
+};
+
+/**
  * createPaymentPreference - crea una preferencia de pago en Mercado Pago
  * POST /api/payments/create-preference
  */
