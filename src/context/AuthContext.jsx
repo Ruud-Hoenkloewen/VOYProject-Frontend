@@ -1,7 +1,17 @@
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const TOKEN_KEY = "voy_token";
 const USER_KEY  = "voy_user";
+
+const normalizeRole = (r) => {
+  if (!r) return null;
+  const lower = r.toLowerCase();
+  if (lower === "usuario" || lower === "client") return "client";
+  if (lower === "productor" || lower === "producer") return "producer";
+  if (lower === "admin") return "admin";
+  return lower;
+};
 
 const AuthContext = createContext(null);
 
@@ -19,6 +29,24 @@ export function AuthProvider({ children }) {
       return null;
     }
   });
+  const [role, setRole] = useState(() => {
+    const savedToken = localStorage.getItem(TOKEN_KEY);
+    if (savedToken) {
+      try {
+        const decoded = jwtDecode(savedToken);
+        const rawRole = decoded.rol || decoded.role;
+        if (rawRole) return normalizeRole(rawRole);
+      } catch {}
+    }
+    try {
+      const savedUser = localStorage.getItem(USER_KEY);
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        return normalizeRole(parsed.rol || parsed.role);
+      }
+    } catch {}
+    return null;
+  });
 
   /** Llama después de un login/register exitoso */
   const login = useCallback((userData, jwt) => {
@@ -26,6 +54,17 @@ export function AuthProvider({ children }) {
     localStorage.setItem(USER_KEY, JSON.stringify(userData));
     setToken(jwt);
     setUser(userData);
+    
+    let userRole = null;
+    try {
+      const decoded = jwtDecode(jwt);
+      userRole = normalizeRole(decoded.rol || decoded.role);
+    } catch {}
+    
+    if (!userRole) {
+      userRole = normalizeRole(userData.rol || userData.role);
+    }
+    setRole(userRole);
   }, []);
 
   /** Cierra la sesión y limpia el storage */
@@ -34,6 +73,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem(USER_KEY);
     setToken(null);
     setUser(null);
+    setRole(null);
   }, []);
 
   /**
@@ -53,6 +93,9 @@ export function AuthProvider({ children }) {
     if (!newUserData) return;
     localStorage.setItem(USER_KEY, JSON.stringify(newUserData));
     setUser(newUserData);
+    if (newUserData.rol || newUserData.role) {
+      setRole(normalizeRole(newUserData.rol || newUserData.role));
+    }
   }, []);
 
   /** Si hay token pero no hay usuario (ej. bug anterior o storage parcial), recuperarlo */
@@ -71,8 +114,11 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = Boolean(token);
 
+  // Devolvemos el usuario asegurándonos de inyectar el rol del JWT si está disponible
+  const userWithRole = user ? { ...user, rol: role || user.rol, role: role || user.role } : null;
+
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user: userWithRole, token, isAuthenticated, role, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );

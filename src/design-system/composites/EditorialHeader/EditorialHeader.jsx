@@ -11,7 +11,7 @@ import styles from "./EditorialHeader.module.css";
  * Mobile: menú hamburguesa con drawer animado.
  */
 export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login" }) {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, role } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [hidden, setHidden] = useState(false);
@@ -48,10 +48,23 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
 
   const closeMenu = () => setMenuOpen(false);
 
-  const NAV_LINKS = [
+  const navLinks = [
     { to: "/", label: "INICIO", end: true },
     { to: "/events", label: "EXPLORAR EVENTOS" },
   ];
+
+  if (isAuthenticated) {
+    if (role === "client") {
+      navLinks.push({ to: `/profile/${user?.username || user?._id || 'me'}`, label: "MIS ENTRADAS" });
+    } else if (role === "producer") {
+      navLinks.push({ to: "/dashboard/producer", label: "PANEL PRODUCTOR" });
+    }
+    /*
+    else if (role === "admin") {
+      navLinks.push({ to: "/dashboard/admin", label: "PANEL ADMIN" });
+    }
+    */
+  }
 
   return (
     <>
@@ -71,7 +84,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
 
         {/* NAV LINKS — desktop */}
         <nav className={styles.nav}>
-          {NAV_LINKS.map(({ to, label, end }) => (
+          {navLinks.map(({ to, label, end }) => (
             <NavLink
               key={to}
               to={to}
@@ -88,6 +101,15 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         {/* CTA / Usuario — desktop */}
         {isAuthenticated ? (
           <div className={styles.userArea}>
+            {role === "producer" && (
+              <Link
+                to="/dashboard/producer"
+                className={styles.cta}
+                style={{ marginRight: "1rem" }}
+              >
+                + CREAR EVENTO
+              </Link>
+            )}
             <Link
               to={`/profile/${user?.username || user?._id || 'me'}`}
               className={styles.userWidget}
@@ -130,7 +152,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         aria-hidden={!menuOpen}
       >
         <nav className={styles.drawerNav}>
-          {NAV_LINKS.map(({ to, label, end }) => (
+          {navLinks.map(({ to, label, end }) => (
             <NavLink
               key={to}
               to={to}
@@ -143,6 +165,16 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
               {label}
             </NavLink>
           ))}
+          {role === "producer" && (
+            <Link
+              to="/dashboard/producer"
+              className={styles.drawerLink}
+              style={{ color: "var(--ds-color-accent-primary, #C6F92B)", borderBottom: "1px solid #141414" }}
+              onClick={closeMenu}
+            >
+              + CREAR EVENTO
+            </Link>
+          )}
           {isAuthenticated ? (
             <button className={styles.drawerCta} onClick={() => { handleLogout(); closeMenu(); }}>
               SALIR
