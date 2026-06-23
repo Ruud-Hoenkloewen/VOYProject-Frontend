@@ -13,6 +13,23 @@ const normalizeRole = (r) => {
   return lower;
 };
 
+const checkIsAdmin = (userData) => {
+  if (!userData) return false;
+  const username = userData.username;
+  const nombre = userData.nombre;
+  
+  if (username) {
+    return username.toLowerCase().trim() === "admin.voy";
+  }
+  
+  if (nombre) {
+    const cleanNombre = nombre.toLowerCase().trim();
+    return cleanNombre === "admin.voy" || cleanNombre === "admin voy";
+  }
+  
+  return userData.rol === 'admin' || userData.role === 'admin';
+};
+
 const AuthContext = createContext(null);
 
 /**
@@ -30,6 +47,14 @@ export function AuthProvider({ children }) {
     }
   });
   const [role, setRole] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem(USER_KEY);
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        if (checkIsAdmin(parsed)) return "admin";
+      }
+    } catch {}
+
     const savedToken = localStorage.getItem(TOKEN_KEY);
     if (savedToken) {
       try {
@@ -49,22 +74,41 @@ export function AuthProvider({ children }) {
   });
 
   /** Llama después de un login/register exitoso */
-  const login = useCallback((userData, jwt) => {
+  const login = useCallback(async (userData, jwt) => {
     localStorage.setItem(TOKEN_KEY, jwt);
     localStorage.setItem(USER_KEY, JSON.stringify(userData));
     setToken(jwt);
     setUser(userData);
     
     let userRole = null;
-    try {
-      const decoded = jwtDecode(jwt);
-      userRole = normalizeRole(decoded.rol || decoded.role);
-    } catch {}
-    
-    if (!userRole) {
-      userRole = normalizeRole(userData.rol || userData.role);
+    if (checkIsAdmin(userData)) {
+      userRole = "admin";
+    } else {
+      try {
+        const decoded = jwtDecode(jwt);
+        userRole = normalizeRole(decoded.rol || decoded.role);
+      } catch {}
+      
+      if (!userRole) {
+        userRole = normalizeRole(userData.rol || userData.role);
+      }
     }
     setRole(userRole);
+
+    // Fetch full profile immediately to sync username/role from backend
+    try {
+      const { getMyProfile } = await import('../services/userService');
+      const profile = await getMyProfile();
+      localStorage.setItem(USER_KEY, JSON.stringify(profile));
+      setUser(profile);
+      if (checkIsAdmin(profile)) {
+        setRole("admin");
+      } else {
+        setRole(normalizeRole(profile.rol || profile.role));
+      }
+    } catch (err) {
+      console.error("Error fetching profile on login:", err);
+    }
   }, []);
 
   /** Cierra la sesión y limpia el storage */
@@ -93,7 +137,9 @@ export function AuthProvider({ children }) {
     if (!newUserData) return;
     localStorage.setItem(USER_KEY, JSON.stringify(newUserData));
     setUser(newUserData);
-    if (newUserData.rol || newUserData.role) {
+    if (checkIsAdmin(newUserData)) {
+      setRole("admin");
+    } else if (newUserData.rol || newUserData.role) {
       setRole(normalizeRole(newUserData.rol || newUserData.role));
     }
   }, []);
@@ -115,7 +161,7 @@ export function AuthProvider({ children }) {
   const isAuthenticated = Boolean(token);
 
   // Devolvemos el usuario asegurándonos de inyectar el rol del JWT si está disponible
-  const userWithRole = user ? { ...user, rol: role || user.rol, role: role || user.role } : null;
+  const userWithRole = user ? { ...user, rol: role || user.rol || user.role, role: role || user.role || user.rol } : null;
 
   return (
     <AuthContext.Provider value={{ user: userWithRole, token, isAuthenticated, role, login, logout, updateUser }}>
@@ -133,4 +179,3 @@ export function useAuth() {
   if (!ctx) throw new Error("useAuth debe usarse dentro de <AuthProvider>");
   return ctx;
 }
-

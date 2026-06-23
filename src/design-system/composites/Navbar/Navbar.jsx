@@ -41,6 +41,11 @@ export default function Navbar() {
                 + Crear Evento
               </Link>
             )}
+            {role === "admin" && (
+              <Link to="/dashboard/admin" className={styles.actionPrimary} style={{ marginRight: "1rem" }}>
+                Panel Admin
+              </Link>
+            )}
             <UserAvatar />
           </>
         ) : (

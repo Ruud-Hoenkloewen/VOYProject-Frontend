@@ -58,12 +58,9 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
       navLinks.push({ to: `/profile/${user?.username || user?._id || 'me'}`, label: "MIS ENTRADAS" });
     } else if (role === "producer") {
       navLinks.push({ to: "/dashboard/producer", label: "PANEL PRODUCTOR" });
-    }
-    /*
-    else if (role === "admin") {
+    } else if (role === "admin") {
       navLinks.push({ to: "/dashboard/admin", label: "PANEL ADMIN" });
     }
-    */
   }
 
   return (

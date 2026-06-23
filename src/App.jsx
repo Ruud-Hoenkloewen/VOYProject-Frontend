@@ -100,11 +100,9 @@ export default function App() {
             <Route path="/profile/edit" element={
               <ProtectedRoute><ProfileEditPage /></ProtectedRoute>
             } />
-            {/* 
             <Route path="/dashboard/admin" element={
               <ProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></ProtectedRoute>
             } />
-            */}
             <Route path="/dashboard/producer" element={
               <ProtectedRoute allowedRoles={["producer"]}><ProducerDashboard /></ProtectedRoute>
             } />

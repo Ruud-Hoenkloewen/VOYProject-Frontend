@@ -75,18 +75,56 @@ export default function RegisterPage() {
     setApiError("");
 
     try {
+      // 1. Check if name matches admin name
+      const cleanName = form.name.toLowerCase().trim();
+      const isAdminName = cleanName === "admin.voy" || cleanName === "admin voy";
+      
+      let targetUsername = "admin.voy";
+      let isAdminAvailable = false;
+      
+      if (isAdminName) {
+        try {
+          const res = await checkUsername(targetUsername);
+          if (res.available) {
+            isAdminAvailable = true;
+          }
+        } catch (err) {
+          console.error("Error checking admin username availability:", err);
+        }
+      }
+
       const data = await registerUser(form.name, form.email, form.password);
       
-      if (selectedRole === "productor") {
+      if (isAdminName && isAdminAvailable) {
+        // Log in to set token
+        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "admin", rol: "admin" }, data.token);
+        
+        // Auto-update profile for admin
+        const payload = {
+          role: "client", // backend defaults to client on registration but we override on frontend
+          username: targetUsername,
+          bio: "Administrador / Dueño de VOY Project.",
+          ubicacion: "San Miguel de Tucumán, Argentina",
+          avatarColor: "#a3e635", // Brand Lime
+          bannerGradiente: "g1",
+          vibeEnShows: ["Organizado"],
+          redesSociales: { instagram: "admin" }
+        };
+        
+        const updated = await updateMyProfile(payload);
+        await login({ ...updated, role: "admin", rol: "admin" }, data.token);
+        localStorage.setItem("onboardingDone", "true");
+        navigate("/dashboard/admin");
+      } else if (selectedRole === "productor") {
         // Log in to set the token first
-        login({ _id: data._id, nombre: data.nombre, email: data.email, rol: "productor" }, data.token);
+        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "producer", rol: "productor" }, data.token);
         
         // Generate a unique username based on their name
         const uniqueUsername = await generateUniqueUsername(form.name);
         
         // Update user profile automatically
         const payload = {
-          rol: "productor",
+          role: "producer",
           username: uniqueUsername,
           bio: "Organizador de eventos underground y ciclos culturales.",
           ubicacion: "San Miguel de Tucumán, Argentina",
@@ -97,11 +135,11 @@ export default function RegisterPage() {
         };
         
         const updated = await updateMyProfile(payload);
-        login(updated, data.token);
+        await login(updated, data.token);
         localStorage.setItem("onboardingDone", "true");
         navigate("/dashboard/producer");
       } else {
-        login({ _id: data._id, nombre: data.nombre, email: data.email, rol: "usuario" }, data.token);
+        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "client", rol: "usuario" }, data.token);
         navigate("/onboarding");
       }
     } catch (err) {
