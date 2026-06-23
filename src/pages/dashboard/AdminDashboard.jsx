@@ -21,6 +21,15 @@ export default function AdminDashboard() {
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
   const [toast, setToast] = useState(null); // { message: string, error: boolean }
+  const [featuredEventIds, setFeaturedEventIds] = useState(() => {
+    const saved = localStorage.getItem("voy_featured_events");
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {}
+    }
+    return [];
+  });
 
   const showToastMsg = (message, isError = false) => {
     setToast({ message, error: isError });
@@ -130,6 +139,20 @@ export default function AdminDashboard() {
     });
     setUsers(updated);
     localStorage.setItem("voy_admin_users", JSON.stringify(updated));
+  };
+
+  // Action: Toggle Featured status
+  const handleToggleFeatured = (id) => {
+    let updated;
+    if (featuredEventIds.includes(id)) {
+      updated = featuredEventIds.filter(itemId => itemId !== id);
+      showToastMsg("Evento removido de destacados");
+    } else {
+      updated = [...featuredEventIds, id];
+      showToastMsg("Evento marcado como destacado");
+    }
+    setFeaturedEventIds(updated);
+    localStorage.setItem("voy_featured_events", JSON.stringify(updated));
   };
 
   // Dynamic KPIs calculations
@@ -305,6 +328,80 @@ export default function AdminDashboard() {
                 </tbody>
               </table>
             </div>
+          </div>
+
+          {/* SECCIÓN 3: Gestión de Eventos */}
+          <div className={styles.card}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>
+                🎸 Gestión de Eventos
+              </h2>
+              <span className={styles.badgeCount}>{events.length}</span>
+            </div>
+
+            {loadingEvents ? (
+              <p style={{ color: "#666", fontSize: "14px", margin: 0 }}>Cargando eventos...</p>
+            ) : events.length === 0 ? (
+              <p style={{ color: "#666", fontSize: "14px", margin: 0 }}>No hay eventos cargados en la plataforma.</p>
+            ) : (
+              <div className={styles.tableWrapper}>
+                <table className={styles.table}>
+                  <thead>
+                    <tr>
+                      <th>Evento</th>
+                      <th>Fecha / Hora</th>
+                      <th>Precio</th>
+                      <th>Ventas</th>
+                      <th style={{ textAlign: "right" }}>Destacado</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {events.map(evt => {
+                      const isFeatured = featuredEventIds.includes(evt.id);
+                      const ticketsSold = Math.max(0, (evt.capacity || 0) - (evt.stock || 0));
+                      const capacity = evt.capacity || 0;
+                      
+                      return (
+                        <tr key={evt.id}>
+                          <td>
+                            <div className={styles.userMeta}>
+                              <span className={styles.username}>{evt.title}</span>
+                              <span className={styles.email}>{evt.venue}</span>
+                            </div>
+                          </td>
+                          <td>
+                            <div className={styles.userMeta}>
+                              <span style={{ color: "#fff", fontWeight: 500 }}>{evt.date}</span>
+                              <span className={styles.email}>{evt.time}</span>
+                            </div>
+                          </td>
+                          <td>
+                            <span style={{ color: "#00E5FF", fontWeight: 700 }}>
+                              {evt.price}
+                            </span>
+                          </td>
+                          <td>
+                            <span style={{ fontSize: "12px", color: "#ccc" }}>
+                              {ticketsSold} / {capacity}
+                            </span>
+                          </td>
+                          <td style={{ textAlign: "right" }}>
+                            <label className={styles.switch}>
+                              <input 
+                                type="checkbox" 
+                                checked={isFeatured}
+                                onChange={() => handleToggleFeatured(evt.id)}
+                              />
+                              <span className={styles.slider}></span>
+                            </label>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
         </div>
