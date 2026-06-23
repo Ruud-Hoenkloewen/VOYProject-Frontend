@@ -135,7 +135,8 @@ export default function RegisterPage() {
         };
         
         const updated = await updateMyProfile(payload);
-        await login(updated, data.token);
+        const updatedWithMockRole = { ...updated, role: "producer", rol: "productor" };
+        await login(updatedWithMockRole, data.token);
         localStorage.setItem("onboardingDone", "true");
         navigate("/dashboard/producer");
       } else {

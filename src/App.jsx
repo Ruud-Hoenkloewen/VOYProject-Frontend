@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 // ── Lazy loading — cada ruta descarga su chunk solo cuando se necesita
 const LandingPage          = lazy(() => import("./pages/landing/LandingPage"));
@@ -40,21 +41,7 @@ function ProtectedLoginRoute() {
   return isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />;
 }
 
-/** Protege rutas que requieren sesión activa y roles específicos */
-function ProtectedRoute({ children, allowedRoles }) {
-  const { isAuthenticated, role } = useAuth();
-  const location = useLocation();
-  
-  if (!isAuthenticated) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
-  }
-  
-  if (allowedRoles && !allowedRoles.includes(role)) {
-    return <Navigate to="/" replace />;
-  }
-  
-  return children;
-}
+
 
 /**
  * Ruta de onboarding — solo accesible para usuarios autenticados

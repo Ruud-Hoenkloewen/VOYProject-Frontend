@@ -47,68 +47,55 @@ export function AuthProvider({ children }) {
     }
   });
   const [role, setRole] = useState(() => {
-    try {
-      const savedUser = localStorage.getItem(USER_KEY);
-      if (savedUser) {
-        const parsed = JSON.parse(savedUser);
-        if (checkIsAdmin(parsed)) return "admin";
-      }
-    } catch {}
-
     const savedToken = localStorage.getItem(TOKEN_KEY);
     if (savedToken) {
       try {
         const decoded = jwtDecode(savedToken);
-        const rawRole = decoded.rol || decoded.role;
-        if (rawRole) return normalizeRole(rawRole);
+        const tokenRole = normalizeRole(decoded.role || decoded.rol);
+        if (tokenRole) {
+          // Si se registró como productor, el backend devuelve rol client pero guardamos role producer localmente.
+          // Respetamos este mock/override local para no romper el flujo de registro.
+          const savedUser = localStorage.getItem(USER_KEY);
+          if (savedUser) {
+            const parsed = JSON.parse(savedUser);
+            if (parsed.role && parsed.role !== "client") {
+              return normalizeRole(parsed.role);
+            }
+          }
+          return tokenRole;
+        }
       } catch {}
     }
     try {
       const savedUser = localStorage.getItem(USER_KEY);
       if (savedUser) {
         const parsed = JSON.parse(savedUser);
-        return normalizeRole(parsed.rol || parsed.role);
+        return normalizeRole(parsed.role || parsed.rol);
       }
     } catch {}
     return null;
   });
 
   /** Llama después de un login/register exitoso */
-  const login = useCallback(async (userData, jwt) => {
+  const login = useCallback((userData, jwt) => {
     localStorage.setItem(TOKEN_KEY, jwt);
     localStorage.setItem(USER_KEY, JSON.stringify(userData));
     setToken(jwt);
     setUser(userData);
     
     let userRole = null;
-    if (checkIsAdmin(userData)) {
-      userRole = "admin";
-    } else {
-      try {
-        const decoded = jwtDecode(jwt);
-        userRole = normalizeRole(decoded.rol || decoded.role);
-      } catch {}
-      
-      if (!userRole) {
-        userRole = normalizeRole(userData.rol || userData.role);
-      }
-    }
-    setRole(userRole);
-
-    // Fetch full profile immediately to sync username/role from backend
     try {
-      const { getMyProfile } = await import('../services/userService');
-      const profile = await getMyProfile();
-      localStorage.setItem(USER_KEY, JSON.stringify(profile));
-      setUser(profile);
-      if (checkIsAdmin(profile)) {
-        setRole("admin");
-      } else {
-        setRole(normalizeRole(profile.rol || profile.role));
-      }
-    } catch (err) {
-      console.error("Error fetching profile on login:", err);
+      const decoded = jwtDecode(jwt);
+      userRole = normalizeRole(decoded.role || decoded.rol);
+    } catch {}
+    
+    // Si el token tiene 'client' pero userData especifica 'producer' o 'admin' de forma explícita,
+    // es un flujo de registro o mockeo que debemos respetar en el frontend
+    if (!userRole || (userData && userData.role && userData.role !== "client")) {
+      userRole = normalizeRole(userData.role || userData.rol) || userRole;
     }
+    
+    setRole(userRole);
   }, []);
 
   /** Cierra la sesión y limpia el storage */
@@ -139,8 +126,8 @@ export function AuthProvider({ children }) {
     setUser(newUserData);
     if (checkIsAdmin(newUserData)) {
       setRole("admin");
-    } else if (newUserData.rol || newUserData.role) {
-      setRole(normalizeRole(newUserData.rol || newUserData.role));
+    } else if (newUserData.role || newUserData.rol) {
+      setRole(normalizeRole(newUserData.role || newUserData.rol));
     }
   }, []);
 

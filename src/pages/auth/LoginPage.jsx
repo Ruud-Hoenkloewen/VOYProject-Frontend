@@ -50,8 +50,20 @@ export default function LoginPage() {
 
     try {
       const data = await loginUser(form.email, form.password);
-      // data = { _id, nombre, email, token }
-      login({ _id: data._id, nombre: data.nombre, email: data.email }, data.token);
+      // data = { _id, nombre, email, token, role }
+      // The role will be extracted from JWT payload inside login()
+      login({ _id: data._id, nombre: data.nombre, email: data.email, role: data.role }, data.token);
+      
+      // Fetch full profile in the background to sync other metadata like username, avatar color, banner, etc.
+      import("../../services/userService")
+        .then(({ getMyProfile }) => getMyProfile())
+        .then((profile) => {
+          login(profile, data.token);
+        })
+        .catch((err) => {
+          console.error("Error fetching full profile on login:", err);
+        });
+
       navigate(redirectTo, { replace: true });
     } catch (err) {
       const msg = err.response?.data?.mensaje || "Error al iniciar sesión. Intentá de nuevo.";
