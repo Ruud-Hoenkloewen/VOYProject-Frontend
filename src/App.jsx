@@ -18,6 +18,7 @@ const ProfilePage          = lazy(() => import("./pages/profile/ProfilePage"));
 const ProfileEditPage      = lazy(() => import("./pages/profile/ProfileEditPage"));
 const AdminDashboard       = lazy(() => import("./pages/dashboard/AdminDashboard"));
 const ProducerDashboard    = lazy(() => import("./pages/dashboard/ProducerDashboard"));
+const EventFormPage        = lazy(() => import("./pages/dashboard/EventFormPage"));
 
 /** Componente utilitario para resetear el scroll al principio al cambiar de ruta */
 function ScrollToTop() {
@@ -92,6 +93,12 @@ export default function App() {
             } />
             <Route path="/dashboard/producer" element={
               <ProtectedRoute allowedRoles={["producer"]}><ProducerDashboard /></ProtectedRoute>
+            } />
+            <Route path="/events/create" element={
+              <ProtectedRoute allowedRoles={["producer"]}><EventFormPage /></ProtectedRoute>
+            } />
+            <Route path="/events/edit/:id" element={
+              <ProtectedRoute allowedRoles={["producer"]}><EventFormPage /></ProtectedRoute>
             } />
           </Routes>
         </Suspense>
