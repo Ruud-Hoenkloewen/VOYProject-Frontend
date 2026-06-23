@@ -137,6 +137,29 @@ export default function RegisterPage() {
         const updated = await updateMyProfile(payload);
         const updatedWithMockRole = { ...updated, role: "producer", rol: "productor" };
         await login(updatedWithMockRole, data.token);
+
+        // Registrar al productor en la lista administrativa de usuarios de localStorage en estado pendiente
+        const savedUsers = localStorage.getItem("voy_admin_users");
+        let usersList = [];
+        if (savedUsers) {
+          try {
+            usersList = JSON.parse(savedUsers);
+          } catch (e) {}
+        }
+        if (!usersList.some(u => u.email.toLowerCase() === form.email.toLowerCase())) {
+          usersList.push({
+            id: data._id || String(Date.now()),
+            nombre: form.name,
+            username: uniqueUsername,
+            email: form.email,
+            role: "producer",
+            isSuspended: false,
+            isVerifiedProducer: false,
+            isPendingApproval: true
+          });
+          localStorage.setItem("voy_admin_users", JSON.stringify(usersList));
+        }
+
         localStorage.setItem("onboardingDone", "true");
         navigate("/dashboard/producer");
       } else {
