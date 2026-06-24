@@ -25,7 +25,7 @@ const PUERTAS_OFFSET = 30; // primer set empieza 30 min después de puertas
 export default function EventDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, updateUser, isAuthenticated } = useAuth();
+  const { user, updateUser, isAuthenticated, handleToggleFavorite } = useAuth();
   
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -34,23 +34,18 @@ export default function EventDetailPage() {
 
   const isFavorite = user?.favoritos?.includes(id) || false;
 
-  const handleToggleFavorite = async () => {
+  const toggleFavAction = async () => {
     if (!isAuthenticated) {
       navigate('/login');
       return;
     }
-    
     try {
       setIsTogglingFav(true);
-      const currentFavs = user?.favoritos || [];
-      const newFavs = isFavorite 
-        ? currentFavs.filter(favId => favId !== id)
-        : [...currentFavs, id];
-        
-      const updatedUser = await updateMyProfile({ favoritos: newFavs });
-      updateUser(updatedUser);
+      if (handleToggleFavorite) {
+        await handleToggleFavorite(id);
+      }
     } catch (err) {
-      console.error("Error toggling favorite:", err);
+      console.error(err);
     } finally {
       setIsTogglingFav(false);
     }
@@ -149,7 +144,7 @@ export default function EventDetailPage() {
         </button>
         <button 
           className={`${styles.heroHeart} ${isFavorite ? styles.heroHeartActive : ''}`}
-          onClick={handleToggleFavorite}
+          onClick={toggleFavAction}
           disabled={isTogglingFav}
           style={{ color: isFavorite ? 'var(--ds-color-magenta-400)' : 'currentColor' }}
         >

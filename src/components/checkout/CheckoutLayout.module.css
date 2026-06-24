@@ -172,7 +172,7 @@
 .stepBoxCompleted {
   border-color: var(--ds-color-accent-primary);
   background: var(--ds-color-accent-primary);
-  color: #000;
+  color: var(--ds-color-bg-canvas);
 }
 
 /* Etiqueta debajo del cuadrado */

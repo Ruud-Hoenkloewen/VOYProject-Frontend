@@ -10,7 +10,7 @@
 }
 
 .headerRow {
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid var(--ds-color-border-editorial);
   padding-bottom: 24px;
   margin-bottom: 32px;
   display: flex;
@@ -29,7 +29,7 @@
 .eyebrow {
   font-size: 11px;
   font-weight: 800;
-  color: #00E5FF;
+  color: var(--ds-color-cyan-400);
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
@@ -43,8 +43,8 @@
 }
 
 .createBtn {
-  background: #00E5FF;
-  color: #000;
+  background: var(--ds-color-cyan-400);
+  color: var(--ds-color-bg-canvas);
   text-decoration: none;
   padding: 12px 24px;
   font-weight: 900;
@@ -114,7 +114,7 @@
 
 .eventCard {
   background: #0c0c0c;
-  border: 1px solid #1a1a1a;
+  border: 1px solid var(--ds-color-border-editorial);
   border-radius: 8px;
   overflow: hidden;
   display: flex;
@@ -124,7 +124,7 @@
 }
 
 .eventCard:hover {
-  border-color: #333;
+  border-color: var(--ds-color-border-editorial-mid);
 }
 
 .cardBanner {
@@ -153,18 +153,18 @@
 }
 
 .statusActive {
-  background: #C6F92B;
-  color: #000;
+  background: var(--ds-color-accent-primary);
+  color: var(--ds-color-bg-canvas);
 }
 
 .statusPaused {
-  background: #FFAA00;
-  color: #000;
+  background: var(--ds-color-yellow-300);
+  color: var(--ds-color-bg-canvas);
 }
 
 .statusCancelled {
-  background: #FF4444;
-  color: #fff;
+  background: var(--ds-color-state-danger);
+  color: var(--ds-color-text-primary);
 }
 
 .cardContent {
@@ -181,7 +181,7 @@
 .eventTitle {
   font-size: 20px;
   font-weight: 800;
-  color: #fff;
+  color: var(--ds-color-text-primary);
   margin: 0;
   line-height: 1.2;
 }
@@ -217,13 +217,13 @@
 .progressBarBg {
   width: 100%;
   height: 6px;
-  background: #1a1a1a;
+  background: var(--ds-color-border-editorial);
   overflow: hidden;
 }
 
 .progressBarFill {
   height: 100%;
-  background: #00E5FF;
+  background: var(--ds-color-cyan-400);
 }
 
 .cardActions {
@@ -237,7 +237,7 @@
 .actionBtn {
   flex: 1;
   background: transparent;
-  color: #fff;
+  color: var(--ds-color-text-primary);
   border: 1px solid #222;
   padding: 8px;
   font-size: 11px;
@@ -256,11 +256,11 @@
 }
 
 .actionBtnDanger {
-  color: #FF4444;
+  color: var(--ds-color-state-danger);
 }
 
 .actionBtnDanger:hover {
-  border-color: #FF4444;
+  border-color: var(--ds-color-state-danger);
   background: rgba(255,68,68,0.05);
 }
 
@@ -278,8 +278,8 @@
 .toast {
   padding: 16px 24px;
   background: #0c0c0c;
-  color: #fff;
-  border: 1px solid #C6F92B;
+  color: var(--ds-color-text-primary);
+  border: 1px solid var(--ds-color-accent-primary);
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
   font-size: 13px;
   font-weight: 700;
@@ -289,7 +289,7 @@
 }
 
 .toastError {
-  border-color: #FF4444;
+  border-color: var(--ds-color-state-danger);
 }
 
 @keyframes slideIn {

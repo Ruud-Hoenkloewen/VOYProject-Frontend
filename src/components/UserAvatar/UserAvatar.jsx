@@ -7,7 +7,7 @@ export default function UserAvatar() {
 
   const safeName = user.nombre || user.username || 'Usuario';
   const initial = safeName.charAt(0).toUpperCase();
-  const avatarColor = user.avatarColor || 'var(--ds-color-accent-primary, #C6F92B)';
+  const avatarColor = user.avatarColor || 'var(--ds-color-accent-primary)';
 
   const profileUrl = `/profile/${user.username || user._id || user.id || 'me'}`;
 
@@ -18,7 +18,7 @@ export default function UserAvatar() {
         width: "28px",
         height: "28px",
         backgroundColor: avatarColor,
-        color: "var(--ds-color-background-primary, #000)",
+        color: "var(--ds-color-bg-canvas)",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -26,12 +26,12 @@ export default function UserAvatar() {
         fontSize: "14px",
         borderRadius: "2px",
         textDecoration: "none",
-        border: "1px solid var(--ds-color-border, #333)",
+        border: "1px solid var(--ds-color-border)",
         transition: "border-color 0.2s",
         cursor: "pointer"
       }}
-      onMouseOver={(e) => e.currentTarget.style.borderColor = "var(--ds-color-text-secondary, #777)"}
-      onMouseOut={(e) => e.currentTarget.style.borderColor = "var(--ds-color-border, #333)"}
+      onMouseOver={(e) => e.currentTarget.style.borderColor = "var(--ds-color-text-secondary)"}
+      onMouseOut={(e) => e.currentTarget.style.borderColor = "var(--ds-color-border)"}
       title="Ir a Perfil"
     >
       {initial}

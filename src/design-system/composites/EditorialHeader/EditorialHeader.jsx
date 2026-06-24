@@ -16,7 +16,20 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
   const location = useLocation();
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const lastScrollY = useRef(0);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Verificar si el productor está aprobado en la lista administrativa de localStorage
   const isApprovedProducer = (() => {
@@ -120,22 +133,42 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
                 + CREAR EVENTO
               </Link>
             )}
-            <Link
-              to={`/profile/${user?.username || user?._id || 'me'}`}
-              className={styles.userWidget}
-            >
-              <div
-                className={styles.userAvatar}
-                style={{ backgroundColor: user?.avatarColor || 'var(--ds-color-brand-lime)' }}
-              >
-                {(user?.nombre || user?.username || 'U').charAt(0).toUpperCase()}
+              <div className={styles.userDropdownContainer} ref={dropdownRef}>
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className={styles.userWidget}
+                  style={{ cursor: "pointer", color: "inherit", fontFamily: "inherit", textAlign: "left" }}
+                  aria-haspopup="true"
+                  aria-expanded={dropdownOpen}
+                >
+                  <div
+                    className={styles.userAvatar}
+                    style={{ backgroundColor: user?.avatarColor || 'var(--ds-color-brand-lime)' }}
+                  >
+                    {(user?.nombre || user?.username || 'U').charAt(0).toUpperCase()}
+                  </div>
+                  <div className={styles.userInfo} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                    <span className={styles.userNombre}>
+                      {(user?.nombre || user?.username || 'Usuario').toUpperCase()}
+                    </span>
+                  </div>
+                </button>
+
+                {dropdownOpen && (
+                  <div className={styles.dropdownMenu}>
+                    <Link to={`/profile/${user?.username || user?._id || 'me'}`} onClick={() => setDropdownOpen(false)}>
+                      Mi Perfil
+                    </Link>
+                    <Link to="/profile/me?tab=ajustes" onClick={() => setDropdownOpen(false)}>
+                      Ajustes de perfil
+                    </Link>
+                    <hr />
+                    <button onClick={() => { setDropdownOpen(false); handleLogout(); }}>
+                      Cerrar sesión
+                    </button>
+                  </div>
+                )}
               </div>
-              <div className={styles.userInfo}>
-                <span className={styles.userNombre}>
-                  {(user?.nombre || user?.username || 'Usuario').toUpperCase()}
-                </span>
-              </div>
-            </Link>
           </div>
         ) : (
           <Link to={ctaTo} className={`${styles.cta} ${styles.ctaDesktop}`}>
@@ -179,7 +212,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
             <Link
               to="/dashboard/producer"
               className={styles.drawerLink}
-              style={{ color: "var(--ds-color-accent-primary, #C6F92B)", borderBottom: "1px solid #141414" }}
+              style={{ color: "var(--ds-color-accent-primary)", borderBottom: "1px solid #141414" }}
               onClick={closeMenu}
             >
               + CREAR EVENTO

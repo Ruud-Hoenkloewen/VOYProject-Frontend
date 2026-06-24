@@ -1,0 +1,75 @@
+.emptyState {
+  border: 1px dashed var(--ds-color-border-editorial-mid);
+  background: var(--ds-color-bg-editorial-surface);
+  border-radius: var(--ds-radius-md);
+  padding: 3rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.emptyState.compact {
+  padding: 1.5rem 1rem;
+  flex-direction: row;
+  text-align: left;
+  justify-content: flex-start;
+  gap: 1rem;
+  border-radius: var(--ds-radius-sm);
+}
+
+.emptyIcon {
+  color: var(--ds-color-text-editorial-muted);
+  display: flex;
+}
+
+.emptyContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.emptyTitle {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ds-color-text-primary);
+}
+
+.emptyState.compact .emptyTitle {
+  font-size: 0.8rem;
+}
+
+.emptyDesc {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--ds-color-text-editorial-subtle);
+  max-width: 300px;
+}
+
+.emptyState.compact .emptyDesc {
+  display: none;
+}
+
+.emptyAction {
+  display: inline-flex;
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ds-color-accent-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.emptyState.compact .emptyAction {
+  margin-top: 0;
+  margin-left: auto;
+}
+
+.emptyAction:hover {
+  color: var(--ds-color-text-primary);
+}

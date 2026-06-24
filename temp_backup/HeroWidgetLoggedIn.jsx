@@ -171,45 +171,20 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
                   icon={<TicketIcon size={24} />}
                   title="Sin tickets activos"
                   compact
+                  actionLabel="Buscar pogo"
+                  actionTo="/events"
                 />
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px", color: "var(--ds-color-text-editorial-subtle)" }}>
-                  {myOrders.slice(0, 3).map((order) => {
-                    const ev = order.evento;
-                    if (!ev) return null;
-                    const artistName = ev.artistas && ev.artistas.length > 0 ? (typeof ev.artistas[0] === 'string' ? ev.artistas[0] : ev.artistas[0].nombre) : "Varios Artistas";
-                    // Sanitize backend image
-                    let imageUrl = ev.imagen || '';
-                    if (imageUrl.startsWith('/public/') || !imageUrl) {
-                      const titleLower = (ev.nombre || '').toLowerCase();
-                      if (titleLower.includes('danny') || titleLower.includes('proyectil')) imageUrl = '/flyer-danny-proyectil.png';
-                      else if (titleLower.includes('lacrifagia') || titleLower.includes('oscuridad')) imageUrl = '/flyer-lacrifagia.png';
-                      else if (titleLower.includes('inexplicables')) imageUrl = '/flyer-las-cosas-inexplicables.png';
-                      else imageUrl = '/flyer-sabbath-fest.png';
-                    }
-
-                    // Format date
-                    const dateObj = new Date(ev.fecha);
-                    const isDateValid = !isNaN(dateObj.getTime());
-                    const dateStr = isDateValid ? dateObj.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short' }).toUpperCase() : (ev.fecha || "Fecha a confirmar");
-
-                    return (
-                      <div key={order._id} style={{ display: "flex", gap: "10px", alignItems: "center", paddingBottom: "8px", borderBottom: "1px dashed var(--ds-color-border-editorial-mid)" }}>
-                        <div style={{ width: "45px", height: "60px", flexShrink: 0, borderRadius: "4px", overflow: "hidden", background: "#1a1a1a" }}>
-                          <img src={imageUrl} alt={ev.nombre} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, justifyContent: "center" }}>
-                          <strong style={{ color: "var(--ds-color-text-primary)", fontSize: "0.85rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: "1.2", marginBottom: "2px" }}>{ev.nombre}</strong>
-                          <span style={{ fontSize: "0.75rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "var(--ds-color-text-editorial-subtle)", marginBottom: "4px" }}>{artistName}</span>
-                          <span style={{ fontSize: "0.7rem", color: "var(--ds-color-text-primary)", fontWeight: "500" }}>{dateStr} {ev.hora ? `• ${ev.hora}hs` : ''}</span>
-                        </div>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center" }}>
-                          <span style={{ color: "var(--ds-color-accent-primary)", fontWeight: "900", fontSize: "1rem", lineHeight: "1" }}>x{order.cantidad}</span>
-                          <span style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--ds-color-text-editorial-subtle)", marginTop: "2px" }}>TICKETS</span>
-                        </div>
-                      </div>
-                    );
-                  })}
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "0.8rem", color: "var(--ds-color-text-editorial-subtle)" }}>
+                  {myOrders.slice(0, 2).map((order) => (
+                    <div key={order._id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", borderBottom: "1px dashed var(--ds-color-border-editorial-mid)", paddingBottom: "4px" }}>
+                      <span>
+                        <strong style={{ color: "var(--ds-color-text-primary)", display: "block" }}>{order.evento?.nombre || "Evento Eliminado"}</strong>
+                        {order.cantidad}x tickets
+                      </span>
+                      <span style={{ color: "var(--ds-color-accent-primary)", fontWeight: "bold" }}>ACTIVO</span>
+                    </div>
+                  ))}
                 </div>
               )}
             </div>

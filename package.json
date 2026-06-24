@@ -11,6 +11,7 @@
     "cypress:run": "cypress run"
   },
   "dependencies": {
+    "@react-oauth/google": "^0.13.5",
     "axios": "^1.6.0",
     "jwt-decode": "^4.0.0",
     "qrcode.react": "^4.2.0",

@@ -492,7 +492,7 @@ export default function OnboardingPage() {
             <div className={styles.overlayGrain} />
             
             <div className={styles.lightningBox} style={{ backgroundColor: form.avatarColor, borderColor: form.avatarColor }}>
-              <div className={styles.lightningIcon} aria-hidden="true" style={{ animation: 'none', color: '#111', textShadow: 'none', fontSize: '2.5rem', fontWeight: 900 }}>
+              <div className={styles.lightningIcon} aria-hidden="true" style={{ animation: 'none', color: 'var(--ds-color-bg-surface)', textShadow: 'none', fontSize: '2.5rem', fontWeight: 900 }}>
                 {user?.nombre ? user.nombre.charAt(0).toUpperCase() : "U"}
               </div>
             </div>

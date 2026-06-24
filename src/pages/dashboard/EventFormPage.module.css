@@ -10,7 +10,7 @@
 }
 
 .headerRow {
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid var(--ds-color-border-editorial);
   padding-bottom: 20px;
   margin-bottom: 32px;
   display: flex;
@@ -27,7 +27,7 @@
 .eyebrow {
   font-size: 11px;
   font-weight: 800;
-  color: #00E5FF;
+  color: var(--ds-color-cyan-400);
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
@@ -54,7 +54,7 @@
 }
 
 .backBtn:hover {
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
 
 .formGrid {
@@ -84,9 +84,9 @@
   margin-top: 0;
   margin-bottom: 20px;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid var(--ds-color-border-editorial);
   padding-bottom: 10px;
-  color: #fff;
+  color: var(--ds-color-text-primary);
   display: flex;
   align-items: center;
   gap: 8px;
@@ -124,10 +124,10 @@
 }
 
 .input, .textarea, .select {
-  background: #111;
+  background: var(--ds-color-bg-surface);
   border: 1px solid #222;
   border-radius: 4px;
-  color: #fff;
+  color: var(--ds-color-text-primary);
   padding: 12px 16px;
   font-size: 14px;
   font-family: inherit;
@@ -138,7 +138,7 @@
 
 .input:focus, .textarea:focus, .select:focus {
   outline: none;
-  border-color: #00E5FF;
+  border-color: var(--ds-color-cyan-400);
   box-shadow: 0 0 10px rgba(0, 229, 255, 0.1);
 }
 
@@ -149,13 +149,13 @@
 
 .errorMsg {
   font-size: 11px;
-  color: #FF4444;
+  color: var(--ds-color-state-danger);
   font-weight: 700;
   margin-top: 2px;
 }
 
 .inputError {
-  border-color: #FF4444 !important;
+  border-color: var(--ds-color-state-danger) !important;
 }
 
 /* File Upload & Preview */
@@ -174,7 +174,7 @@
 }
 
 .uploadContainer:hover {
-  border-color: #00E5FF;
+  border-color: var(--ds-color-cyan-400);
 }
 
 .fileInput {
@@ -186,7 +186,7 @@
   width: 100%;
   max-height: 280px;
   overflow: hidden;
-  border: 1px solid #1a1a1a;
+  border: 1px solid var(--ds-color-border-editorial);
   border-radius: 6px;
 }
 
@@ -201,8 +201,8 @@
   top: 10px;
   right: 10px;
   background: rgba(0,0,0,0.8);
-  color: #fff;
-  border: 1px solid #333;
+  color: var(--ds-color-text-primary);
+  border: 1px solid var(--ds-color-border-editorial-mid);
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -214,8 +214,8 @@
 }
 
 .removePreviewBtn:hover {
-  background: #FF4444;
-  border-color: #FF4444;
+  background: var(--ds-color-state-danger);
+  border-color: var(--ds-color-state-danger);
 }
 
 /* Genres tag list */
@@ -232,7 +232,7 @@
 }
 
 .tag {
-  background: #111;
+  background: var(--ds-color-bg-surface);
   border: 1px solid #222;
   color: #aaa;
   border-radius: 20px;
@@ -246,8 +246,8 @@
 
 .tagActive {
   background: rgba(0, 229, 255, 0.1);
-  border-color: #00E5FF;
-  color: #00E5FF;
+  border-color: var(--ds-color-cyan-400);
+  color: var(--ds-color-cyan-400);
 }
 
 .addTagRow {
@@ -257,8 +257,8 @@
 
 .addTagBtn {
   background: transparent;
-  color: #00E5FF;
-  border: 1px solid #00E5FF;
+  color: var(--ds-color-cyan-400);
+  border: 1px solid var(--ds-color-cyan-400);
   padding: 8px 16px;
   font-size: 11px;
   font-weight: 900;
@@ -267,8 +267,8 @@
 }
 
 .addTagBtn:hover {
-  background: #00E5FF;
-  color: #000;
+  background: var(--ds-color-cyan-400);
+  color: var(--ds-color-bg-canvas);
 }
 
 /* Dynamic Artist List */
@@ -283,9 +283,9 @@
   grid-template-columns: 1fr auto auto;
   gap: 12px;
   align-items: center;
-  background: #111;
+  background: var(--ds-color-bg-surface);
   padding: 10px 14px;
-  border: 1px solid #1a1a1a;
+  border: 1px solid var(--ds-color-border-editorial);
   border-radius: 4px;
 }
 
@@ -300,7 +300,7 @@
 }
 
 .checkbox {
-  accent-color: #00E5FF;
+  accent-color: var(--ds-color-cyan-400);
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -316,13 +316,13 @@
 }
 
 .deleteArtistBtn:hover {
-  color: #FF4444;
+  color: var(--ds-color-state-danger);
 }
 
 .addArtistBtn {
   background: transparent;
-  color: #fff;
-  border: 1px dashed #333;
+  color: var(--ds-color-text-primary);
+  border: 1px dashed var(--ds-color-border-editorial-mid);
   padding: 12px;
   width: 100%;
   font-size: 12px;
@@ -377,7 +377,7 @@
 }
 
 .mapPin {
-  color: #FF4444;
+  color: var(--ds-color-state-danger);
   position: relative;
   z-index: 2;
   animation: bouncePin 1.2s infinite ease;
@@ -393,7 +393,7 @@
   bottom: 12px;
   left: 12px;
   background: rgba(0,0,0,0.8);
-  border: 1px solid #1a1a1a;
+  border: 1px solid var(--ds-color-border-editorial);
   padding: 4px 8px;
   font-size: 10px;
   font-family: var(--ds-font-family-mono, monospace);
@@ -407,13 +407,13 @@
   justify-content: flex-end;
   gap: 16px;
   margin-top: 32px;
-  border-top: 1px solid #1a1a1a;
+  border-top: 1px solid var(--ds-color-border-editorial);
   padding-top: 24px;
 }
 
 .cancelBtn {
   background: transparent;
-  color: #fff;
+  color: var(--ds-color-text-primary);
   border: 1px solid #222;
   padding: 12px 24px;
   font-weight: 800;
@@ -430,8 +430,8 @@
 }
 
 .submitBtn {
-  background: #00E5FF;
-  color: #000;
+  background: var(--ds-color-cyan-400);
+  color: var(--ds-color-bg-canvas);
   border: none;
   padding: 12px 32px;
   font-weight: 900;
@@ -463,8 +463,8 @@
 .toast {
   padding: 16px 24px;
   background: #0c0c0c;
-  color: #fff;
-  border: 1px solid #C6F92B;
+  color: var(--ds-color-text-primary);
+  border: 1px solid var(--ds-color-accent-primary);
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
   font-size: 13px;
   font-weight: 700;
@@ -473,5 +473,5 @@
 }
 
 .toastError {
-  border-color: #FF4444;
+  border-color: var(--ds-color-state-danger);
 }

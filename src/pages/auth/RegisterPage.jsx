@@ -15,7 +15,8 @@ export default function RegisterPage() {
   const { login }   = useAuth();
 
   const [form,       setForm]       = useState({ name: "", email: "", password: "", confirmPassword: "" });
-  const [selectedRole, setSelectedRole] = useState("usuario"); // "usuario" (Fan) o "productor" (Productor)
+  const [selectedRole, setSelectedRole] = useState("usuario");
+  const [step, setStep] = useState(0); // "usuario" (Fan) o "productor" (Productor)
   const [errors,     setErrors]     = useState({});
   const [apiError,   setApiError]   = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -79,30 +80,21 @@ export default function RegisterPage() {
       const cleanName = form.name.toLowerCase().trim();
       const isAdminName = cleanName === "admin.voy" || cleanName === "admin voy";
       
-      let targetUsername = "admin.voy";
-      let isAdminAvailable = false;
-      
-      if (isAdminName) {
-        try {
-          const res = await checkUsername(targetUsername);
-          if (res.available) {
-            isAdminAvailable = true;
-          }
-        } catch (err) {
-          console.error("Error checking admin username availability:", err);
+      let adminUsername = "admin.voy";
+        if (isAdminName) {
+          adminUsername = await generateUniqueUsername("admin.voy");
         }
-      }
 
-      const data = await registerUser(form.name, form.email, form.password);
-      
-      if (isAdminName && isAdminAvailable) {
+        const data = await registerUser(form.name, form.email, form.password);
+        
+        if (isAdminName) {
         // Log in to set token
         await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "admin", rol: "admin" }, data.token);
         
         // Auto-update profile for admin
         const payload = {
-          role: "client", // backend defaults to client on registration but we override on frontend
-          username: targetUsername,
+          role: "admin", // Admin gets admin role
+          username: adminUsername,
           bio: "Administrador / Dueño de VOY Project.",
           ubicacion: "San Miguel de Tucumán, Argentina",
           avatarColor: "#a3e635", // Brand Lime
@@ -174,6 +166,58 @@ export default function RegisterPage() {
     }
   }
 
+  
+  if (step === 0) {
+    return (
+      <div className={styles.page}>
+        <div className={styles.grain} aria-hidden="true" />
+        <nav className={styles.nav}>
+          <div className={styles.navLogo}>
+            <LogoVoy />
+          </div>
+        </nav>
+        
+        <main className={styles.onboardingStep}>
+          <p className={styles.onboardingEyebrow}>BIENVENIDO A LA MOVIDA</p>
+          <h1 className={styles.onboardingTitle}>
+            ¿QUÉ VENÍS <span className={styles.onboardingTitleAccent}>A HACER?</span>
+          </h1>
+          <p className={styles.onboardingSubtitle}>
+            Elegí cómo querés ser parte de la escena.
+          </p>
+
+          <div className={styles.onboardingCards}>
+            <div 
+              className={styles.onboardingCard} 
+              onClick={() => { setSelectedRole("usuario"); setStep(1); }}
+            >
+              <div className={styles.onboardingCardIcon}>🎫</div>
+              <h3 className={styles.onboardingCardTitle}>SOY FAN</h3>
+              <p className={styles.onboardingCardDesc}>
+                Seguí artistas, comprá entradas y conectá con la escena local.
+              </p>
+            </div>
+
+            <div 
+              className={styles.onboardingCard} 
+              onClick={() => { setSelectedRole("productor"); setStep(1); }}
+            >
+              <div className={styles.onboardingCardIcon}>🏢</div>
+              <h3 className={styles.onboardingCardTitle}>PRODUZCO EVENTOS</h3>
+              <p className={styles.onboardingCardDesc}>
+                Publicá eventos, gestioná venues y vendé entradas.
+              </p>
+            </div>
+          </div>
+
+          <div className={styles.onboardingFooter}>
+            ¿Ya tenés cuenta? <Link to="/login" className={styles.onboardingLoginLink}>Iniciá sesión</Link>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   return (
     <div className={styles.page}>
       <div className={styles.grain} aria-hidden="true" />
@@ -223,34 +267,7 @@ export default function RegisterPage() {
             )}
 
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
-              <div className={styles.field}>
-                <label className={styles.label}>TIPO DE PERFIL</label>
-                <div className={styles.roleSelector}>
-                  <button
-                    type="button"
-                    className={`${styles.roleCard} ${selectedRole === "usuario" ? styles.roleCardActive : ""}`}
-                    onClick={() => setSelectedRole("usuario")}
-                  >
-                    <div className={styles.roleIcon}>🎫</div>
-                    <div className={styles.roleDetails}>
-                      <span className={styles.roleLabel}>FAN</span>
-                      <span className={styles.roleDesc}>Descubrí shows, armá tu agenda y apoyá el under local.</span>
-                    </div>
-                  </button>
-
-                  <button
-                    type="button"
-                    className={`${styles.roleCard} ${selectedRole === "productor" ? styles.roleCardActive : ""}`}
-                    onClick={() => setSelectedRole("productor")}
-                  >
-                    <div className={styles.roleIcon}>⚡</div>
-                    <div className={styles.roleDetails}>
-                      <span className={styles.roleLabel}>PRODUCTOR</span>
-                      <span className={styles.roleDesc}>Publicá tus propios eventos, gestioná tickets y vendé online.</span>
-                    </div>
-                  </button>
-                </div>
-              </div>
+              
 
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="name">NOMBRE</label>

@@ -147,8 +147,8 @@ export default function PurchaseSuccessPage() {
               <div className={styles.qrContainer}>
                 <QRCodeSVG
                   value={`${orderId}-01`}
-                  bgColor="#ffffff"
-                  fgColor="#000000"
+                  bgColor="var(--ds-color-text-primary)"
+                  fgColor="var(--ds-color-bg-canvas)"
                   size={110}
                   level="M"
                 />

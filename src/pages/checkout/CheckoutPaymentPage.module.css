@@ -188,7 +188,7 @@
 .cardFieldError {
   font-size: 0.65rem;
   font-weight: 700;
-  color: var(--ds-color-red-400, #ff4d4d);
+  color: var(--ds-color-red-400);
   letter-spacing: 0.05em;
   margin-top: 0.1rem;
 }

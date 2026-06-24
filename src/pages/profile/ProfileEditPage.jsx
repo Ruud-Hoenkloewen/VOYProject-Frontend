@@ -187,7 +187,7 @@ export default function ProfileEditPage() {
   }
 
   const initial    = (form.nombre || form.username || user?.nombre || "U").charAt(0).toUpperCase();
-  const bannerBg   = GRADIENTS?.[form.gradientKey] || "linear-gradient(90deg,#C6F92B,#A044FF)";
+  const bannerBg   = GRADIENTS?.[form.gradientKey] || "linear-gradient(90deg,var(--ds-color-accent-primary),#A044FF)";
 
   return (
     <div className={styles.page}>

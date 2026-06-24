@@ -145,13 +145,26 @@ export function AuthProvider({ children }) {
     }
   }, [token, user, updateUser, logout]);
 
+  /** Toggle favorite event */
+  const handleToggleFavorite = useCallback(async (eventId) => {
+    if (!user) return;
+    try {
+      // Import dynamically to avoid circular dependencies if any
+      const { toggleFavorite } = await import('../services/userService');
+      const data = await toggleFavorite(eventId);
+      updateUser({ ...user, favoritos: data.favoritos });
+    } catch (error) {
+      console.error("Error toggling favorite:", error);
+    }
+  }, [user, updateUser]);
+
   const isAuthenticated = Boolean(token);
 
   // Devolvemos el usuario asegurándonos de inyectar el rol del JWT si está disponible
   const userWithRole = user ? { ...user, rol: role || user.rol || user.role, role: role || user.role || user.rol } : null;
 
   return (
-    <AuthContext.Provider value={{ user: userWithRole, token, isAuthenticated, role, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user: userWithRole, token, isAuthenticated, role, login, logout, updateUser, handleToggleFavorite }}>
       {children}
     </AuthContext.Provider>
   );

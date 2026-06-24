@@ -5,7 +5,7 @@
   gap: var(--ds-space-6);
   padding: var(--ds-space-4) 2rem;
   background: #080808;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid var(--ds-color-border-editorial);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -58,7 +58,7 @@
 }
 
 .eventsLink:hover {
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
 
 /* Se ilumina cuando la ruta es /events */
@@ -76,12 +76,12 @@
   color: #888;
   text-decoration: none;
   padding: 0.4rem 0.75rem;
-  border: 1px solid #333;
+  border: 1px solid var(--ds-color-border-editorial-mid);
   transition: color 0.2s, border-color 0.2s;
 }
 
 .actionGhost:hover {
-  color: #fff;
+  color: var(--ds-color-text-primary);
   border-color: #666;
 }
 

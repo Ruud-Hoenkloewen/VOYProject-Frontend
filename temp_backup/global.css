@@ -1,6 +1,6 @@
 :root {
-
-  --ds-color-neutral-0: #000000;
+  /* Colors */
+  --ds-color-neutral-0: var(--ds-color-bg-canvas);
   --ds-color-neutral-50: #0a0b10;
   --ds-color-neutral-100: #10121a;
   --ds-color-neutral-200: #181b24;
@@ -9,18 +9,16 @@
   --ds-color-neutral-700: #c2c7d5;
   --ds-color-neutral-900: #f4f6fb;
 
-  /* Brand editorial — paleta underground */
-  --ds-color-brand-canvas: #080808;   /* fondo más oscuro que neutral-0, editorial */
-  --ds-color-brand-lime: #00ff9f;     /* Verde menta eléctrico */
-  --ds-color-brand-fuchsia: #ff7bee; /* Rosa/Fucsia editorial */
-  --ds-color-brand-fuchsia-dark: #cc5abb; /* Rosa/Fucsia oscuro */
+  --ds-color-brand-canvas: #080808;
+  --ds-color-brand-lime: #00ff9f;
+  --ds-color-brand-fuchsia: #ff7bee;
+  --ds-color-brand-fuchsia-dark: #cc5abb;
 
-  /* Grises editoriales intermedios */
-  --ds-color-editorial-border: #1a1a1a;  /* borde sutil sobre canvas editorial */
-  --ds-color-editorial-border-mid: #2a2a2a; /* borde medio (inputs, chips) */
-  --ds-color-editorial-muted: #666666;   /* texto muted editorial */
-  --ds-color-editorial-subtle: #888888;  /* texto subtle editorial */
-  --ds-color-editorial-surface: #0f0f0f; /* surface hover sobre canvas editorial */
+  --ds-color-editorial-border: var(--ds-color-border-editorial);
+  --ds-color-editorial-border-mid: #2a2a2a;
+  --ds-color-editorial-muted: #666666;
+  --ds-color-editorial-subtle: #888888;
+  --ds-color-editorial-surface: #0f0f0f;
 
   --ds-color-lime-300: #33ffb2;
   --ds-color-lime-400: #00ff9f;
@@ -29,108 +27,13 @@
   --ds-color-magenta-400: #ff9cf2;
   --ds-color-magenta-500: #ff7bee;
 
-  /* Colores de Acento Globales */
-  --ds-color-accent-primary: var(--ds-color-brand-lime); /* Verde menta eléctrico */
-  --ds-color-accent-secondary: var(--ds-color-brand-fuchsia); /* Fucsia editorial */
-
-  /* Resplandores y Glows */
-  --ds-glow-primary: 0 0 15px rgba(0, 255, 159, 0.3);
-  --ds-glow-secondary: 0 0 15px rgba(255, 123, 238, 0.3);
-
   --ds-color-red-400: #ff3f48;
   --ds-color-yellow-300: #ffd84e;
-
-  /* Cyan */
   --ds-color-cyan-400: #22d3ee;
   --ds-color-cyan-300: #67e8f9;
 
-
-  --ds-font-family-base: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
-  --ds-font-family-display: "Outfit", "Segoe UI", Roboto, Arial, sans-serif;
-  --ds-font-family-mono: "Space Mono", monospace;
-
-  /* Escala de tamaños — body */
-  --ds-font-size-100: 0.75rem;   /* caption / overline */
-  --ds-font-size-200: 0.875rem;  /* small */
-  --ds-font-size-300: 1rem;      /* base */
-  --ds-font-size-400: 1.25rem;   /* lead */
-  --ds-font-size-500: 1.5rem;    /* h4 */
-  --ds-font-size-600: 2rem;      /* h3 */
-  --ds-font-size-700: 2.5rem;    /* h2 */
-
-  /* Escala display — hero / editorial headlines */
-  --ds-font-size-display-sm: clamp(2.5rem, 5vw, 4rem);
-  --ds-font-size-display-md: clamp(3.5rem, 7vw, 6rem);
-  --ds-font-size-display-lg: clamp(4rem, 9vw, 9rem);
-
-  /* Pesos */
-  --ds-font-weight-regular: 400;
-  --ds-font-weight-medium: 500;
-  --ds-font-weight-semibold: 600;
-  --ds-font-weight-bold: 700;
-  --ds-font-weight-extrabold: 800;
-  --ds-font-weight-black: 900;   /* titulares editoriales */
-
-  /* Interlineado */
-  --ds-line-height-none: 0.9;    /* display muy compacto */
-  --ds-line-height-tight: 1.1;
-  --ds-line-height-snug: 1.25;
-  --ds-line-height-normal: 1.5;
-  --ds-line-height-relaxed: 1.7;
-
-  /* Espaciado de letras (letter-spacing) */
-  --ds-tracking-tighter: -0.02em;  /* headlines grandes */
-  --ds-tracking-tight: -0.01em;
-  --ds-tracking-normal: 0em;
-  --ds-tracking-wide: 0.05em;
-  --ds-tracking-wider: 0.1em;
-  --ds-tracking-widest: 0.15em;   /* overlines editoriales */
-  --ds-tracking-ultra: 0.3em;     /* subtítulos en caps */
-
-
-  --ds-space-0: 0;
-  --ds-space-1: 0.25rem;
-  --ds-space-2: 0.5rem;
-  --ds-space-3: 0.75rem;
-  --ds-space-4: 1rem;
-  --ds-space-5: 1.25rem;
-  --ds-space-6: 1.5rem;
-  --ds-space-8: 2rem;
-  --ds-space-10: 2.5rem;
-  --ds-space-12: 3rem;
-  --ds-space-14: 3.5rem;
-  --ds-space-16: 4rem;
-  --ds-space-20: 5rem;
-  --ds-space-24: 6rem;
-
-
-  --ds-shadow-none: none;
-
-  /* Elevación */
-  --ds-shadow-sm:   0 4px 12px rgba(0, 0, 0, 0.25);
-  --ds-shadow-card: 0 10px 24px rgba(0, 0, 0, 0.35);
-  --ds-shadow-lg:   0 20px 48px rgba(0, 0, 0, 0.55);
-  --ds-shadow-xl:   0 28px 70px rgba(0, 0, 0, 0.70);
-
-  /* Glow — efectos de acento */
-  --ds-shadow-glow-lime:    0 0 24px rgba(198, 255, 0, 0.25);
-  --ds-shadow-glow-fuchsia: 0 0 24px rgba(213, 0, 249, 0.25);
-
-  /* Drop shadow para el flyer (usa filter: drop-shadow) */
-  --ds-shadow-flyer:       0 20px 55px rgba(0, 0, 0, 0.65);
-  --ds-shadow-flyer-hover: 0 28px 70px rgba(0, 0, 0, 0.80);
-
-  /* Focus ring */
-  --ds-shadow-focus-ring:         0 0 0 2px rgba(166, 239, 31, 0.50);
-  --ds-shadow-focus-ring-fuchsia: 0 0 0 2px rgba(213, 0, 249, 0.50);
-
-
-  --ds-radius-none: 0;
-  --ds-radius-sm: 0.25rem;
-  --ds-radius-md: 0.5rem;
-  --ds-radius-lg: 0.75rem;
-  --ds-radius-pill: 999px;
-
+  --ds-color-accent-primary: var(--ds-color-brand-lime);
+  --ds-color-accent-secondary: var(--ds-color-brand-fuchsia);
 
   --ds-color-bg-canvas: var(--ds-color-neutral-0);
   --ds-color-bg-surface: var(--ds-color-neutral-100);
@@ -156,18 +59,93 @@
   --ds-color-state-danger: var(--ds-color-red-400);
   --ds-color-state-highlight: var(--ds-color-magenta-400);
 
-  /* Aliases semánticos editoriales — landing page + brand */
   --ds-color-bg-editorial: var(--ds-color-brand-canvas);
-  --ds-color-accent-primary: var(--ds-color-brand-lime);
-  --ds-color-accent-secondary: var(--ds-color-brand-fuchsia);
   --ds-color-text-editorial-muted: var(--ds-color-editorial-muted);
   --ds-color-text-editorial-subtle: var(--ds-color-editorial-subtle);
   --ds-color-border-editorial: var(--ds-color-editorial-border);
   --ds-color-border-editorial-mid: var(--ds-color-editorial-border-mid);
   --ds-color-bg-editorial-surface: var(--ds-color-editorial-surface);
 
+  /* Typography */
+  --ds-font-family-base: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
+  --ds-font-family-display: "Outfit", "Segoe UI", Roboto, Arial, sans-serif;
+  --ds-font-family-mono: "Space Mono", monospace;
 
-  /* Duraciones */
+  --ds-font-size-100: 0.75rem;
+  --ds-font-size-200: 0.875rem;
+  --ds-font-size-300: 1rem;
+  --ds-font-size-400: 1.25rem;
+  --ds-font-size-500: 1.5rem;
+  --ds-font-size-600: 2rem;
+  --ds-font-size-700: 2.5rem;
+
+  --ds-font-size-display-sm: clamp(2.5rem, 5vw, 4rem);
+  --ds-font-size-display-md: clamp(3.5rem, 7vw, 6rem);
+  --ds-font-size-display-lg: clamp(4rem, 9vw, 9rem);
+
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-font-weight-bold: 700;
+  --ds-font-weight-extrabold: 800;
+  --ds-font-weight-black: 900;
+
+  --ds-line-height-none: 0.9;
+  --ds-line-height-tight: 1.1;
+  --ds-line-height-snug: 1.25;
+  --ds-line-height-normal: 1.5;
+  --ds-line-height-relaxed: 1.7;
+
+  --ds-tracking-tighter: -0.02em;
+  --ds-tracking-tight: -0.01em;
+  --ds-tracking-normal: 0em;
+  --ds-tracking-wide: 0.05em;
+  --ds-tracking-wider: 0.1em;
+  --ds-tracking-widest: 0.15em;
+  --ds-tracking-ultra: 0.3em;
+
+  /* Spacing */
+  --ds-space-0: 0;
+  --ds-space-1: 0.25rem;
+  --ds-space-2: 0.5rem;
+  --ds-space-3: 0.75rem;
+  --ds-space-4: 1rem;
+  --ds-space-5: 1.25rem;
+  --ds-space-6: 1.5rem;
+  --ds-space-8: 2rem;
+  --ds-space-10: 2.5rem;
+  --ds-space-12: 3rem;
+  --ds-space-14: 3.5rem;
+  --ds-space-16: 4rem;
+  --ds-space-20: 5rem;
+  --ds-space-24: 6rem;
+
+  /* Radius */
+  --ds-radius-none: 0;
+  --ds-radius-sm: 0.25rem;
+  --ds-radius-md: 0.5rem;
+  --ds-radius-lg: 0.75rem;
+  --ds-radius-pill: 999px;
+
+  /* Shadows & Glows */
+  --ds-shadow-none: none;
+  --ds-shadow-sm:   0 4px 12px rgba(0, 0, 0, 0.25);
+  --ds-shadow-card: 0 10px 24px rgba(0, 0, 0, 0.35);
+  --ds-shadow-lg:   0 20px 48px rgba(0, 0, 0, 0.55);
+  --ds-shadow-xl:   0 28px 70px rgba(0, 0, 0, 0.70);
+
+  --ds-glow-primary: 0 0 15px rgba(0, 255, 159, 0.3);
+  --ds-glow-secondary: 0 0 15px rgba(255, 123, 238, 0.3);
+  --ds-shadow-glow-lime:    0 0 24px rgba(198, 255, 0, 0.25);
+  --ds-shadow-glow-fuchsia: 0 0 24px rgba(213, 0, 249, 0.25);
+
+  --ds-shadow-flyer:       0 20px 55px rgba(0, 0, 0, 0.65);
+  --ds-shadow-flyer-hover: 0 28px 70px rgba(0, 0, 0, 0.80);
+
+  --ds-shadow-focus-ring:         0 0 0 2px rgba(166, 239, 31, 0.50);
+  --ds-shadow-focus-ring-fuchsia: 0 0 0 2px rgba(213, 0, 249, 0.50);
+
+  /* Motion */
   --ds-motion-instant:  80ms;
   --ds-motion-fast:    120ms;
   --ds-motion-base:    180ms;
@@ -175,18 +153,13 @@
   --ds-motion-slower:  500ms;
   --ds-motion-crawl:   800ms;
 
-  /* Easings */
   --ds-easing-standard:  ease;
   --ds-easing-in:        ease-in;
   --ds-easing-out:       ease-out;
   --ds-easing-in-out:    ease-in-out;
-  /* Spring suave — botones, hovers */
   --ds-easing-spring:    cubic-bezier(0.34, 1.56, 0.64, 1);
-  /* Spring editorial — tilt 3D, transiciones de página */
   --ds-easing-editorial: cubic-bezier(0.23, 1, 0.32, 1);
-
 }
-
 
 *,
 *::before,

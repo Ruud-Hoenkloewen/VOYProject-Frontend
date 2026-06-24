@@ -354,7 +354,7 @@ export default function EventFormPage() {
                   <div className={styles.mapWrapper}>
                     <div className={styles.radarGrid} />
                     {isGeocoding ? (
-                      <div style={{ color: "#00E5FF", fontSize: "11px", fontWeight: "900", fontFamily: "var(--ds-font-family-mono)", zIndex: 3 }}>
+                      <div style={{ color: "var(--ds-color-cyan-400)", fontSize: "11px", fontWeight: "900", fontFamily: "var(--ds-font-family-mono)", zIndex: 3 }}>
                         GEOCODIFICANDO DIRECCIÓN...
                       </div>
                     ) : mapAddress ? (
@@ -362,7 +362,7 @@ export default function EventFormPage() {
                         <div className={styles.radarCircle} />
                         <div className={styles.radarCircle} style={{ animationDelay: "1s" }} />
                         <div className={styles.mapPin}>
-                          <MapPinIcon size={32} color="#FF4444" />
+                          <MapPinIcon size={32} color="var(--ds-color-state-danger)" />
                         </div>
                         <span className={styles.mapLabel}>{mapAddress}</span>
                       </>

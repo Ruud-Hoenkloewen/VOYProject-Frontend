@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import styles from "../../LandingPage.module.css";
 import { CalendarIcon, ClockIcon, MapPinIcon } from "../../../../components/icons";
 import { shareEvent } from "../../../../utils/helpers";
+import { useAuth } from "../../../../context/AuthContext";
 
 /**
  * FeaturedEventCard — Card mediana del evento destacado
@@ -10,8 +11,8 @@ import { shareEvent } from "../../../../utils/helpers";
  * Sin precio ni botón comprar. Acciones: VER DETALLE (largo) + Share + Favoritos.
  */
 export default function FeaturedEventCard({ event, isLoading }) {
-  const [fav, setFav] = useState(false);
-
+  const { user, handleToggleFavorite } = useAuth();
+  
   const handleShare = () => {
     shareEvent(event);
   };
@@ -28,6 +29,7 @@ export default function FeaturedEventCard({ event, isLoading }) {
 
   const artists = event.artists || [];
   const genres  = event.genres  || [];
+  const fav = user?.favoritos?.includes(event.id || event._id);
 
   return (
     <div className={styles.featuredEventCard}>
@@ -130,7 +132,7 @@ export default function FeaturedEventCard({ event, isLoading }) {
           </button>
           <button
             className={`${styles.fecBtnIcon} ${fav ? styles.fecBtnIconActive : ''}`}
-            onClick={() => setFav(f => !f)}
+            onClick={() => handleToggleFavorite(event.id || event._id)}
             aria-label={fav ? 'Quitar de favoritos' : 'Agregar a favoritos'}
             title="Favoritos"
             id="featured-event-fav"

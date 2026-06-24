@@ -26,23 +26,51 @@ const mapStatusTone = (status) => {
  * @param {object} evt - Documento crudo de MongoDB
  * @returns {object} Evento normalizado
  */
-const mapEvent = (evt) => ({
-  id:           evt._id,
-  title:        evt.nombre,
-  imageUrl:     evt.imagen || '',
-  genres:       evt.generos  || [],
-  date:         evt.fecha    ? formatDate(evt.fecha) : 'Fecha a confirmar',
-  time:         evt.hora     ? `${evt.hora} HS`      : '',
-  venue:        evt.lugar    || 'Lugar a confirmar',
-  price:        evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),
-  rawPrice:     evt.precio   ?? 0,
-  description:  evt.descripcion || '',
-  artists:      (evt.artistas || []).map(a => ({ nombre: a.nombre, headliner: a.headliner || false })),
-  status:       evt.estado   || 'DISPONIBLE',
-  statusTone:   mapStatusTone(evt.estado || 'DISPONIBLE'),
-  capacity:     evt.capacidadTotal ?? null,
-  stock:        evt.stock ?? null,
-});
+const mapEvent = (evt) => {
+  let imageUrl = evt.imagen || '';
+  
+  // Sanitize invalid local mock paths and assign actual flyers based on title
+  if (imageUrl.startsWith('/public/') || !imageUrl) {
+    const titleLower = (evt.nombre || '').toLowerCase();
+    
+    if (titleLower.includes('danny') || titleLower.includes('proyectil')) {
+      imageUrl = '/flyer-danny-proyectil.png';
+    } else if (titleLower.includes('lacrifagia') || titleLower.includes('oscuridad')) {
+      imageUrl = '/flyer-lacrifagia.png';
+    } else if (titleLower.includes('inexplicables')) {
+      imageUrl = '/flyer-las-cosas-inexplicables.png';
+    } else {
+      // Default to one of the cool flyers for any other mock event
+      const fallbacks = [
+        '/flyer-sabbath-fest.png',
+        '/flyer-lacrifagia.png',
+        '/flyer-danny-proyectil.png',
+        '/flyer-las-cosas-inexplicables.png'
+      ];
+      // Deterministic fallback based on ID or string length
+      const index = (evt.nombre || '').length % fallbacks.length;
+      imageUrl = fallbacks[index];
+    }
+  }
+
+  return {
+    id:           evt._id,
+    title:        evt.nombre,
+    imageUrl:     imageUrl,
+    genres:       evt.generos  || [],
+    date:         evt.fecha    ? formatDate(evt.fecha) : 'Fecha a confirmar',
+    time:         evt.hora     ? `${evt.hora} HS`      : '',
+    venue:        evt.lugar    || 'Lugar a confirmar',
+    price:        evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),
+    rawPrice:     evt.precio   ?? 0,
+    description:  evt.descripcion || '',
+    artists:      (evt.artistas || []).map(a => ({ nombre: a.nombre, headliner: a.headliner || false })),
+    status:       evt.estado   || 'DISPONIBLE',
+    statusTone:   mapStatusTone(evt.estado || 'DISPONIBLE'),
+    capacity:     evt.capacidadTotal ?? null,
+    stock:        evt.stock ?? null,
+  };
+};
 
 /**
  * fetchEvents — obtiene la lista de eventos con filtros opcionales.

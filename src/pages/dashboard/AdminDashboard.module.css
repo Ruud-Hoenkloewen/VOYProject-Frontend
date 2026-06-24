@@ -10,7 +10,7 @@
 }
 
 .headerRow {
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid var(--ds-color-border-editorial);
   padding-bottom: 24px;
   margin-bottom: 32px;
   display: flex;
@@ -29,7 +29,7 @@
 .eyebrow {
   font-size: 11px;
   font-weight: 800;
-  color: var(--ds-color-accent-primary, #C6F92B);
+  color: var(--ds-color-accent-primary);
   letter-spacing: 0.2em;
   text-transform: uppercase;
 }
@@ -99,7 +99,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid var(--ds-color-border-editorial);
   padding-bottom: 12px;
   margin-bottom: 20px;
 }
@@ -116,7 +116,7 @@
 }
 
 .badgeCount {
-  background: #1a1a1a;
+  background: var(--ds-color-border-editorial);
   color: #888;
   font-size: 11px;
   font-weight: 800;
@@ -144,7 +144,7 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   padding: 12px 16px;
-  border-bottom: 1px solid #1a1a1a;
+  border-bottom: 1px solid var(--ds-color-border-editorial);
 }
 
 .table td {
@@ -166,7 +166,7 @@
 
 .username {
   font-weight: 700;
-  color: #fff;
+  color: var(--ds-color-text-primary);
 }
 
 .email {
@@ -191,13 +191,13 @@
 
 .roleProducer {
   background: rgba(0, 229, 255, 0.1);
-  color: #00E5FF;
+  color: var(--ds-color-cyan-400);
   border: 1px solid rgba(0, 229, 255, 0.2);
 }
 
 .roleAdmin {
   background: rgba(198, 249, 43, 0.1);
-  color: #C6F92B;
+  color: var(--ds-color-accent-primary);
   border: 1px solid rgba(198, 249, 43, 0.2);
 }
 
@@ -215,13 +215,13 @@
 }
 
 .dotActive {
-  background-color: #C6F92B;
-  box-shadow: 0 0 8px #C6F92B;
+  background-color: var(--ds-color-accent-primary);
+  box-shadow: 0 0 8px var(--ds-color-accent-primary);
 }
 
 .dotSuspended {
-  background-color: #FF4444;
-  box-shadow: 0 0 8px #FF4444;
+  background-color: var(--ds-color-state-danger);
+  box-shadow: 0 0 8px var(--ds-color-state-danger);
 }
 
 /* Pending Producer List */
@@ -232,8 +232,8 @@
 }
 
 .pendingCard {
-  background: #111;
-  border: 1px solid #1a1a1a;
+  background: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-editorial);
   padding: 16px;
   border-radius: 6px;
   display: flex;
@@ -251,8 +251,8 @@
 
 .btn {
   background: transparent;
-  color: #fff;
-  border: 1px solid #333;
+  color: var(--ds-color-text-primary);
+  border: 1px solid var(--ds-color-border-editorial-mid);
   padding: 6px 12px;
   font-size: 11px;
   font-weight: 800;
@@ -269,8 +269,8 @@
 }
 
 .btnPrimary {
-  background: #C6F92B;
-  color: #000;
+  background: var(--ds-color-accent-primary);
+  color: var(--ds-color-bg-canvas);
   border: none;
 }
 
@@ -280,22 +280,22 @@
 }
 
 .btnDanger {
-  color: #FF4444;
+  color: var(--ds-color-state-danger);
   border-color: rgba(255,68,68,0.3);
 }
 
 .btnDanger:hover {
-  border-color: #FF4444;
+  border-color: var(--ds-color-state-danger);
   background: rgba(255,68,68,0.05);
 }
 
 .btnWarn {
-  color: #FFAA00;
+  color: var(--ds-color-yellow-300);
   border-color: rgba(255,170,0,0.3);
 }
 
 .btnWarn:hover {
-  border-color: #FFAA00;
+  border-color: var(--ds-color-yellow-300);
   background: rgba(255,170,0,0.05);
 }
 
@@ -310,8 +310,8 @@
 .toast {
   padding: 16px 24px;
   background: #0c0c0c;
-  color: #fff;
-  border: 1px solid #C6F92B;
+  color: var(--ds-color-text-primary);
+  border: 1px solid var(--ds-color-accent-primary);
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
   font-size: 13px;
   font-weight: 700;
@@ -321,7 +321,7 @@
 }
 
 .toastError {
-  border-color: #FF4444;
+  border-color: var(--ds-color-state-danger);
 }
 
 @keyframes slideIn {
@@ -353,7 +353,7 @@
   background-color: #222;
   transition: .3s;
   border-radius: 22px;
-  border: 1px solid #333;
+  border: 1px solid var(--ds-color-border-editorial-mid);
 }
 
 .slider:before {
@@ -370,11 +370,11 @@
 
 .switch input:checked + .slider {
   background-color: rgba(198, 249, 43, 0.15);
-  border-color: #C6F92B;
+  border-color: var(--ds-color-accent-primary);
 }
 
 .switch input:checked + .slider:before {
   transform: translateX(22px);
-  background-color: #C6F92B;
-  box-shadow: 0 0 8px #C6F92B;
+  background-color: var(--ds-color-accent-primary);
+  box-shadow: 0 0 8px var(--ds-color-accent-primary);
 }

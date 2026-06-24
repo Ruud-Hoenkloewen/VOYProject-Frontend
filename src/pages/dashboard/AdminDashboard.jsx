@@ -3,23 +3,15 @@ import EditorialHeader from "../../design-system/composites/EditorialHeader/Edit
 import Container from "../../design-system/layout/Container/Container";
 import { useAuth } from "../../context/AuthContext";
 import { fetchEvents } from "../../services/eventService";
+import { getUsers, updateUserStatus, getMetrics } from "../../services/adminService";
 import styles from "./AdminDashboard.module.css";
-
-const MOCK_INITIAL_USERS = [
-  { id: "1", nombre: "Juan Perez", username: "juanperez", email: "juan@test.com", role: "client", isSuspended: false, isVerifiedProducer: false },
-  { id: "2", nombre: "Danny Proyectil", username: "dannyproyectil", email: "danny@test.com", role: "client", isSuspended: false, isVerifiedProducer: false },
-  { id: "3", nombre: "Producciones Oskar", username: "produccionesoskar", email: "oskar@test.com", role: "producer", isSuspended: false, isVerifiedProducer: true },
-  { id: "4", nombre: "Admin General", username: "admin", email: "admin@test.com", role: "admin", isSuspended: false, isVerifiedProducer: false },
-  { id: "5", nombre: "Usuario Suspendido", username: "suspended", email: "suspended@test.com", role: "client", isSuspended: true, isVerifiedProducer: false },
-  { id: "6", nombre: "Noche de Rock SMT", username: "rocksmt", email: "rocksmt@test.com", role: "client", isSuspended: false, isVerifiedProducer: false, isPendingApproval: true },
-  { id: "7", nombre: "Ciclos Under Tucumán", username: "under_tuc", email: "under_tuc@test.com", role: "client", isSuspended: false, isVerifiedProducer: false, isPendingApproval: true },
-];
 
 export default function AdminDashboard() {
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState([]);
   const [events, setEvents] = useState([]);
   const [loadingEvents, setLoadingEvents] = useState(true);
+  const [metrics, setMetrics] = useState({ ventasTotales: 0, recaudacion: 0 });
   const [toast, setToast] = useState(null); // { message: string, error: boolean }
   const [featuredEventIds, setFeaturedEventIds] = useState(() => {
     const saved = localStorage.getItem("voy_featured_events");
@@ -38,54 +30,21 @@ export default function AdminDashboard() {
     }, 4000);
   };
 
-  // Load events and initialize users list
+  // Load events, users, and metrics from real API
   useEffect(() => {
-    // 1. Fetch Events for KPIs
-    fetchEvents()
-      .then(data => {
-        setEvents(data);
+    Promise.all([fetchEvents(), getUsers(), getMetrics()])
+      .then(([eventsData, usersData, metricsData]) => {
+        setEvents(eventsData);
+        setUsers(usersData);
+        setMetrics(metricsData || { ventasTotales: 0, recaudacion: 0 });
       })
       .catch(err => {
         console.error(err);
-        showToastMsg("Error al obtener eventos del servidor", true);
+        showToastMsg("Error al obtener datos del servidor", true);
       })
       .finally(() => {
         setLoadingEvents(false);
       });
-
-    // 2. Initialize Users List with mock data + any logged in account
-    const saved = localStorage.getItem("voy_admin_users");
-    let usersList = MOCK_INITIAL_USERS;
-    if (saved) {
-      try {
-        usersList = JSON.parse(saved);
-      } catch (e) {}
-    }
-
-    // Sync current user session so they can test actions on themselves if needed
-    const savedUser = localStorage.getItem("voy_user");
-    if (savedUser) {
-      try {
-        const parsedUser = JSON.parse(savedUser);
-        if (parsedUser && parsedUser.email) {
-          const exists = usersList.some(u => u.email.toLowerCase() === parsedUser.email.toLowerCase());
-          if (!exists) {
-            usersList.push({
-              id: parsedUser._id || parsedUser.id || String(Date.now()),
-              nombre: parsedUser.nombre || parsedUser.username || "Usuario Nuevo",
-              username: parsedUser.username || "usuarionuevo",
-              email: parsedUser.email,
-              role: parsedUser.role || "client",
-              isSuspended: parsedUser.isSuspended || false,
-              isVerifiedProducer: parsedUser.isVerifiedProducer || false
-            });
-          }
-        }
-      } catch (e) {}
-    }
-
-    localStorage.setItem("voy_admin_users", JSON.stringify(usersList));
-    setUsers(usersList);
   }, []);
 
   // Action: Toggle Suspend
@@ -195,7 +154,7 @@ export default function AdminDashboard() {
           </div>
           <div className={styles.metricCard}>
             <span className={styles.metricLabel}>EVENTOS ACTIVOS</span>
-            <div className={styles.metricValue} style={{ color: "#ffffff" }}>{activeEventsCount}</div>
+            <div className={styles.metricValue} style={{ color: "var(--ds-color-text-primary)" }}>{activeEventsCount}</div>
           </div>
           <div className={styles.metricCard}>
             <span className={styles.metricLabel}>TICKETS VENDIDOS</span>
@@ -203,7 +162,7 @@ export default function AdminDashboard() {
           </div>
           <div className={styles.metricCard}>
             <span className={styles.metricLabel}>RECAUDACIÓN TOTAL</span>
-            <div className={styles.metricValue} style={{ color: "#00E5FF" }}>{formattedRevenue}</div>
+            <div className={styles.metricValue} style={{ color: "var(--ds-color-cyan-400)" }}>{formattedRevenue}</div>
           </div>
         </div>
 
@@ -315,7 +274,7 @@ export default function AdminDashboard() {
                             {!isAdmin && (
                               <button 
                                 className={`${styles.btn} ${u.isSuspended ? styles.btnPrimary : styles.btnDanger}`}
-                                onClick={() => handleToggleSuspend(u.id, u.email)}
+                                onClick={() => handleToggleSuspend(u.id, u.email, u.isSuspended)}
                               >
                                 {u.isSuspended ? "Activar" : "Suspender"}
                               </button>
@@ -371,12 +330,12 @@ export default function AdminDashboard() {
                           </td>
                           <td>
                             <div className={styles.userMeta}>
-                              <span style={{ color: "#fff", fontWeight: 500 }}>{evt.date}</span>
+                              <span style={{ color: "var(--ds-color-text-primary)", fontWeight: 500 }}>{evt.date}</span>
                               <span className={styles.email}>{evt.time}</span>
                             </div>
                           </td>
                           <td>
-                            <span style={{ color: "#00E5FF", fontWeight: 700 }}>
+                            <span style={{ color: "var(--ds-color-cyan-400)", fontWeight: 700 }}>
                               {evt.price}
                             </span>
                           </td>

@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
-import { loginUser } from "../../services/authService";
+import { loginUser, googleLogin } from "../../services/authService";
+import { GoogleLogin } from '@react-oauth/google';
 import LogoVoy from "../../components/LogoVoy/LogoVoy";
 import { EyeIcon } from "../../components/icons";
 import styles from "./RegisterPage.module.css"; // Reutiliza el mismo diseño
@@ -39,6 +40,26 @@ export default function LoginPage() {
     if (!form.password)        next.password = "La contraseña es requerida";
     return next;
   }
+
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setSubmitting(true);
+    setApiError("");
+    try {
+      const data = await googleLogin(credentialResponse.credential);
+      login({ _id: data._id, nombre: data.nombre, email: data.email, role: data.role, avatar: data.avatar }, data.token);
+      
+      import("../../services/userService")
+        .then(({ getMyProfile }) => getMyProfile())
+        .then((profile) => login(profile, data.token))
+        .catch(console.error);
+
+      navigate(redirectTo, { replace: true });
+    } catch (err) {
+      setApiError(err.response?.data?.mensaje || "Error al iniciar sesión con Google");
+    } finally {
+      setSubmitting(false);
+    }
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -179,6 +200,24 @@ export default function LoginPage() {
                 {submitting ? "INGRESANDO..." : "INGRESAR →"}
               </button>
             </form>
+
+<div style={{ display: 'flex', alignItems: 'center', margin: '1.5rem 0' }}>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--ds-color-border-editorial-mid)' }}></div>
+              <span style={{ padding: '0 1rem', fontSize: '0.8rem', color: 'var(--ds-color-text-editorial-subtle)' }}>O ingresá con email</span>
+              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--ds-color-border-editorial-mid)' }}></div>
+            </div>
+
+            <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+              <GoogleLogin
+                onSuccess={handleGoogleSuccess}
+                onError={() => setApiError("Falló la autenticación con Google")}
+                theme="filled_black"
+                text="signin_with"
+                shape="rectangular"
+              />
+            </div>
+            
+            
 
             <p className={styles.altLink}>
               ¿No tenés cuenta?{" "}

@@ -20,6 +20,11 @@ export const unfollowUser = async (userId) => {
   return data;
 };
 
+export const toggleFavorite = async (eventId) => {
+  const { data } = await api.put(`/users/favorites/${eventId}`);
+  return data;
+};
+
 /**
  * PUT /api/users/me
  * Actualiza el perfil del usuario autenticado.

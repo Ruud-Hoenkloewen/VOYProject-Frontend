@@ -125,15 +125,15 @@ export default function ProducerDashboard() {
         <div className={styles.metricsGrid}>
           <div className={styles.metricCard}>
             <span className={styles.metricLabel}>SHOWS PROGRAMADOS</span>
-            <div className={styles.metricValue} style={{ color: "#00E5FF" }}>{totalShows}</div>
+            <div className={styles.metricValue} style={{ color: "var(--ds-color-cyan-400)" }}>{totalShows}</div>
           </div>
           <div className={styles.metricCard}>
             <span className={styles.metricLabel}>TICKETS VENDIDOS (MES)</span>
-            <div className={styles.metricValue} style={{ color: "#ffffff" }}>{ticketsSold}</div>
+            <div className={styles.metricValue} style={{ color: "var(--ds-color-text-primary)" }}>{ticketsSold}</div>
           </div>
           <div className={styles.metricCard}>
             <span className={styles.metricLabel}>CAPACIDAD PROMEDIO</span>
-            <div className={styles.metricValue} style={{ color: "#C6F92B" }}>{fillRate}%</div>
+            <div className={styles.metricValue} style={{ color: "var(--ds-color-accent-primary)" }}>{fillRate}%</div>
           </div>
           <div className={styles.metricCard}>
             <span className={styles.metricLabel}>INGRESOS TOTALES</span>
@@ -211,7 +211,7 @@ export default function ProducerDashboard() {
                           className={styles.progressBarFill} 
                           style={{ 
                             width: `${fillPercentage}%`,
-                            background: isPaused ? "#FFAA00" : "#00E5FF"
+                            background: isPaused ? "var(--ds-color-yellow-300)" : "var(--ds-color-cyan-400)"
                           }} 
                         />
                       </div>

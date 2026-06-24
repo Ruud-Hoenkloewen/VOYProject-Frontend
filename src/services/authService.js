@@ -29,3 +29,13 @@ export const registerUser = async (nombre, email, password) => {
   const { data } = await api.post("/auth/register", { nombre, email, password });
   return data;
 };
+
+/**
+ * POST /api/auth/google
+ * @param {string} credential JWT token from Google
+ * @returns {{ _id, nombre, email, token, avatar }}
+ */
+export const googleLogin = async (credential) => {
+  const { data } = await api.post("/auth/google", { credential });
+  return data;
+};
