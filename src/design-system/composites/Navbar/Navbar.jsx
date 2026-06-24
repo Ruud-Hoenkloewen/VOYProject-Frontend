@@ -12,7 +12,7 @@ import styles from "./Navbar.module.css";
  * NO se usa en LandingPage — esta tiene su propio header editorial.
  */
 export default function Navbar() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, role } = useAuth();
 
   return (
     <header className={styles.root}>
@@ -35,7 +35,19 @@ export default function Navbar() {
           Explorar Eventos
         </NavLink>
         {isAuthenticated ? (
-          <UserAvatar />
+          <>
+            {role === "producer" && (
+              <Link to="/dashboard/producer" className={styles.actionPrimary} style={{ marginRight: "1rem" }}>
+                + Crear Evento
+              </Link>
+            )}
+            {role === "admin" && (
+              <Link to="/dashboard/admin" className={styles.actionPrimary} style={{ marginRight: "1rem" }}>
+                Panel Admin
+              </Link>
+            )}
+            <UserAvatar />
+          </>
         ) : (
           <>
             <Link to="/login" className={styles.actionGhost}>Ingresar</Link>

@@ -1,7 +1,34 @@
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
+import { jwtDecode } from "jwt-decode";
 
 const TOKEN_KEY = "voy_token";
 const USER_KEY  = "voy_user";
+
+const normalizeRole = (r) => {
+  if (!r) return null;
+  const lower = r.toLowerCase();
+  if (lower === "usuario" || lower === "client") return "client";
+  if (lower === "productor" || lower === "producer") return "producer";
+  if (lower === "admin") return "admin";
+  return lower;
+};
+
+const checkIsAdmin = (userData) => {
+  if (!userData) return false;
+  const username = userData.username;
+  const nombre = userData.nombre;
+  
+  if (username) {
+    return username.toLowerCase().trim() === "admin.voy";
+  }
+  
+  if (nombre) {
+    const cleanNombre = nombre.toLowerCase().trim();
+    return cleanNombre === "admin.voy" || cleanNombre === "admin voy";
+  }
+  
+  return userData.rol === 'admin' || userData.role === 'admin';
+};
 
 const AuthContext = createContext(null);
 
@@ -19,6 +46,35 @@ export function AuthProvider({ children }) {
       return null;
     }
   });
+  const [role, setRole] = useState(() => {
+    const savedToken = localStorage.getItem(TOKEN_KEY);
+    if (savedToken) {
+      try {
+        const decoded = jwtDecode(savedToken);
+        const tokenRole = normalizeRole(decoded.role || decoded.rol);
+        if (tokenRole) {
+          // Si se registró como productor, el backend devuelve rol client pero guardamos role producer localmente.
+          // Respetamos este mock/override local para no romper el flujo de registro.
+          const savedUser = localStorage.getItem(USER_KEY);
+          if (savedUser) {
+            const parsed = JSON.parse(savedUser);
+            if (parsed.role && parsed.role !== "client") {
+              return normalizeRole(parsed.role);
+            }
+          }
+          return tokenRole;
+        }
+      } catch {}
+    }
+    try {
+      const savedUser = localStorage.getItem(USER_KEY);
+      if (savedUser) {
+        const parsed = JSON.parse(savedUser);
+        return normalizeRole(parsed.role || parsed.rol);
+      }
+    } catch {}
+    return null;
+  });
 
   /** Llama después de un login/register exitoso */
   const login = useCallback((userData, jwt) => {
@@ -26,6 +82,20 @@ export function AuthProvider({ children }) {
     localStorage.setItem(USER_KEY, JSON.stringify(userData));
     setToken(jwt);
     setUser(userData);
+    
+    let userRole = null;
+    try {
+      const decoded = jwtDecode(jwt);
+      userRole = normalizeRole(decoded.role || decoded.rol);
+    } catch {}
+    
+    // Si el token tiene 'client' pero userData especifica 'producer' o 'admin' de forma explícita,
+    // es un flujo de registro o mockeo que debemos respetar en el frontend
+    if (!userRole || (userData && userData.role && userData.role !== "client")) {
+      userRole = normalizeRole(userData.role || userData.rol) || userRole;
+    }
+    
+    setRole(userRole);
   }, []);
 
   /** Cierra la sesión y limpia el storage */
@@ -34,6 +104,7 @@ export function AuthProvider({ children }) {
     localStorage.removeItem(USER_KEY);
     setToken(null);
     setUser(null);
+    setRole(null);
   }, []);
 
   /**
@@ -53,6 +124,11 @@ export function AuthProvider({ children }) {
     if (!newUserData) return;
     localStorage.setItem(USER_KEY, JSON.stringify(newUserData));
     setUser(newUserData);
+    if (checkIsAdmin(newUserData)) {
+      setRole("admin");
+    } else if (newUserData.role || newUserData.rol) {
+      setRole(normalizeRole(newUserData.role || newUserData.rol));
+    }
   }, []);
 
   /** Si hay token pero no hay usuario (ej. bug anterior o storage parcial), recuperarlo */
@@ -71,8 +147,11 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = Boolean(token);
 
+  // Devolvemos el usuario asegurándonos de inyectar el rol del JWT si está disponible
+  const userWithRole = user ? { ...user, rol: role || user.rol || user.role, role: role || user.role || user.rol } : null;
+
   return (
-    <AuthContext.Provider value={{ user, token, isAuthenticated, login, logout, updateUser }}>
+    <AuthContext.Provider value={{ user: userWithRole, token, isAuthenticated, role, login, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
@@ -87,4 +166,3 @@ export function useAuth() {
   if (!ctx) throw new Error("useAuth debe usarse dentro de <AuthProvider>");
   return ctx;
 }
-

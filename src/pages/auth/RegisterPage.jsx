@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { registerUser } from "../../services/authService";
+import { checkUsername, updateMyProfile } from "../../services/userService";
 import LogoVoy from "../../components/LogoVoy/LogoVoy";
 import styles from "./RegisterPage.module.css";
 
@@ -14,9 +15,38 @@ export default function RegisterPage() {
   const { login }   = useAuth();
 
   const [form,       setForm]       = useState({ name: "", email: "", password: "", confirmPassword: "" });
+  const [selectedRole, setSelectedRole] = useState("usuario"); // "usuario" (Fan) o "productor" (Productor)
   const [errors,     setErrors]     = useState({});
   const [apiError,   setApiError]   = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  async function generateUniqueUsername(baseName) {
+    let username = baseName.toLowerCase()
+      .trim()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9._]/g, "");
+    if (!username) username = "productor";
+    
+    let candidate = username;
+    let isAvailable = false;
+    let attempts = 0;
+    
+    while (!isAvailable && attempts < 10) {
+      try {
+        const res = await checkUsername(candidate);
+        if (res.available) {
+          isAvailable = true;
+        } else {
+          candidate = `${username}${Math.floor(100 + Math.random() * 900)}`;
+          attempts++;
+        }
+      } catch (err) {
+        candidate = `${username}${Math.floor(100 + Math.random() * 900)}`;
+        break;
+      }
+    }
+    return candidate;
+  }
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -45,9 +75,74 @@ export default function RegisterPage() {
     setApiError("");
 
     try {
+      // 1. Check if name matches admin name
+      const cleanName = form.name.toLowerCase().trim();
+      const isAdminName = cleanName === "admin.voy" || cleanName === "admin voy";
+      
+      let targetUsername = "admin.voy";
+      let isAdminAvailable = false;
+      
+      if (isAdminName) {
+        try {
+          const res = await checkUsername(targetUsername);
+          if (res.available) {
+            isAdminAvailable = true;
+          }
+        } catch (err) {
+          console.error("Error checking admin username availability:", err);
+        }
+      }
+
       const data = await registerUser(form.name, form.email, form.password);
-      login({ _id: data._id, nombre: data.nombre, email: data.email }, data.token);
-      navigate("/onboarding");
+      
+      if (isAdminName && isAdminAvailable) {
+        // Log in to set token
+        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "admin", rol: "admin" }, data.token);
+        
+        // Auto-update profile for admin
+        const payload = {
+          role: "client", // backend defaults to client on registration but we override on frontend
+          username: targetUsername,
+          bio: "Administrador / Dueño de VOY Project.",
+          ubicacion: "San Miguel de Tucumán, Argentina",
+          avatarColor: "#a3e635", // Brand Lime
+          bannerGradiente: "g1",
+          vibeEnShows: ["Organizado"],
+          redesSociales: { instagram: "admin" }
+        };
+        
+        const updated = await updateMyProfile(payload);
+        await login({ ...updated, role: "admin", rol: "admin" }, data.token);
+        localStorage.setItem("onboardingDone", "true");
+        navigate("/dashboard/admin");
+      } else if (selectedRole === "productor") {
+        // Log in to set the token first
+        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "producer", rol: "productor" }, data.token);
+        
+        // Generate a unique username based on their name
+        const uniqueUsername = await generateUniqueUsername(form.name);
+        
+        // Update user profile automatically
+        const payload = {
+          role: "producer",
+          username: uniqueUsername,
+          bio: "Organizador de eventos underground y ciclos culturales.",
+          ubicacion: "San Miguel de Tucumán, Argentina",
+          avatarColor: "#00E5FF", // Cyan
+          bannerGradiente: "g5",
+          vibeEnShows: ["Organizado", "Profesional"],
+          redesSociales: { instagram: uniqueUsername }
+        };
+        
+        const updated = await updateMyProfile(payload);
+        const updatedWithMockRole = { ...updated, role: "producer", rol: "productor" };
+        await login(updatedWithMockRole, data.token);
+        localStorage.setItem("onboardingDone", "true");
+        navigate("/dashboard/producer");
+      } else {
+        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "client", rol: "usuario" }, data.token);
+        navigate("/onboarding");
+      }
     } catch (err) {
       const msg = err.response?.data?.mensaje || "Error al crear la cuenta. Intentá de nuevo.";
       setApiError(msg);
@@ -105,6 +200,35 @@ export default function RegisterPage() {
             )}
 
             <form className={styles.form} onSubmit={handleSubmit} noValidate>
+              <div className={styles.field}>
+                <label className={styles.label}>TIPO DE PERFIL</label>
+                <div className={styles.roleSelector}>
+                  <button
+                    type="button"
+                    className={`${styles.roleCard} ${selectedRole === "usuario" ? styles.roleCardActive : ""}`}
+                    onClick={() => setSelectedRole("usuario")}
+                  >
+                    <div className={styles.roleIcon}>🎫</div>
+                    <div className={styles.roleDetails}>
+                      <span className={styles.roleLabel}>FAN</span>
+                      <span className={styles.roleDesc}>Descubrí shows, armá tu agenda y apoyá el under local.</span>
+                    </div>
+                  </button>
+
+                  <button
+                    type="button"
+                    className={`${styles.roleCard} ${selectedRole === "productor" ? styles.roleCardActive : ""}`}
+                    onClick={() => setSelectedRole("productor")}
+                  >
+                    <div className={styles.roleIcon}>⚡</div>
+                    <div className={styles.roleDetails}>
+                      <span className={styles.roleLabel}>PRODUCTOR</span>
+                      <span className={styles.roleDesc}>Publicá tus propios eventos, gestioná tickets y vendé online.</span>
+                    </div>
+                  </button>
+                </div>
+              </div>
+
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="name">NOMBRE</label>
                 <input

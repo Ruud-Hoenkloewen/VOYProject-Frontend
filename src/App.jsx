@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider, useAuth } from "./context/AuthContext";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 
 // ── Lazy loading — cada ruta descarga su chunk solo cuando se necesita
 const LandingPage          = lazy(() => import("./pages/landing/LandingPage"));
@@ -15,6 +16,8 @@ const PurchaseSuccessPage  = lazy(() => import("./pages/checkout/PurchaseSuccess
 const OnboardingPage       = lazy(() => import("./pages/auth/OnboardingPage"));
 const ProfilePage          = lazy(() => import("./pages/profile/ProfilePage"));
 const ProfileEditPage      = lazy(() => import("./pages/profile/ProfileEditPage"));
+const AdminDashboard       = lazy(() => import("./pages/dashboard/AdminDashboard"));
+const ProducerDashboard    = lazy(() => import("./pages/dashboard/ProducerDashboard"));
 
 /** Componente utilitario para resetear el scroll al principio al cambiar de ruta */
 function ScrollToTop() {
@@ -38,13 +41,7 @@ function ProtectedLoginRoute() {
   return isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />;
 }
 
-/** Protege rutas que requieren sesión activa */
-function ProtectedRoute({ children }) {
-  const { isAuthenticated } = useAuth();
-  const location = useLocation();
-  if (!isAuthenticated) return <Navigate to="/login" state={{ from: location }} replace />;
-  return children;
-}
+
 
 /**
  * Ruta de onboarding — solo accesible para usuarios autenticados
@@ -89,6 +86,12 @@ export default function App() {
             <Route path="/profile/:username" element={<ProfilePage />} />
             <Route path="/profile/edit" element={
               <ProtectedRoute><ProfileEditPage /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/admin" element={
+              <ProtectedRoute allowedRoles={["admin"]}><AdminDashboard /></ProtectedRoute>
+            } />
+            <Route path="/dashboard/producer" element={
+              <ProtectedRoute allowedRoles={["producer"]}><ProducerDashboard /></ProtectedRoute>
             } />
           </Routes>
         </Suspense>
