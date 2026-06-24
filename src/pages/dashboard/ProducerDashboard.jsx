@@ -86,6 +86,23 @@ export default function ProducerDashboard() {
     maximumFractionDigits: 0
   }).format(totalRevenue);
 
+  // Obtener estado de verificación del productor actual en localStorage
+  const producerStatus = (() => {
+    const savedUsers = localStorage.getItem("voy_admin_users");
+    if (!savedUsers) return { isVerifiedProducer: true, isPendingApproval: false };
+    try {
+      const list = JSON.parse(savedUsers);
+      const found = list.find(u => u.email.toLowerCase() === user?.email?.toLowerCase());
+      if (found) {
+        return {
+          isVerifiedProducer: found.isVerifiedProducer === true,
+          isPendingApproval: found.isPendingApproval === true
+        };
+      }
+    } catch (e) {}
+    return { isVerifiedProducer: user?.isVerifiedProducer === true, isPendingApproval: false };
+  })();
+
   return (
     <div className={styles.root}>
       <EditorialHeader />

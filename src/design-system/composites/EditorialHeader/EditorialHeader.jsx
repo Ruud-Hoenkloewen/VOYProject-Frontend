@@ -18,6 +18,19 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
   const [menuOpen, setMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
 
+  // Verificar si el productor está aprobado en la lista administrativa de localStorage
+  const isApprovedProducer = (() => {
+    if (role !== "producer") return false;
+    const savedUsers = localStorage.getItem("voy_admin_users");
+    if (!savedUsers) return true;
+    try {
+      const list = JSON.parse(savedUsers);
+      const found = list.find(u => u.email.toLowerCase() === user?.email?.toLowerCase());
+      if (found) return found.isVerifiedProducer === true;
+    } catch (e) {}
+    return user?.isVerifiedProducer === true;
+  })();
+
   function handleLogout() {
     logout();
     navigate("/");
@@ -98,7 +111,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         {/* CTA / Usuario — desktop */}
         {isAuthenticated ? (
           <div className={styles.userArea}>
-            {role === "producer" && (
+            {role === "producer" && isApprovedProducer && (
               <Link
                 to="/dashboard/producer"
                 className={styles.cta}
@@ -162,7 +175,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
               {label}
             </NavLink>
           ))}
-          {role === "producer" && (
+          {role === "producer" && isApprovedProducer && (
             <Link
               to="/dashboard/producer"
               className={styles.drawerLink}

@@ -59,12 +59,47 @@ const FEATURED_SHOWS = [
 export default function FeaturedCarousel() {
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Traemos hasta 3 eventos del backend para el carrusel
-  const { events: backendEvents, isLoading } = useEvents({ limit: 3 });
+  // Traemos los eventos del backend sin límite estricto para poder buscar los destacados
+  const { events: backendEvents, isLoading } = useEvents();
+
+  // Filtrar los eventos destacados configurados por el administrador
+  const getFeaturedAndPaddedEvents = () => {
+    if (isLoading || !backendEvents || backendEvents.length === 0) return [];
+
+    const saved = localStorage.getItem("voy_featured_events");
+    let featuredIds = [];
+    if (saved) {
+      try {
+        featuredIds = JSON.parse(saved);
+      } catch (e) {}
+    }
+
+    // Filtrar los que tengan su ID en la lista de destacados
+    const featured = backendEvents.filter(evt => featuredIds.includes(evt.id));
+
+    // Si no hay ninguno destacado por el admin, tomamos los primeros 3
+    if (featured.length === 0) {
+      return backendEvents.slice(0, 3);
+    }
+
+    // Si hay destacados pero son menos de 3, rellenamos con otros para mantener la estructura tridimensional
+    let finalEvents = [...featured];
+    if (finalEvents.length < 3 && backendEvents.length >= 3) {
+      for (const evt of backendEvents) {
+        if (finalEvents.length >= 3) break;
+        if (!finalEvents.some(fe => fe.id === evt.id)) {
+          finalEvents.push(evt);
+        }
+      }
+    }
+    return finalEvents;
+  };
+
+  const activeEventsList = getFeaturedAndPaddedEvents();
 
   // Mezclamos: si el backend tiene eventos, los usamos; si no (cargando/error), usamos los hardcodeados
-  const shows = !isLoading && backendEvents.length > 0
-    ? backendEvents.map(evt => ({
+  const shows = activeEventsList.length > 0
+    ? activeEventsList.map(evt => ({
         id: evt.id,
         img: evt.imageUrl || FEATURED_SHOWS[0].img,
         alt: evt.title,
@@ -113,9 +148,7 @@ export default function FeaturedCarousel() {
 
   const activeShow = shows[centerIdx];
   // Para la card de evento usamos los datos reales del backend si existen
-  const featuredEvent = !isLoading && backendEvents.length > 0
-    ? backendEvents[centerIdx] || backendEvents[0]
-    : null;
+  const featuredEvent = activeShow?._raw || null;
 
   return (
     <section className={styles.featuredSection}>
