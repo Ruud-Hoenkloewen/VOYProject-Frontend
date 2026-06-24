@@ -4,6 +4,7 @@ import EditorialHeader from "../../design-system/composites/EditorialHeader/Edit
 import Container from "../../design-system/layout/Container/Container";
 import { useAuth } from "../../context/AuthContext";
 import { fetchEvents, deleteEvent } from "../../services/eventService";
+import api from "../../services/api";
 import { CalendarIcon, MapPinIcon, TicketIcon, EditIcon, TrashIcon } from "../../components/icons";
 import styles from "./ProducerDashboard.module.css";
 
@@ -86,22 +87,29 @@ export default function ProducerDashboard() {
     maximumFractionDigits: 0
   }).format(totalRevenue);
 
-  // Obtener estado de verificación del productor actual en localStorage
-  const producerStatus = (() => {
-    const savedUsers = localStorage.getItem("voy_admin_users");
-    if (!savedUsers) return { isVerifiedProducer: true, isPendingApproval: false };
-    try {
-      const list = JSON.parse(savedUsers);
-      const found = list.find(u => u.email.toLowerCase() === user?.email?.toLowerCase());
-      if (found) {
-        return {
-          isVerifiedProducer: found.isVerifiedProducer === true,
-          isPendingApproval: found.isPendingApproval === true
-        };
+  const [producerStatus, setProducerStatus] = useState({ 
+    isVerifiedProducer: user?.isVerifiedProducer === true, 
+    isPendingApproval: false 
+  });
+
+  useEffect(() => {
+    const verifyStatus = async () => {
+      try {
+        const { data } = await api.get('/users/me');
+        if (data && data.isVerifiedProducer !== undefined) {
+          setProducerStatus({ 
+            isVerifiedProducer: data.isVerifiedProducer, 
+            isPendingApproval: !data.isVerifiedProducer
+          });
+        }
+      } catch (err) {
+        console.error('Error verificando status:', err);
       }
-    } catch (e) {}
-    return { isVerifiedProducer: user?.isVerifiedProducer === true, isPendingApproval: false };
-  })();
+    };
+    if (user && user.role === 'producer') {
+      verifyStatus();
+    }
+  }, [user]);
 
   return (
     <div className={styles.root}>

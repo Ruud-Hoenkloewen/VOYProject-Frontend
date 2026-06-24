@@ -58,7 +58,7 @@ export default function AdminDashboard() {
       return u;
     });
     setUsers(updated);
-    localStorage.setItem("voy_admin_users", JSON.stringify(updated));
+    
   };
 
   // Action: Promote to Producer
@@ -71,7 +71,7 @@ export default function AdminDashboard() {
       return u;
     });
     setUsers(updated);
-    localStorage.setItem("voy_admin_users", JSON.stringify(updated));
+    
   };
 
   // Action: Approve Producer request
@@ -84,7 +84,7 @@ export default function AdminDashboard() {
       return u;
     });
     setUsers(updated);
-    localStorage.setItem("voy_admin_users", JSON.stringify(updated));
+    
   };
 
   // Action: Reject Producer request
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
       return u;
     });
     setUsers(updated);
-    localStorage.setItem("voy_admin_users", JSON.stringify(updated));
+    
   };
 
   // Action: Toggle Featured status

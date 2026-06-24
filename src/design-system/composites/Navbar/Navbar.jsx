@@ -14,18 +14,8 @@ import styles from "./Navbar.module.css";
 export default function Navbar() {
   const { isAuthenticated, role, user } = useAuth();
 
-  // Verificar si el productor está aprobado en la lista administrativa de localStorage
-  const isApprovedProducer = (() => {
-    if (role !== "producer") return false;
-    const savedUsers = localStorage.getItem("voy_admin_users");
-    if (!savedUsers) return true;
-    try {
-      const list = JSON.parse(savedUsers);
-      const found = list.find(u => u.email.toLowerCase() === user?.email?.toLowerCase());
-      if (found) return found.isVerifiedProducer === true;
-    } catch (e) {}
-    return user?.isVerifiedProducer === true;
-  })();
+  // Verificar si el productor está aprobado
+  const isApprovedProducer = role === "producer" && user?.isVerifiedProducer === true;
 
   return (
     <header className={styles.root}>

@@ -25,8 +25,8 @@ export const loginUser = async (email, password) => {
  * @param {string} password
  * @returns {{ _id, nombre, email, token }}
  */
-export const registerUser = async (nombre, email, password) => {
-  const { data } = await api.post("/auth/register", { nombre, email, password });
+export const registerUser = async (nombre, email, password, wantsToBeProducer = false) => {
+  const { data } = await api.post("/auth/register", { nombre, email, password, wantsToBeProducer });
   return data;
 };
 

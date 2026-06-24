@@ -7,6 +7,7 @@ import Button from "../../design-system/primitives/Button/Button";
 import SearchBar from "../../design-system/composites/SearchBar/SearchBar";
 import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
 import { useEvents } from "../../hooks/useEvents";
+import { useState, useEffect } from "react";
 import { useEventFilters } from "../../hooks/useEventFilters";
 import { WarningIcon } from "../../components/icons";
 import styles from "./EventsPage.module.css";
@@ -19,8 +20,17 @@ const GENRES = ["INDIE", "ROCK", "PUNK", "HARDCORE", "METAL", "GRUNGE", "SHOEGAZ
  * Ruta: /events
  */
 export default function EventsPage() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [debouncedArtist, setDebouncedArtist] = useState('');
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedArtist(searchTerm);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchTerm]);
   const navigate = useNavigate();
-  const { events, isLoading, error } = useEvents();
+  const { events, isLoading, error } = useEvents({ artist: debouncedArtist });
   const {
     activeCategories, toggleCategory,
     activeLugar, setActiveLugar, availableLugares,
