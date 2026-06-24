@@ -11,12 +11,25 @@ import styles from "./EditorialHeader.module.css";
  * Mobile: menú hamburguesa con drawer animado.
  */
 export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login" }) {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, role } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const lastScrollY = useRef(0);
+
+  // Verificar si el productor está aprobado en la lista administrativa de localStorage
+  const isApprovedProducer = (() => {
+    if (role !== "producer") return false;
+    const savedUsers = localStorage.getItem("voy_admin_users");
+    if (!savedUsers) return true;
+    try {
+      const list = JSON.parse(savedUsers);
+      const found = list.find(u => u.email.toLowerCase() === user?.email?.toLowerCase());
+      if (found) return found.isVerifiedProducer === true;
+    } catch (e) {}
+    return user?.isVerifiedProducer === true;
+  })();
 
   function handleLogout() {
     logout();
@@ -48,10 +61,20 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
 
   const closeMenu = () => setMenuOpen(false);
 
-  const NAV_LINKS = [
+  const navLinks = [
     { to: "/", label: "INICIO", end: true },
     { to: "/events", label: "EXPLORAR EVENTOS" },
   ];
+
+  if (isAuthenticated) {
+    if (role === "client") {
+      navLinks.push({ to: `/profile/${user?.username || user?._id || 'me'}`, label: "MIS ENTRADAS" });
+    } else if (role === "producer") {
+      navLinks.push({ to: "/dashboard/producer", label: "PANEL PRODUCTOR" });
+    } else if (role === "admin") {
+      navLinks.push({ to: "/dashboard/admin", label: "PANEL ADMIN" });
+    }
+  }
 
   return (
     <>
@@ -71,7 +94,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
 
         {/* NAV LINKS — desktop */}
         <nav className={styles.nav}>
-          {NAV_LINKS.map(({ to, label, end }) => (
+          {navLinks.map(({ to, label, end }) => (
             <NavLink
               key={to}
               to={to}
@@ -88,6 +111,15 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         {/* CTA / Usuario — desktop */}
         {isAuthenticated ? (
           <div className={styles.userArea}>
+            {role === "producer" && isApprovedProducer && (
+              <Link
+                to="/dashboard/producer"
+                className={styles.cta}
+                style={{ marginRight: "1rem" }}
+              >
+                + CREAR EVENTO
+              </Link>
+            )}
             <Link
               to={`/profile/${user?.username || user?._id || 'me'}`}
               className={styles.userWidget}
@@ -130,7 +162,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         aria-hidden={!menuOpen}
       >
         <nav className={styles.drawerNav}>
-          {NAV_LINKS.map(({ to, label, end }) => (
+          {navLinks.map(({ to, label, end }) => (
             <NavLink
               key={to}
               to={to}
@@ -143,6 +175,16 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
               {label}
             </NavLink>
           ))}
+          {role === "producer" && isApprovedProducer && (
+            <Link
+              to="/dashboard/producer"
+              className={styles.drawerLink}
+              style={{ color: "var(--ds-color-accent-primary, #C6F92B)", borderBottom: "1px solid #141414" }}
+              onClick={closeMenu}
+            >
+              + CREAR EVENTO
+            </Link>
+          )}
           {isAuthenticated ? (
             <button className={styles.drawerCta} onClick={() => { handleLogout(); closeMenu(); }}>
               SALIR

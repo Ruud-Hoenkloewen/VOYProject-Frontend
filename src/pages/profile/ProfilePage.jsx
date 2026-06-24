@@ -221,9 +221,13 @@ export default function ProfilePage() {
 
             <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap', marginTop: '8px' }}>
               <div className={styles.badgeFan}>
-                <TicketIcon size={14} /> {profile.rol ? profile.rol.toUpperCase() : 'FAN'}
+                <TicketIcon size={14} /> {
+                  (profile.username && profile.username.toLowerCase().trim() === "admin.voy")
+                    ? 'ADMIN'
+                    : (profile.role ? profile.role.toUpperCase() : (profile.rol ? profile.rol.toUpperCase() : 'FAN'))
+                }
               </div>
-              {profile.rol === 'artista' && profile.generosMusicales?.map((g) => (
+              {(profile.role === 'artista' || profile.rol === 'artista') && profile.generosMusicales?.map((g) => (
                 <div key={g} className={styles.pogoBadge} style={{ border: '1px solid var(--ds-color-text-secondary)', color: 'var(--ds-color-text-primary)' }}>
                   {g}
                 </div>

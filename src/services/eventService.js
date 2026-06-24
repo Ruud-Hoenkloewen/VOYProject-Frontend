@@ -102,3 +102,48 @@ export const fetchEventById = async (id) => {
     throw error;
   }
 };
+
+/**
+ * createEvent — crea un nuevo evento en el servidor.
+ * @param {object} eventData - Datos del evento a crear
+ * @returns {object} Evento normalizado creado
+ */
+export const createEvent = async (eventData) => {
+  try {
+    const { data } = await api.post('/events', eventData);
+    return mapEvent(data);
+  } catch (error) {
+    console.error("Error creating event:", error);
+    throw error;
+  }
+};
+
+/**
+ * updateEvent — actualiza un evento existente en el servidor.
+ * @param {string} id - ID del evento a actualizar
+ * @param {object} eventData - Campos a actualizar
+ * @returns {object} Evento normalizado actualizado
+ */
+export const updateEvent = async (id, eventData) => {
+  try {
+    const { data } = await api.put(`/events/${id}`, eventData);
+    return mapEvent(data);
+  } catch (error) {
+    console.error(`Error updating event ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * deleteEvent — elimina un evento en el servidor.
+ * @param {string} id - ID del evento a eliminar
+ */
+export const deleteEvent = async (id) => {
+  try {
+    const { data } = await api.delete(`/events/${id}`);
+    return data;
+  } catch (error) {
+    console.error(`Error deleting event ${id}:`, error);
+    throw error;
+  }
+};

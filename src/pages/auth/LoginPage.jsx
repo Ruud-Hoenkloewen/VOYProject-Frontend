@@ -49,12 +49,40 @@ export default function LoginPage() {
     setApiError("");
 
     try {
+      // Verificar si el usuario está suspendido en la base de datos simulada (localStorage)
+      const savedUsers = localStorage.getItem("voy_admin_users");
+      if (savedUsers) {
+        try {
+          const usersList = JSON.parse(savedUsers);
+          const found = usersList.find(u => u.email.toLowerCase() === form.email.toLowerCase());
+          if (found && found.isSuspended) {
+            throw new Error("Su cuenta ha sido suspendida. Contacte al administrador.");
+          }
+        } catch (e) {
+          if (e.message.includes("suspendida")) throw e;
+        }
+      }
+
       const data = await loginUser(form.email, form.password);
-      // data = { _id, nombre, email, token }
-      login({ _id: data._id, nombre: data.nombre, email: data.email }, data.token);
+      // data = { _id, nombre, email, token, role }
+      // The role will be extracted from JWT payload inside login()
+      login({ _id: data._id, nombre: data.nombre, email: data.email, role: data.role }, data.token);
+      
+      // Fetch full profile in the background to sync other metadata like username, avatar color, banner, etc.
+      import("../../services/userService")
+        .then(({ getMyProfile }) => getMyProfile())
+        .then((profile) => {
+          login(profile, data.token);
+        })
+        .catch((err) => {
+          console.error("Error fetching full profile on login:", err);
+        });
+
       navigate(redirectTo, { replace: true });
     } catch (err) {
-      const msg = err.response?.data?.mensaje || "Error al iniciar sesión. Intentá de nuevo.";
+      const msg = err.message.includes("suspendida")
+        ? err.message
+        : (err.response?.data?.mensaje || "Error al iniciar sesión. Intentá de nuevo.");
       setApiError(msg);
     } finally {
       setSubmitting(false);
