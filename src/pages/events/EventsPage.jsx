@@ -29,11 +29,10 @@ export default function EventsPage() {
   const [artistQuery, setArtistQuery] = useState("");
   const debouncedArtistQuery = useDebounce(artistQuery, 300);
 
-  // Solo se pasa el param "artista" a la API cuando hay texto.
-  // useEvents usa JSON.stringify(params) como dependencia, así que
-  // el fetch solo se vuelve a disparar cuando debouncedArtistQuery cambia.
+  // El backend expone el filtro como ?artist=xyz (ver tarea de backend
+  // SCRUM-XXX: GET /api/events con RegExp case-insensitive sobre artistas[].nombre)
   const eventsParams = debouncedArtistQuery.trim()
-    ? { artista: debouncedArtistQuery.trim() }
+    ? { artist: debouncedArtistQuery.trim() }
     : {};
 
   const { events, isLoading, error } = useEvents(eventsParams);

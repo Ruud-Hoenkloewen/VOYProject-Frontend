@@ -21,6 +21,30 @@ const mapStatusTone = (status) => {
 };
 
 /**
+ * extractCoords — convierte el campo `location` (GeoJSON Point) del backend
+ * a un objeto plano { lat, lng } que es más cómodo de usar en el frontend.
+ *
+ * GeoJSON guarda las coordenadas como [longitud, latitud] (orden invertido
+ * respecto a lo intuitivo), por eso el mapeo cuida ese detalle.
+ *
+ * @param {object} location - { type: "Point", coordinates: [lng, lat] }
+ * @returns {{lat: number, lng: number} | null}
+ */
+const extractCoords = (location) => {
+  if (
+    !location ||
+    location.type !== 'Point' ||
+    !Array.isArray(location.coordinates) ||
+    location.coordinates.length !== 2
+  ) {
+    return null;
+  }
+  const [lng, lat] = location.coordinates;
+  if (typeof lat !== 'number' || typeof lng !== 'number') return null;
+  return { lat, lng };
+};
+
+/**
  * mapEvent — transforma un documento de evento del backend al shape
  * que consume el frontend. Centralizado para evitar duplicación.
  * @param {object} evt - Documento crudo de MongoDB
@@ -35,10 +59,9 @@ const mapEvent = (evt) => ({
   time:         evt.hora     ? `${evt.hora} HS`      : '',
   venue:        evt.lugar    || 'Lugar a confirmar',
   direccion:    evt.direccion || '',
-  // Coordenadas esperadas como { lat, lng } — null si el evento no las tiene
-  coordenadas:  (evt.coordenadas && evt.coordenadas.lat != null && evt.coordenadas.lng != null)
-                  ? { lat: evt.coordenadas.lat, lng: evt.coordenadas.lng }
-                  : null,
+  // `location` viene como GeoJSON Point ({ type, coordinates: [lng, lat] })
+  // desde el backend. Se normaliza a { lat, lng } o null si no existe.
+  coordenadas:  extractCoords(evt.location),
   price:        evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),
   rawPrice:     evt.precio   ?? 0,
   description:  evt.descripcion || '',
@@ -51,7 +74,7 @@ const mapEvent = (evt) => ({
 
 /**
  * fetchEvents — obtiene la lista de eventos con filtros opcionales.
- * @param {object} params - Query params: genero, lugar, fecha, artista, limit
+ * @param {object} params - Query params: genero, lugar, fecha, artist, limit
  * @returns {Array} Lista de eventos normalizados
  */
 export const fetchEvents = async (params = {}) => {
