@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
 import Container from "../../design-system/layout/Container/Container";
 import { useAuth } from "../../context/AuthContext";
-import { fetchEvents, deleteEvent } from "../../services/eventService";
+import { fetchMyEvents, deleteEvent } from "../../services/eventService";
 import api from "../../services/api";
 import { CalendarIcon, MapPinIcon, TicketIcon, EditIcon, TrashIcon } from "../../components/icons";
 import styles from "./ProducerDashboard.module.css";
@@ -28,9 +28,7 @@ export default function ProducerDashboard() {
   const loadEvents = async () => {
     try {
       setLoading(true);
-      const data = await fetchEvents();
-      // Como no hay campo creador/owner en el modelo Event del backend, 
-      // mostramos todos los eventos de la base de datos (aplica para desarrollo local)
+      const data = await fetchMyEvents();
       setEvents(data);
     } catch (err) {
       console.error(err);
@@ -165,10 +163,13 @@ export default function ProducerDashboard() {
         ) : (
           <div className={styles.eventsGrid}>
             {events.map((evt) => {
-              const ticketsVendidos = Math.max(0, (evt.capacity || 0) - (evt.stock || 0));
-              const fillPercentage = evt.capacity > 0 ? Math.round((ticketsVendidos / evt.capacity) * 100) : 0;
+              const capacity = evt.capacity || 100;
+              const ticketsRemaining = evt.stock !== undefined ? evt.stock : capacity;
+              const remainingPercentage = capacity > 0 ? Math.round((ticketsRemaining / capacity) * 100) : 0;
               const isPaused = evt.status === "PAUSADO";
               const isAgotado = evt.status === "AGOTADO";
+              
+              const progressLabel = (ticketsRemaining < 20 && ticketsRemaining > 0) ? "Últimas entradas" : "Entradas";
 
               return (
                 <div key={evt.id} className={styles.eventCard}>
@@ -211,15 +212,17 @@ export default function ProducerDashboard() {
                     {/* Progress capacity */}
                     <div className={styles.progressContainer}>
                       <div className={styles.progressText}>
-                        <span>Entradas: {ticketsVendidos}/{evt.capacity || 100}</span>
-                        <span>{fillPercentage}%</span>
+                        <span style={progressLabel === "Últimas entradas" ? { color: "var(--ds-color-brand-lime, #a3e635)", fontWeight: "bold" } : {}}>
+                          {progressLabel}: {ticketsRemaining}/{capacity}
+                        </span>
+                        <span>{remainingPercentage}%</span>
                       </div>
                       <div className={styles.progressBarBg}>
                         <div 
                           className={styles.progressBarFill} 
                           style={{ 
-                            width: `${fillPercentage}%`,
-                            background: isPaused ? "var(--ds-color-yellow-300)" : "var(--ds-color-cyan-400)"
+                            width: `${remainingPercentage}%`,
+                            background: isPaused ? "var(--ds-color-yellow-300)" : (ticketsRemaining < 20 ? "var(--ds-color-brand-lime, #a3e635)" : "var(--ds-color-cyan-400)")
                           }} 
                         />
                       </div>

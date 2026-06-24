@@ -69,6 +69,7 @@ const mapEvent = (evt) => {
     statusTone:   mapStatusTone(evt.estado || 'DISPONIBLE'),
     capacity:     evt.capacidadTotal ?? null,
     stock:        evt.stock ?? null,
+    creador:      evt.creador || null,
   };
 };
 
@@ -84,6 +85,20 @@ export const fetchEvents = async (params = {}) => {
   } catch (error) {
     console.error("Error fetching events:", error);
     throw new Error(error.response?.data?.mensaje || "Error al obtener eventos del servidor");
+  }
+};
+
+/**
+ * fetchMyEvents — obtiene los eventos creados por el productor actual.
+ * @returns {Array} Lista de eventos normalizados
+ */
+export const fetchMyEvents = async () => {
+  try {
+    const { data } = await api.get('/events/producer/my-events');
+    return data.map((evt) => ({ ...mapEvent(evt), highlighted: false }));
+  } catch (error) {
+    console.error("Error fetching my events:", error);
+    throw new Error(error.response?.data?.mensaje || "Error al obtener tus eventos del servidor");
   }
 };
 

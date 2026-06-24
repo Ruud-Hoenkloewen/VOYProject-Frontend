@@ -56,6 +56,21 @@
   color: #d4d4d4;
 }
 
+.leftContainer {
+  flex: 1 1 0%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.rightContainer {
+  flex: 1 1 0%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 1rem;
+}
+
 /* ── NAV LINKS ────────────────────────────────────────── */
 .nav {
   display: flex;

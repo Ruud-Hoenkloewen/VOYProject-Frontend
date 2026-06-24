@@ -20,6 +20,7 @@ export default function RegisterPage() {
   const [errors,     setErrors]     = useState({});
   const [apiError,   setApiError]   = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [showPendingPopup, setShowPendingPopup] = useState(false);
 
   async function generateUniqueUsername(baseName) {
     let username = baseName.toLowerCase()
@@ -129,7 +130,7 @@ export default function RegisterPage() {
         await login({ ...updated, role: "client", isPendingApproval: true }, data.token);
 
         localStorage.setItem("onboardingDone", "true");
-        navigate("/dashboard/producer");
+        setShowPendingPopup(true);
       } else {
         await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "client", rol: "usuario" }, data.token);
         navigate("/onboarding");
@@ -300,6 +301,36 @@ export default function RegisterPage() {
           </p>
         </section>
       </main>
+
+      {/* Pending Producer Popup */}
+      {showPendingPopup && (
+        <div style={{
+          position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem'
+        }}>
+          <div style={{
+            background: '#111', border: '1px solid #333', borderRadius: '12px', padding: '2.5rem',
+            maxWidth: '420px', textAlign: 'center', color: '#fff', boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
+          }}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '1rem', letterSpacing: '0.05em' }}>
+              ¡HOLA!
+            </h2>
+            <p style={{ fontSize: '1rem', color: '#ccc', marginBottom: '2rem', lineHeight: 1.6 }}>
+              Acabas de crear tu cuenta de productor. Espera a que un administrador del sitio te apruebe para poder acceder al Panel y crear eventos.
+            </p>
+            <button
+              onClick={() => navigate("/")}
+              style={{
+                background: 'var(--ds-color-brand-lime, #a3e635)', color: '#000', border: 'none',
+                padding: '0.8rem 2rem', fontSize: '0.9rem', fontWeight: 800, cursor: 'pointer',
+                borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '0.1em'
+              }}
+            >
+              Entendido
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

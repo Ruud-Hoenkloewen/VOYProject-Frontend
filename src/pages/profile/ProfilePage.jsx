@@ -144,6 +144,15 @@ export default function ProfilePage() {
   const followersCount = profile.seguidores?.length || 0;
   const followingCount = profile.siguiendo?.length || 0;
 
+  const isProducer = profile.role === 'producer' || profile.rol === 'producer' || profile.isVerifiedProducer;
+  const producerEvents = allEvents.filter(e => {
+    const creatorId = e.creador?._id || e.creador;
+    return creatorId === profile._id;
+  });
+
+  const validTabs = isProducer ? ['CARTELERA', 'INFO'] : ['MI MOVIDA', 'GUSTOS', 'HISTORIAL'];
+  const currentTab = validTabs.includes(activeTab) ? activeTab : validTabs[0];
+
   // ¿El usuario logueado ya sigue a este perfil?
   const isFollowing = profile.seguidores?.some(
     (s) => s === user?._id || s._id === user?._id
@@ -278,22 +287,28 @@ export default function ProfilePage() {
 
           <div className={styles.statsBoxes}>
             <div className={styles.statBox}>
-              <span className={`${styles.statBoxVal} ${styles.valSaved}`}>{profile.favoritos?.length || 0}</span>
-              <span className={styles.statBoxLabel}>EVENTOS<br/>GUARDADOS</span>
+              <span className={`${styles.statBoxVal} ${styles.valSaved}`}>
+                {isProducer ? producerEvents.length : (profile.favoritos?.length || 0)}
+              </span>
+              <span className={styles.statBoxLabel}>
+                {isProducer ? <>SHOWS<br/>PUBLICADOS</> : <>EVENTOS<br/>GUARDADOS</>}
+              </span>
             </div>
-            <div className={styles.statBox}>
-              <span className={`${styles.statBoxVal} ${styles.valGenres}`}>{profile.generosFavoritos?.length || 1}</span>
-              <span className={styles.statBoxLabel}>GÉNEROS<br/>FAVORITOS</span>
-            </div>
+            {!isProducer && (
+              <div className={styles.statBox}>
+                <span className={`${styles.statBoxVal} ${styles.valGenres}`}>{profile.generosFavoritos?.length || 1}</span>
+                <span className={styles.statBoxLabel}>GÉNEROS<br/>FAVORITOS</span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Tabs */}
         <div className={styles.tabsContainer}>
-          {['MI MOVIDA', 'GUSTOS', 'HISTORIAL'].map(tab => (
+          {validTabs.map(tab => (
             <button
               key={tab}
-              className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ''}`}
+              className={`${styles.tab} ${currentTab === tab ? styles.tabActive : ''}`}
               onClick={() => setActiveTab(tab)}
             >
               {tab}
@@ -301,7 +316,74 @@ export default function ProfilePage() {
           ))}
         </div>
 
-        {activeTab === 'MI MOVIDA' && (
+        {currentTab === 'CARTELERA' && (
+          <div className={styles.sectionBlock}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>
+                <StarIcon size={16} className={styles.sectionIcon} />
+                NUESTROS EVENTOS
+              </h2>
+            </div>
+            
+            {producerEvents.length === 0 ? (
+                <div className={styles.emptyState}>
+                  <TicketIcon size={32} className={styles.emptyIcon} />
+                  <span className={styles.emptyText}>Esta productora aún no ha publicado eventos.</span>
+                </div>
+            ) : (
+                <div className={styles.eventsGrid}>
+                  {producerEvents.map(evt => (
+                    <EventCard key={evt.id} {...evt} />
+                  ))}
+                </div>
+            )}
+          </div>
+        )}
+
+        {currentTab === 'INFO' && (
+          <div className={styles.sectionBlock}>
+            <div className={styles.sectionHeader}>
+              <h2 className={styles.sectionTitle}>SOBRE NOSOTROS</h2>
+            </div>
+            {profile.bio ? (
+              <p style={{ fontSize: '14px', lineHeight: '1.6', color: 'var(--ds-color-text-secondary)', marginTop: '16px' }}>
+                {profile.bio}
+              </p>
+            ) : (
+              <div className={styles.emptyState} style={{ width: '100%', marginTop: '16px' }}>
+                <span className={styles.emptyText}>Esta productora aún no ha agregado una descripción.</span>
+              </div>
+            )}
+
+            {profile.vibeEnShows && profile.vibeEnShows.length > 0 && (
+              <div style={{ marginTop: '24px' }}>
+                <h3 style={{fontSize: '12px', marginBottom: '12px', color: 'var(--ds-color-text-secondary)', letterSpacing: '0.1em', fontWeight: 800}}>VIBES</h3>
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {profile.vibeEnShows.map(vibe => (
+                    <div key={vibe} className={styles.pogoBadge} style={{ border: '1px solid var(--ds-color-text-secondary)', color: 'var(--ds-color-text-primary)' }}>
+                      {vibe}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+            
+            {profile.generosMusicales && profile.generosMusicales.length > 0 && (
+               <div style={{marginTop: '24px'}}>
+                  <h3 style={{fontSize: '12px', marginBottom: '12px', color: 'var(--ds-color-text-secondary)', letterSpacing: '0.1em', fontWeight: 800}}>GÉNEROS MUSICALES</h3>
+                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                  {profile.generosMusicales.map(g => (
+                    <div key={g} className={styles.pogoBadge} style={{ border: '1px solid var(--ds-color-text-secondary)', color: 'var(--ds-color-text-primary)' }}>
+                      {g}
+                    </div>
+                  ))}
+                  </div>
+               </div>
+            )}
+          </div>
+        )}
+
+        {currentTab === 'MI MOVIDA' && (
           <>
             <div className={styles.sectionBlock}>
               <div className={styles.sectionHeader}>
@@ -350,7 +432,7 @@ export default function ProfilePage() {
           </>
         )}
 
-        {activeTab === 'GUSTOS' && (
+        {currentTab === 'GUSTOS' && (
           <div className={styles.sectionBlock}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>GUSTOS Y VIBES</h2>
@@ -384,7 +466,7 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {activeTab === 'HISTORIAL' && (
+        {currentTab === 'HISTORIAL' && (
           <div className={styles.sectionBlock}>
             <div className={styles.sectionHeader}>
               <h2 className={styles.sectionTitle}>HISTORIAL DE COMPRAS</h2>

@@ -49,55 +49,82 @@ export default function AdminDashboard() {
 
   // Action: Toggle Suspend
   const handleToggleSuspend = (id, email) => {
-    const updated = users.map(u => {
-      if (u.id === id) {
-        const nextStatus = !u.isSuspended;
+    const uToUpdate = users.find(u => u.id === id);
+    if (!uToUpdate) return;
+    const nextStatus = !uToUpdate.isSuspended;
+
+    updateUserStatus(id, { isSuspended: nextStatus })
+      .then(() => {
+        const updated = users.map(u => {
+          if (u.id === id) {
+            return { ...u, isSuspended: nextStatus };
+          }
+          return u;
+        });
+        setUsers(updated);
         showToastMsg(`Usuario ${email} ${nextStatus ? "suspendido" : "activado"} con éxito`);
-        return { ...u, isSuspended: nextStatus };
-      }
-      return u;
-    });
-    setUsers(updated);
-    
+      })
+      .catch(err => {
+        console.error(err);
+        showToastMsg("Error al actualizar estado del usuario", true);
+      });
   };
 
   // Action: Promote to Producer
   const handlePromoteToProducer = (id, email) => {
-    const updated = users.map(u => {
-      if (u.id === id) {
+    updateUserStatus(id, { role: "producer", isVerifiedProducer: true, isPendingApproval: false })
+      .then(() => {
+        const updated = users.map(u => {
+          if (u.id === id) {
+            return { ...u, role: "producer", isVerifiedProducer: true, isPendingApproval: false };
+          }
+          return u;
+        });
+        setUsers(updated);
         showToastMsg(`Usuario ${email} ascendido a Productor`);
-        return { ...u, role: "producer", isVerifiedProducer: true };
-      }
-      return u;
-    });
-    setUsers(updated);
-    
+      })
+      .catch(err => {
+        console.error(err);
+        showToastMsg("Error al ascender usuario", true);
+      });
   };
 
   // Action: Approve Producer request
   const handleApproveProducer = (id, email) => {
-    const updated = users.map(u => {
-      if (u.id === id) {
+    updateUserStatus(id, { role: "producer", isVerifiedProducer: true, isPendingApproval: false })
+      .then(() => {
+        const updated = users.map(u => {
+          if (u.id === id) {
+            return { ...u, role: "producer", isVerifiedProducer: true, isPendingApproval: false };
+          }
+          return u;
+        });
+        setUsers(updated);
         showToastMsg(`Productor ${email} aprobado con éxito`);
-        return { ...u, role: "producer", isVerifiedProducer: true, isPendingApproval: false };
-      }
-      return u;
-    });
-    setUsers(updated);
-    
+      })
+      .catch(err => {
+        console.error(err);
+        showToastMsg("Error al aprobar productor", true);
+      });
   };
 
   // Action: Reject Producer request
   const handleRejectProducer = (id, email) => {
-    const updated = users.map(u => {
-      if (u.id === id) {
+    updateUserStatus(id, { isPendingApproval: false })
+      .then(() => {
+        const updated = users.map(u => {
+          if (u.id === id) {
+            return { ...u, isPendingApproval: false };
+          }
+          return u;
+        });
+        setUsers(updated);
         showToastMsg(`Solicitud de productor ${email} rechazada`, true);
-        return { ...u, isPendingApproval: false };
-      }
-      return u;
-    });
-    setUsers(updated);
-    
+      })
+      .catch(err => {
+        console.error(err);
+        showToastMsg("Error al rechazar solicitud", true);
+      });
   };
 
   // Action: Toggle Featured status

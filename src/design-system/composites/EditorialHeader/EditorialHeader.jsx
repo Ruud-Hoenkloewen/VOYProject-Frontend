@@ -70,7 +70,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
   ];
 
   if (isAuthenticated) {
-    if (role === "client") {
+    if (role === "client" && !user?.isPendingApproval) {
       navLinks.push({ to: `/profile/${user?.username || user?._id || 'me'}`, label: "MIS ENTRADAS" });
     } else if (role === "producer") {
       navLinks.push({ to: "/dashboard/producer", label: "PANEL PRODUCTOR" });
@@ -91,7 +91,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         }}
       >
         {/* LOGO */}
-        <div onClick={closeMenu} style={{ cursor: "pointer" }}>
+        <div className={styles.leftContainer} onClick={closeMenu} style={{ cursor: "pointer" }}>
           <LogoVoy />
         </div>
 
@@ -111,18 +111,10 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
           ))}
         </nav>
 
-        {/* CTA / Usuario — desktop */}
-        {isAuthenticated ? (
-          <div className={styles.userArea}>
-            {role === "producer" && isApprovedProducer && (
-              <Link
-                to="/dashboard/producer"
-                className={styles.cta}
-                style={{ marginRight: "1rem" }}
-              >
-                + CREAR EVENTO
-              </Link>
-            )}
+        {/* CTA / Usuario / Hamburger — desktop & mobile */}
+        <div className={styles.rightContainer}>
+          {isAuthenticated ? (
+            <div className={styles.userArea}>
               <div className={styles.userDropdownContainer} ref={dropdownRef}>
                 <button
                   onClick={() => setDropdownOpen(!dropdownOpen)}
@@ -159,24 +151,25 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
                   </div>
                 )}
               </div>
-          </div>
-        ) : (
-          <Link to={ctaTo} className={`${styles.cta} ${styles.ctaDesktop}`}>
-            {ctaLabel}
-          </Link>
-        )}
+            </div>
+          ) : (
+            <Link to={ctaTo} className={`${styles.cta} ${styles.ctaDesktop}`}>
+              {ctaLabel}
+            </Link>
+          )}
 
-        {/* HAMBURGER — mobile only */}
-        <button
-          className={styles.hamburger}
-          onClick={() => setMenuOpen((o) => !o)}
-          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-          aria-expanded={menuOpen}
-        >
-          <span className={`${styles.hamburgerBar} ${menuOpen ? styles.barTop : ""}`} />
-          <span className={`${styles.hamburgerBar} ${menuOpen ? styles.barMid : ""}`} />
-          <span className={`${styles.hamburgerBar} ${menuOpen ? styles.barBot : ""}`} />
-        </button>
+          {/* HAMBURGER — mobile only */}
+          <button
+            className={styles.hamburger}
+            onClick={() => setMenuOpen((o) => !o)}
+            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+            aria-expanded={menuOpen}
+          >
+            <span className={`${styles.hamburgerBar} ${menuOpen ? styles.barTop : ""}`} />
+            <span className={`${styles.hamburgerBar} ${menuOpen ? styles.barMid : ""}`} />
+            <span className={`${styles.hamburgerBar} ${menuOpen ? styles.barBot : ""}`} />
+          </button>
+        </div>
       </header>
 
       {/* MOBILE DRAWER */}
@@ -198,16 +191,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
               {label}
             </NavLink>
           ))}
-          {role === "producer" && isApprovedProducer && (
-            <Link
-              to="/dashboard/producer"
-              className={styles.drawerLink}
-              style={{ color: "var(--ds-color-accent-primary)", borderBottom: "1px solid #141414" }}
-              onClick={closeMenu}
-            >
-              + CREAR EVENTO
-            </Link>
-          )}
+
           {isAuthenticated ? (
             <button className={styles.drawerCta} onClick={() => { handleLogout(); closeMenu(); }}>
               SALIR
