@@ -34,6 +34,11 @@ const mapEvent = (evt) => ({
   date:         evt.fecha    ? formatDate(evt.fecha) : 'Fecha a confirmar',
   time:         evt.hora     ? `${evt.hora} HS`      : '',
   venue:        evt.lugar    || 'Lugar a confirmar',
+  direccion:    evt.direccion || '',
+  // Coordenadas esperadas como { lat, lng } — null si el evento no las tiene
+  coordenadas:  (evt.coordenadas && evt.coordenadas.lat != null && evt.coordenadas.lng != null)
+                  ? { lat: evt.coordenadas.lat, lng: evt.coordenadas.lng }
+                  : null,
   price:        evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),
   rawPrice:     evt.precio   ?? 0,
   description:  evt.descripcion || '',
@@ -46,7 +51,7 @@ const mapEvent = (evt) => ({
 
 /**
  * fetchEvents — obtiene la lista de eventos con filtros opcionales.
- * @param {object} params - Query params: genero, lugar, fecha, limit
+ * @param {object} params - Query params: genero, lugar, fecha, artista, limit
  * @returns {Array} Lista de eventos normalizados
  */
 export const fetchEvents = async (params = {}) => {

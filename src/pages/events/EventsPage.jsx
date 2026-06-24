@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Container from "../../design-system/layout/Container/Container";
 import Stack from "../../design-system/layout/Stack/Stack";
@@ -8,6 +9,7 @@ import SearchBar from "../../design-system/composites/SearchBar/SearchBar";
 import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
 import { useEvents } from "../../hooks/useEvents";
 import { useEventFilters } from "../../hooks/useEventFilters";
+import { useDebounce } from "../../hooks/useDebounce";
 import { WarningIcon } from "../../components/icons";
 import styles from "./EventsPage.module.css";
 
@@ -15,12 +17,26 @@ const GENRES = ["INDIE", "ROCK", "PUNK", "HARDCORE", "METAL", "GRUNGE", "SHOEGAZ
 
 /**
  * COMPONENTE: EventsPage
- * Grilla principal de eventos con filtros por género, lugar y fecha.
+ * Grilla principal de eventos con filtros por género, lugar, fecha y artista.
  * Ruta: /events
  */
 export default function EventsPage() {
   const navigate = useNavigate();
-  const { events, isLoading, error } = useEvents();
+
+  // ── Búsqueda por artista con debounce ──────────────────────────
+  // El input se actualiza al instante (UX fluida), pero el valor que
+  // se manda a la API espera 300ms de inactividad antes de disparar.
+  const [artistQuery, setArtistQuery] = useState("");
+  const debouncedArtistQuery = useDebounce(artistQuery, 300);
+
+  // Solo se pasa el param "artista" a la API cuando hay texto.
+  // useEvents usa JSON.stringify(params) como dependencia, así que
+  // el fetch solo se vuelve a disparar cuando debouncedArtistQuery cambia.
+  const eventsParams = debouncedArtistQuery.trim()
+    ? { artista: debouncedArtistQuery.trim() }
+    : {};
+
+  const { events, isLoading, error } = useEvents(eventsParams);
   const {
     activeCategories, toggleCategory,
     activeLugar, setActiveLugar, availableLugares,
@@ -87,6 +103,17 @@ export default function EventsPage() {
                   <option key={fecha} value={fecha}>{fecha}</option>
                 ))}
               </select>
+            </div>
+
+            <div className={styles.filterGroupSmall}>
+              <Typography variant="caption" className={styles.filterLabel}>ARTISTA</Typography>
+              <input
+                type="text"
+                className={styles.filterSelect}
+                placeholder="Buscar por artista..."
+                value={artistQuery}
+                onChange={(e) => setArtistQuery(e.target.value)}
+              />
             </div>
           </div>
 

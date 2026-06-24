@@ -51,10 +51,6 @@ function ProtectedRoute({ children }) {
  * que no hayan completado el onboarding todavía.
  */
 function OnboardingRoute() {
-  const { isAuthenticated } = useAuth();
-  if (!isAuthenticated) return <Navigate to="/login" replace />;
-  const done = localStorage.getItem("onboardingDone") === "true";
-  if (done) return <Navigate to="/" replace />;
   return <OnboardingPage />;
 }
 

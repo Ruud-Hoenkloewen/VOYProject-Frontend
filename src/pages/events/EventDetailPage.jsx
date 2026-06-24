@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchEventById } from "../../services/eventService";
+import { updateMyProfile } from "../../services/userService";
+import { useAuth } from "../../context/AuthContext";
 import Button from "../../design-system/primitives/Button/Button";
 import Typography from "../../design-system/primitives/Typography/Typography";
 import styles from "./EventDetailPage.module.css";
@@ -15,6 +17,7 @@ import { CONCERT_PHOTOS, BAND_DESCRIPTIONS } from "../../utils/mockData";
 import Timeline from "./components/Timeline/Timeline";
 import ArtistGrid from "./components/ArtistGrid/ArtistGrid";
 import TicketCard from "./components/TicketCard/TicketCard";
+import EventMap from "../../components/EventMap/EventMap";
 
 // Duración de cada set en minutos
 const SET_DURATION   = 55;
@@ -23,9 +26,36 @@ const PUERTAS_OFFSET = 30; // primer set empieza 30 min después de puertas
 export default function EventDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user, updateUser, isAuthenticated } = useAuth();
+  
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]   = useState(null);
+  const [isTogglingFav, setIsTogglingFav] = useState(false);
+
+  const isFavorite = user?.favoritos?.includes(id) || false;
+
+  const handleToggleFavorite = async () => {
+    if (!isAuthenticated) {
+      navigate('/login');
+      return;
+    }
+    
+    try {
+      setIsTogglingFav(true);
+      const currentFavs = user?.favoritos || [];
+      const newFavs = isFavorite 
+        ? currentFavs.filter(favId => favId !== id)
+        : [...currentFavs, id];
+        
+      const updatedUser = await updateMyProfile({ favoritos: newFavs });
+      updateUser(updatedUser);
+    } catch (err) {
+      console.error("Error toggling favorite:", err);
+    } finally {
+      setIsTogglingFav(false);
+    }
+  };
 
   const getEventDetail = useCallback(async () => {
     try {
@@ -118,7 +148,12 @@ export default function EventDetailPage() {
         <button className={styles.heroBack} onClick={() => navigate("/events")}>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
         </button>
-        <button className={styles.heroHeart}>
+        <button 
+          className={`${styles.heroHeart} ${isFavorite ? styles.heroHeartActive : ''}`}
+          onClick={handleToggleFavorite}
+          disabled={isTogglingFav}
+          style={{ color: isFavorite ? 'var(--ds-color-magenta-400)' : 'currentColor' }}
+        >
           <HeartIcon />
         </button>
 
@@ -157,6 +192,25 @@ export default function EventDetailPage() {
                 <span className={styles.infoValue}>{eventData.venue}</span>
               </div>
             </div>
+          </div>
+
+          {/* UBICACIÓN — mapa interactivo si hay coordenadas, sino solo texto */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.iconNeon}><MapPinIcon /></span>
+              <h2 className={styles.sectionTitle}>UBICACIÓN</h2>
+            </div>
+            {eventData.coordenadas ? (
+              <EventMap
+                coordenadas={eventData.coordenadas}
+                venue={eventData.venue}
+                direccion={eventData.direccion}
+              />
+            ) : (
+              <p className={styles.movidaDescription}>
+                {eventData.direccion || `${eventData.venue} — dirección a confirmar.`}
+              </p>
+            )}
           </div>
 
           {/* LA MOVIDA */}

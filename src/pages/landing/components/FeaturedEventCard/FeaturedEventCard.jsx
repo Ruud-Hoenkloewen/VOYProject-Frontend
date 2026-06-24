@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import styles from "../../LandingPage.module.css";
 import { CalendarIcon, ClockIcon, MapPinIcon } from "../../../../components/icons";
+import { shareEvent } from "../../../../utils/helpers";
 
 /**
  * FeaturedEventCard — Card mediana del evento destacado
@@ -12,11 +13,7 @@ export default function FeaturedEventCard({ event, isLoading }) {
   const [fav, setFav] = useState(false);
 
   const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({ title: event?.title, url: `${window.location.origin}/events/${event?.id}` });
-    } else {
-      navigator.clipboard.writeText(`${window.location.origin}/events/${event?.id}`);
-    }
+    shareEvent(event);
   };
 
   if (isLoading) {

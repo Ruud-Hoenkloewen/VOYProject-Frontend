@@ -35,8 +35,8 @@ export const updateMyProfile = async (data) => {
  * Devuelve { available: true/false }
  */
 export const checkUsername = async (username) => {
-  const { data } = await api.get(`/users/check-username?username=${username}`);
-  return data;
+  const { data } = await api.get(`/users/check-username/${username}`);
+  return { available: data.disponible };
 };
 
 /**
@@ -56,7 +56,7 @@ export const AVATAR_COLORS = [
   { value: "#A044FF", name: "Violeta" },
   { value: "#00E5FF", name: "Cyan" },
   { value: "#FF6B00", name: "Naranja" },
-  { value: "#A044FF", name: "Púrpura" },
+  { value: "#7B1FA2", name: "Púrpura" },
   { value: "#FF2D78", name: "Rosa" },
   { value: "#FFD600", name: "Amarillo" },
   { value: "#888888", name: "Gris" },
