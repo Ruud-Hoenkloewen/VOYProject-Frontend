@@ -76,24 +76,24 @@ export default function RegisterPage() {
     setApiError("");
 
     try {
-      // 1. Check if name matches admin name
       const cleanName = form.name.toLowerCase().trim();
       const isAdminName = cleanName === "admin.voy" || cleanName === "admin voy";
+      const wantsToBeProducer = selectedRole === "productor";
       
       let adminUsername = "admin.voy";
-        if (isAdminName) {
-          adminUsername = await generateUniqueUsername("admin.voy");
-        }
+      if (isAdminName) {
+        adminUsername = await generateUniqueUsername("admin.voy");
+      }
 
-        const data = await registerUser(form.name, form.email, form.password);
-        
-        if (isAdminName) {
+      // 1. Registramos en backend, mandando la intención de ser productor
+      const data = await registerUser(form.name, form.email, form.password, wantsToBeProducer);
+      
+      if (isAdminName) {
         // Log in to set token
         await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "admin", rol: "admin" }, data.token);
         
         // Auto-update profile for admin
         const payload = {
-          role: "admin", // Admin gets admin role
           username: adminUsername,
           bio: "Administrador / Dueño de VOY Project.",
           ubicacion: "San Miguel de Tucumán, Argentina",
@@ -107,16 +107,15 @@ export default function RegisterPage() {
         await login({ ...updated, role: "admin", rol: "admin" }, data.token);
         localStorage.setItem("onboardingDone", "true");
         navigate("/dashboard/admin");
-      } else if (selectedRole === "productor") {
+      } else if (wantsToBeProducer) {
         // Log in to set the token first
-        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "producer", rol: "productor" }, data.token);
+        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "client", isPendingApproval: true }, data.token);
         
         // Generate a unique username based on their name
         const uniqueUsername = await generateUniqueUsername(form.name);
         
         // Update user profile automatically
         const payload = {
-          role: "producer",
           username: uniqueUsername,
           bio: "Organizador de eventos underground y ciclos culturales.",
           ubicacion: "San Miguel de Tucumán, Argentina",
@@ -127,30 +126,7 @@ export default function RegisterPage() {
         };
         
         const updated = await updateMyProfile(payload);
-        const updatedWithMockRole = { ...updated, role: "producer", rol: "productor" };
-        await login(updatedWithMockRole, data.token);
-
-        // Registrar al productor en la lista administrativa de usuarios de localStorage en estado pendiente
-        const savedUsers = localStorage.getItem("voy_admin_users");
-        let usersList = [];
-        if (savedUsers) {
-          try {
-            usersList = JSON.parse(savedUsers);
-          } catch (e) {}
-        }
-        if (!usersList.some(u => u.email.toLowerCase() === form.email.toLowerCase())) {
-          usersList.push({
-            id: data._id || String(Date.now()),
-            nombre: form.name,
-            username: uniqueUsername,
-            email: form.email,
-            role: "producer",
-            isSuspended: false,
-            isVerifiedProducer: false,
-            isPendingApproval: true
-          });
-          localStorage.setItem("voy_admin_users", JSON.stringify(usersList));
-        }
+        await login({ ...updated, role: "client", isPendingApproval: true }, data.token);
 
         localStorage.setItem("onboardingDone", "true");
         navigate("/dashboard/producer");
