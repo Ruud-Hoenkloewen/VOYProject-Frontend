@@ -15,12 +15,11 @@ export default function RegisterPage() {
   const { login }   = useAuth();
 
   const [form,       setForm]       = useState({ name: "", email: "", password: "", confirmPassword: "" });
-  const [selectedRole, setSelectedRole] = useState("usuario");
-  const [step, setStep] = useState(0); // "usuario" (Fan) o "productor" (Productor)
+  const [selectedRole, setSelectedRole] = useState("client");
+  const [step, setStep] = useState(0); // 0: select role, 1: form
   const [errors,     setErrors]     = useState({});
   const [apiError,   setApiError]   = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [showPendingPopup, setShowPendingPopup] = useState(false);
 
   async function generateUniqueUsername(baseName) {
     let username = baseName.toLowerCase()
@@ -77,62 +76,34 @@ export default function RegisterPage() {
     setApiError("");
 
     try {
-      const cleanName = form.name.toLowerCase().trim();
-      const isAdminName = cleanName === "admin.voy" || cleanName === "admin voy";
-      const wantsToBeProducer = selectedRole === "productor";
+      // 1. Registramos en backend con el rol seleccionado (client, producer, artist)
+      const data = await registerUser(form.name, form.email, form.password, selectedRole);
       
-      let adminUsername = "admin.voy";
-      if (isAdminName) {
-        adminUsername = await generateUniqueUsername("admin.voy");
-      }
+      // Log in immediately after registration
+      await login({ _id: data._id, nombre: data.nombre, email: data.email, role: data.role }, data.token);
 
-      // 1. Registramos en backend, mandando la intención de ser productor
-      const data = await registerUser(form.name, form.email, form.password, wantsToBeProducer);
-      
-      if (isAdminName) {
-        // Log in to set token
-        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "admin", rol: "admin" }, data.token);
-        
-        // Auto-update profile for admin
-        const payload = {
-          username: adminUsername,
-          bio: "Administrador / Dueño de VOY Project.",
-          ubicacion: "San Miguel de Tucumán, Argentina",
-          avatarColor: "#a3e635", // Brand Lime
-          bannerGradiente: "g1",
-          vibeEnShows: ["Organizado"],
-          redesSociales: { instagram: "admin" }
-        };
-        
-        const updated = await updateMyProfile(payload);
-        await login({ ...updated, role: "admin", rol: "admin" }, data.token);
-        localStorage.setItem("onboardingDone", "true");
-        navigate("/dashboard/admin");
-      } else if (wantsToBeProducer) {
-        // Log in to set the token first
-        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "client", isPendingApproval: true }, data.token);
-        
+      if (selectedRole === "producer" || selectedRole === "artist") {
         // Generate a unique username based on their name
         const uniqueUsername = await generateUniqueUsername(form.name);
         
         // Update user profile automatically
         const payload = {
           username: uniqueUsername,
-          bio: "Organizador de eventos underground y ciclos culturales.",
+          bio: selectedRole === "producer" ? "Organizador de eventos underground y ciclos culturales." : "Artista emergente de la escena local.",
           ubicacion: "San Miguel de Tucumán, Argentina",
-          avatarColor: "#00E5FF", // Cyan
-          bannerGradiente: "g5",
-          vibeEnShows: ["Organizado", "Profesional"],
+          avatarColor: selectedRole === "producer" ? "#00E5FF" : "#FF00E5", 
+          bannerGradiente: selectedRole === "producer" ? "g5" : "g4",
+          vibeEnShows: ["Profesional"],
           redesSociales: { instagram: uniqueUsername }
         };
         
         const updated = await updateMyProfile(payload);
-        await login({ ...updated, role: "client", isPendingApproval: true }, data.token);
+        await login({ ...updated, role: selectedRole }, data.token);
 
         localStorage.setItem("onboardingDone", "true");
-        setShowPendingPopup(true);
+        navigate(`/dashboard/${selectedRole}`);
       } else {
-        await login({ _id: data._id, nombre: data.nombre, email: data.email, role: "client", rol: "usuario" }, data.token);
+        // Fans can do onboarding
         navigate("/onboarding");
       }
     } catch (err) {
@@ -166,7 +137,7 @@ export default function RegisterPage() {
           <div className={styles.onboardingCards}>
             <div 
               className={styles.onboardingCard} 
-              onClick={() => { setSelectedRole("usuario"); setStep(1); }}
+              onClick={() => { setSelectedRole("client"); setStep(1); }}
             >
               <div className={styles.onboardingCardIcon}>🎫</div>
               <h3 className={styles.onboardingCardTitle}>SOY FAN</h3>
@@ -177,12 +148,23 @@ export default function RegisterPage() {
 
             <div 
               className={styles.onboardingCard} 
-              onClick={() => { setSelectedRole("productor"); setStep(1); }}
+              onClick={() => { setSelectedRole("producer"); setStep(1); }}
             >
               <div className={styles.onboardingCardIcon}>🏢</div>
               <h3 className={styles.onboardingCardTitle}>PRODUZCO EVENTOS</h3>
               <p className={styles.onboardingCardDesc}>
                 Publicá eventos, gestioná venues y vendé entradas.
+              </p>
+            </div>
+
+            <div 
+              className={styles.onboardingCard} 
+              onClick={() => { setSelectedRole("artist"); setStep(1); }}
+            >
+              <div className={styles.onboardingCardIcon}>🎸</div>
+              <h3 className={styles.onboardingCardTitle}>SOY ARTISTA</h3>
+              <p className={styles.onboardingCardDesc}>
+                Mostrá tu música, conectá con venues y armá tu comunidad.
               </p>
             </div>
           </div>
@@ -202,7 +184,7 @@ export default function RegisterPage() {
       {/* Nav mínima */}
       <nav className={styles.nav}>
         <div className={styles.navLogo}>
-          <LogoVoy />
+          <LogoVoy inverse={true} />
         </div>
       </nav>
 
@@ -302,35 +284,7 @@ export default function RegisterPage() {
         </section>
       </main>
 
-      {/* Pending Producer Popup */}
-      {showPendingPopup && (
-        <div style={{
-          position: 'fixed', inset: 0, zIndex: 9999, background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(4px)',
-          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem'
-        }}>
-          <div style={{
-            background: '#111', border: '1px solid #333', borderRadius: '12px', padding: '2.5rem',
-            maxWidth: '420px', textAlign: 'center', color: '#fff', boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
-          }}>
-            <h2 style={{ fontSize: '1.5rem', fontWeight: 900, marginBottom: '1rem', letterSpacing: '0.05em' }}>
-              ¡HOLA!
-            </h2>
-            <p style={{ fontSize: '1rem', color: '#ccc', marginBottom: '2rem', lineHeight: 1.6 }}>
-              Acabas de crear tu cuenta de productor. Espera a que un administrador del sitio te apruebe para poder acceder al Panel y crear eventos.
-            </p>
-            <button
-              onClick={() => navigate("/")}
-              style={{
-                background: 'var(--ds-color-brand-lime, #a3e635)', color: '#000', border: 'none',
-                padding: '0.8rem 2rem', fontSize: '0.9rem', fontWeight: 800, cursor: 'pointer',
-                borderRadius: '4px', textTransform: 'uppercase', letterSpacing: '0.1em'
-              }}
-            >
-              Entendido
-            </button>
-          </div>
-        </div>
-      )}
+
     </div>
   );
 }

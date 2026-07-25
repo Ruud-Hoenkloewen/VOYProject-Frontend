@@ -2,6 +2,7 @@ import { NavLink, Link } from "react-router-dom";
 import SearchBar from "../SearchBar/SearchBar";
 import { useAuth } from "../../../context/AuthContext";
 import UserAvatar from "../../../components/UserAvatar/UserAvatar";
+import ThemeToggler from "../../../components/ThemeToggler/ThemeToggler";
 import styles from "./Navbar.module.css";
 
 /**
@@ -13,9 +14,6 @@ import styles from "./Navbar.module.css";
  */
 export default function Navbar() {
   const { isAuthenticated, role, user } = useAuth();
-
-  // Verificar si el productor está aprobado
-  const isApprovedProducer = role === "producer" && user?.isVerifiedProducer === true;
 
   return (
     <header className={styles.root}>
@@ -39,22 +37,24 @@ export default function Navbar() {
         </NavLink>
         {isAuthenticated ? (
           <>
-            {role === "producer" && isApprovedProducer && (
+            {role === "producer" && (
               <Link to="/dashboard/producer" className={styles.actionPrimary} style={{ marginRight: "1rem" }}>
-                + Crear Evento
+                Panel Productor
               </Link>
             )}
-            {role === "admin" && (
-              <Link to="/dashboard/admin" className={styles.actionPrimary} style={{ marginRight: "1rem" }}>
-                Panel Admin
+            {role === "artist" && (
+              <Link to="/dashboard/artist" className={styles.actionPrimary} style={{ marginRight: "1rem" }}>
+                Panel Artista
               </Link>
             )}
             <UserAvatar />
+            <ThemeToggler />
           </>
         ) : (
           <>
             <Link to="/login" className={styles.actionGhost}>Ingresar</Link>
             <Link to="/register" className={styles.actionPrimary}>Crear Evento</Link>
+            <ThemeToggler />
           </>
         )}
       </nav>

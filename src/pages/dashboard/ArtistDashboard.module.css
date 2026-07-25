@@ -1,0 +1,96 @@
+.dashboardPage {
+  min-height: 100vh;
+  background-color: var(--ds-color-bg-canvas);
+  color: var(--ds-color-text-primary);
+}
+
+.mainContent {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 8rem 2rem 4rem;
+}
+
+.dashboardHeader {
+  margin-bottom: 3rem;
+  border-bottom: 1px solid var(--ds-color-border-editorial);
+  padding-bottom: 2rem;
+}
+
+.pageTitle {
+  font-size: 2.5rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+  text-transform: uppercase;
+}
+
+.pageSubtitle {
+  font-size: 1.1rem;
+  color: var(--ds-color-text-secondary);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background-color: var(--ds-color-bg-surface);
+  border: 1px solid var(--ds-color-border-subtle);
+  border-radius: 12px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--ds-color-border-accent);
+}
+
+.cardIcon {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+}
+
+.cardDesc {
+  color: var(--ds-color-text-muted);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+  flex-grow: 1;
+}
+
+.cardBtn {
+  background: var(--ds-color-action-primary-bg);
+  color: var(--ds-color-action-primary-text);
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.cardBtn:hover {
+  background: var(--ds-color-action-primary-bg-hover);
+}
+
+.cardBtnSecondary {
+  background: transparent;
+  color: var(--ds-color-text-secondary);
+  border: 1px solid var(--ds-color-border-strong);
+  padding: 0.8rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: not-allowed;
+}

@@ -60,9 +60,10 @@ export function useEventFilters(events = []) {
 
     const matchesLugar = activeLugar === "TODOS" || evt.venue === activeLugar;
     const matchesFecha = activeFecha === "TODOS" || evt.date  === activeFecha;
+    const matchesPrice = !searchParams.get("maxPrice") || evt.rawPrice <= Number(searchParams.get("maxPrice"));
 
-    return matchesSearch && matchesCategories && matchesLugar && matchesFecha;
-  }), [events, searchQuery, activeCategories, activeLugar, activeFecha]);
+    return matchesSearch && matchesCategories && matchesLugar && matchesFecha && matchesPrice;
+  }), [events, searchQuery, activeCategories, activeLugar, activeFecha, searchParams]);
 
   // Opciones únicas extraídas dinámicamente — también memoizadas
   const availableLugares = useMemo(

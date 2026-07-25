@@ -1,20 +1,16 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { MailIcon } from '../../components/icons';
 import { formatPrice } from '../../utils/helpers';
 import styles from './PurchaseSuccessPage.module.css';
 
-/**
- * PurchaseSuccessPage — Paso 4: Confirmación de compra exitosa
- * Muestra el ticket digital con código QR, recibo y pasos a seguir.
- */
 export default function PurchaseSuccessPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const canvasRef = useRef(null);
 
-  const collectionStatus = searchParams.get('collection_status'); // 'approved', 'pending', 'rejected'
+  const collectionStatus = searchParams.get('collection_status');
   const isRejected = collectionStatus === 'rejected';
   const isPending = collectionStatus === 'pending';
 
@@ -23,10 +19,18 @@ export default function PurchaseSuccessPage() {
   const compradorData = location.state?.compradorData ?? null;
   const paymentMethod = location.state?.paymentMethod ?? 'Tarjeta de crédito / débito';
 
-  // Inicializa el número de orden con el retornado por el backend, o genera uno ficticio de respaldo
-  const [orderId] = useState(
-    location.state?.orderId ?? `VOY-${Math.floor(100000 + Math.random() * 900000)}`
-  );
+  const rawOrderId = location.state?.orderId || searchParams.get('orderId');
+  const [orderId] = useState(() => {
+    if (!rawOrderId) return `VOY-${Math.floor(10000 + Math.random() * 90000)}`;
+    if (typeof rawOrderId === 'string' && rawOrderId.length === 24 && /^[0-9a-fA-F]+$/.test(rawOrderId)) {
+      return `VOY-${rawOrderId.slice(-5).toUpperCase()}`;
+    }
+    return rawOrderId;
+  });
+
+  const qrVerificationUrl = typeof window !== 'undefined'
+    ? `${window.location.origin}/compra/confirmacion?orderId=${orderId}`
+    : `https://voyproject.ar/compra/confirmacion?orderId=${orderId}`;
 
   const [showToast, setShowToast] = useState(false);
 
@@ -38,7 +42,6 @@ export default function PurchaseSuccessPage() {
     setShowToast(true);
   }
 
-  // Desvanece el aviso de 'Próximamente' tras 3 segundos
   useEffect(() => {
     if (showToast) {
       const timer = setTimeout(() => {
@@ -48,7 +51,46 @@ export default function PurchaseSuccessPage() {
     }
   }, [showToast]);
 
-  // Cálculos de recibo
+  // CONFETTI EFFECT (SCRUM-193)
+  useEffect(() => {
+    if (isRejected || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const colors = ['#00ff9f', '#ff7bee', '#22d3ee', '#33ffb2', '#ffffff'];
+    const particles = Array.from({ length: 70 }).map(() => ({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height * 0.4,
+      size: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      speedY: Math.random() * 3 + 2,
+      speedX: Math.random() * 2 - 1,
+      opacity: 1,
+    }));
+
+    let animationFrame;
+    const render = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        p.y += p.speedY;
+        p.x += p.speedX;
+        p.opacity -= 0.005;
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = Math.max(0, p.opacity);
+        ctx.fillRect(p.x, p.y, p.size, p.size);
+      });
+
+      if (particles.some(p => p.opacity > 0)) {
+        animationFrame = requestAnimationFrame(render);
+      }
+    };
+    render();
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [isRejected]);
+
   const precioUnitario = eventData?.rawPrice ?? 7999;
   const subtotal       = precioUnitario * cantidad;
   const cargoServicio  = Math.round(subtotal * 0.10);
@@ -56,8 +98,17 @@ export default function PurchaseSuccessPage() {
 
   return (
     <div className={styles.pageRoot}>
+      {/* Canvas Confetti Layer */}
+      <canvas 
+        ref={canvasRef} 
+        style={{ 
+          position: 'fixed', 
+          inset: 0, 
+          pointerEvents: 'none', 
+          zIndex: 9999 
+        }} 
+      />
       
-      {/* Toast de aviso Próximamente */}
       {showToast && (
         <div className={styles.toast} role="alert">
           <span className={styles.toastIcon}>⚡</span>
@@ -65,72 +116,77 @@ export default function PurchaseSuccessPage() {
         </div>
       )}
 
-      {/* Banner de Entradas Enviadas */}
-      <div className={`${styles.bannerContainer} ${styles.animateFadeInUp}`} style={{ animationDelay: '0.1s' }}>
-        <div className={styles.bannerIcon}><MailIcon /></div>
-        <div className={styles.bannerText}>
-          <span className={styles.bannerTitle}>¡ENTRADAS ENVIADAS!</span>
-          <span className={styles.bannerSub}>Revisá tu bandeja en {compradorData?.email ?? 'tu@correo.com'}</span>
-        </div>
-        <div className={styles.bannerCheck}>✓</div>
-      </div>
 
-      {/* Encabezado */}
-      <div className={`${styles.successHeader} ${styles.animateFadeInUp}`} style={{ animationDelay: '0.2s' }}>
+
+      {/* Header con Tick Verde de Éxito */}
+      <div className={`${styles.successHeader} ${styles.animateFadeInUp}`} style={{ animationDelay: '0.1s' }}>
         <div className={styles.checkCircle} style={{ 
-          backgroundColor: isRejected ? 'var(--ds-color-red-400)' : 
-                          isPending ? 'var(--ds-color-warning-400)' : 
-                          'var(--ds-color-accent-primary)'
+          borderColor: isRejected ? '#ef4444' : isPending ? '#f59e0b' : '#00FF9F',
+          backgroundColor: isRejected ? 'rgba(239, 68, 68, 0.1)' : isPending ? 'rgba(245, 158, 11, 0.1)' : 'rgba(0, 255, 159, 0.1)',
+          borderRadius: '50%',
+          width: '68px',
+          height: '68px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '1.5rem',
+          boxShadow: isRejected ? '0 0 20px rgba(239, 68, 68, 0.2)' : isPending ? '0 0 20px rgba(245, 158, 11, 0.2)' : '0 0 20px rgba(0, 255, 159, 0.25)',
         }}>
-          <span>{isRejected ? '✗' : isPending ? '!' : '✓'}</span>
+          {isRejected ? (
+            <span style={{ color: '#ef4444', fontSize: '2rem', fontWeight: 900 }}>✗</span>
+          ) : isPending ? (
+            <span style={{ color: '#f59e0b', fontSize: '2rem', fontWeight: 900 }}>!</span>
+          ) : (
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#00FF9F" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          )}
         </div>
         <div className={styles.orderLabel}>
-          {isRejected ? 'COMPRA FALLIDA' : isPending ? 'COMPRA EN PROCESO' : 'COMPRA CONFIRMADA'} • {orderId}
+          {isRejected ? 'COMPRA FALLIDA' : isPending ? 'RESERVA EN PROCESO' : 'COMPRA CONFIRMADA'} • {orderId}
         </div>
         <h1 className={styles.successTitle}>
           {isRejected ? 'PAGO RECHAZADO' : 
-           isPending ? 'PAGO PENDIENTE' : 
+           isPending ? 'RESERVA CONFIRMADA' : 
            <><>¡NOS VEMOS</><br/>EN LA MOVIDA!</>}
         </h1>
         <p className={styles.successSubtitle}>
           {isRejected ? 'Hubo un problema con tu pago. Por favor intentá con otro método.' : 
-           isPending ? 'Tu pago está siendo procesado. Te avisaremos por correo cuando se acredite.' : 
-           'Guardá esta página o revisá tu correo cuando quieras.'}
+           isPending ? 'Tu reserva fue registrada correctamente. Seguí las instrucciones abajo para abonar al ingresar.' : 
+           'Guardá una captura de esta pantalla o tu comprobante para ingresar al evento.'}
         </p>
       </div>
 
-      {/* DOS COLUMNAS: TICKET A LA IZQUIERDA, RECIBO A LA DERECHA */}
-      <div className={`${styles.twoColumnGrid} ${styles.animateFadeInUp}`} style={{ animationDelay: '0.3s' }}>
+      <div className={`${styles.twoColumnGrid} ${styles.animateFadeInUp}`} style={{ animationDelay: '0.2s' }}>
         
-        {/* TICKET DIGITAL FÍSICO */}
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionIcon}>QR</span>
-            <span>TU ENTRADA DIGITAL</span>
+            <span className={styles.sectionIcon}>🎟️</span>
+            <span>ENTRADA DIGITAL</span>
           </div>
           <div className={styles.ticket}>
             <div className={styles.ticketMain}>
               <div className={styles.ticketGenres}>
                 {eventData?.genres?.slice(0,2).map(g => (
                   <span key={g} className={styles.genreChip}>{g}</span>
-                )) || <span className={styles.genreChip}>ROCK</span>}
+                )) || <span className={styles.genreChip}>EVENTO</span>}
               </div>
               
               <span className={styles.ticketLabel}>EVENTO</span>
-              <h2 className={styles.eventName}>{eventData?.title ?? 'Festival Emergente Norte'}</h2>
+              <h2 className={styles.eventName}>{eventData?.title ?? 'Evento VOY Project'}</h2>
               
               <div className={styles.ticketGrid}>
                 <div className={styles.ticketCol}>
                   <span className={styles.ticketLabel}>FECHA</span>
-                  <span className={styles.ticketValue}>{eventData?.date ?? '10 JUN 2026'}</span>
+                  <span className={styles.ticketValue}>{eventData?.date ?? 'Fecha por confirmar'}</span>
                 </div>
                 <div className={styles.ticketCol}>
                   <span className={styles.ticketLabel}>HORA</span>
-                  <span className={styles.ticketValue}>{eventData?.time ?? '19:00 HS'}</span>
+                  <span className={styles.ticketValue}>{eventData?.time ?? '20:00 HS'}</span>
                 </div>
                 <div className={styles.ticketCol}>
                   <span className={styles.ticketLabel}>LUGAR</span>
-                  <span className={styles.ticketValue}>{eventData?.venue ?? 'Club Floresta'}</span>
+                  <span className={styles.ticketValue}>{eventData?.venue ?? 'Venue'}</span>
                 </div>
                 <div className={styles.ticketCol}>
                   <span className={styles.ticketLabel}>TIPO</span>
@@ -138,7 +194,11 @@ export default function PurchaseSuccessPage() {
                 </div>
                 <div className={styles.ticketColFull}>
                   <span className={styles.ticketLabel}>TITULAR</span>
-                  <span className={styles.ticketValue}>{compradorData?.nombre ? `${compradorData.nombre} ${compradorData.apellido || ''}` : 'Usuario Test'}</span>
+                  <span className={styles.ticketValue}>
+                    {typeof compradorData?.nombre === 'string' && isNaN(compradorData.nombre)
+                      ? `${compradorData.nombre} ${compradorData.apellido || ''}`
+                      : 'Usuario VOY'}
+                  </span>
                 </div>
               </div>
               <div className={styles.ticketRef}>REF: {orderId}-01</div>
@@ -146,10 +206,10 @@ export default function PurchaseSuccessPage() {
             <div className={styles.ticketStub}>
               <div className={styles.qrContainer}>
                 <QRCodeSVG
-                  value={`${orderId}-01`}
-                  bgColor="var(--ds-color-text-primary)"
-                  fgColor="var(--ds-color-bg-canvas)"
-                  size={110}
+                  value={qrVerificationUrl}
+                  bgColor="#ffffff"
+                  fgColor="#08090d"
+                  size={115}
                   level="M"
                 />
               </div>
@@ -158,10 +218,9 @@ export default function PurchaseSuccessPage() {
           </div>
         </div>
 
-        {/* COMPROBANTE DE COMPRA */}
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionIcon}>🧾</span>
+            <span className={styles.sectionIcon}>📄</span>
             <span>COMPROBANTE DE COMPRA</span>
           </div>
           <div className={styles.receipt}>
@@ -177,12 +236,23 @@ export default function PurchaseSuccessPage() {
             </div>
 
             <div className={styles.receiptBody}>
-              <div className={styles.receiptRow}><span className={styles.rl}>TITULAR</span><span className={styles.rr}>{compradorData?.nombre ? `${compradorData.nombre} ${compradorData.apellido || ''}` : 'Usuario Test'}</span></div>
-              <div className={styles.receiptRow}><span className={styles.rl}>TELÉFONO</span><span className={styles.rr}>{compradorData?.telefono || '381 555-5555'}</span></div>
-              <div className={styles.receiptRow}><span className={styles.rl}>EMAIL</span><span className={styles.rr}>{compradorData?.email || 'test@voy.com'}</span></div>
-              <div className={styles.receiptRow}><span className={styles.rl}>EVENTO</span><span className={styles.rr}>{eventData?.title ?? 'Festival Emergente Norte'}</span></div>
-              <div className={styles.receiptRow}><span className={styles.rl}>FECHA</span><span className={styles.rr}>{eventData?.date ?? '10 JUN 2026'} • {eventData?.time ?? '19:00 HS'}</span></div>
-              <div className={styles.receiptRow}><span className={styles.rl}>LUGAR</span><span className={styles.rr}>{eventData?.venue ?? 'Club Floresta'}</span></div>
+              <div className={styles.receiptRow}>
+                <span className={styles.rl}>TITULAR</span>
+                <span className={styles.rr}>
+                  {typeof compradorData?.nombre === 'string' && isNaN(compradorData.nombre)
+                    ? `${compradorData.nombre} ${compradorData.apellido || ''}`
+                    : 'Usuario VOY'}
+                </span>
+              </div>
+              {compradorData?.telefono && (
+                <div className={styles.receiptRow}><span className={styles.rl}>TELÉFONO</span><span className={styles.rr}>{compradorData.telefono}</span></div>
+              )}
+              {compradorData?.email && (
+                <div className={styles.receiptRow}><span className={styles.rl}>EMAIL</span><span className={styles.rr}>{compradorData.email}</span></div>
+              )}
+              <div className={styles.receiptRow}><span className={styles.rl}>EVENTO</span><span className={styles.rr}>{eventData?.title ?? 'Evento VOY Project'}</span></div>
+              <div className={styles.receiptRow}><span className={styles.rl}>FECHA</span><span className={styles.rr}>{eventData?.date ?? 'Por confirmar'} • {eventData?.time ?? '20:00 HS'}</span></div>
+              <div className={styles.receiptRow}><span className={styles.rl}>LUGAR</span><span className={styles.rr}>{eventData?.venue ?? 'Venue'}</span></div>
               <div className={styles.receiptRow}><span className={styles.rl}>TIPO DE ENTRADA</span><span className={styles.rr}>Entrada General</span></div>
               <div className={styles.receiptRow}><span className={styles.rl}>CANTIDAD</span><span className={styles.rr}>{cantidad}</span></div>
               <div className={styles.receiptRow}><span className={styles.rl}>MÉTODO DE PAGO</span><span className={styles.rr}>{paymentMethod}</span></div>
@@ -194,45 +264,97 @@ export default function PurchaseSuccessPage() {
               <div className={styles.receiptRowTotal}><span className={styles.rl}>TOTAL</span><span className={styles.rrTotal}>{formatPrice(total)}</span></div>
             </div>
 
-            <div className={styles.receiptFooter}>DOCUMENTO VÁLIDO COMO COMPROBANTE • NO ES FACTURA</div>
+            <div className={styles.receiptFooter}>🛡️ DOCUMENTO VÁLIDO COMO COMPROBANTE DE COMPRA • VOY PROJECT</div>
           </div>
         </div>
       </div>
 
-      {/* INSTRUCCIONES */}
-      <div className={`${styles.instructionsCard} ${styles.animateFadeInUp}`} style={{ animationDelay: '0.4s' }}>
-        <h3 className={styles.instructionsTitle}><span style={{color: 'var(--ds-color-accent-primary)'}}>?</span> ¿CÓMO PRESENTO MI ENTRADA?</h3>
-        <div className={styles.instructionStep}>
-          <div className={styles.stepNum}>01</div>
-          <div>
-            <div className={styles.stepTitle}>Abrí esta pantalla o tu correo</div>
-            <div className={styles.stepDesc}>Antes de ir al evento, abrí la app o el mail que te enviamos con tus entradas.</div>
-          </div>
-        </div>
-        <div className={styles.instructionStep}>
-          <div className={styles.stepNum}>02</div>
-          <div>
-            <div className={styles.stepTitle}>Mostrá el código QR en la puerta</div>
-            <div className={styles.stepDesc}>El personal de ingreso va a escanear el QR de cada entrada. Tenés uno por persona.</div>
-          </div>
-        </div>
-        <div className={styles.instructionStep}>
-          <div className={styles.stepNum}>03</div>
-          <div>
-            <div className={styles.stepTitle}>Presentá tu DNI si te lo piden</div>
-            <div className={styles.stepDesc}>El titular {compradorData?.nombre || 'Usuario'} puede ser solicitado para verificación.</div>
-          </div>
-        </div>
-        <div className={styles.instructionStep}>
-          <div className={styles.stepNum}>04</div>
-          <div>
-            <div className={styles.stepTitle}>¡A disfrutar!</div>
-            <div className={styles.stepDesc}>Llegá antes de las {eventData?.time ?? '19:00 HS'} para asegurar tu lugar. Capacidad limitada.</div>
-          </div>
-        </div>
+      {/* Sección: MANERAS DE PRESENTAR MI ENTRADA */}
+      <div className={`${styles.instructionsCard} ${styles.animateFadeInUp}`} style={{ animationDelay: '0.3s' }}>
+        <h3 className={styles.instructionsTitle}>
+          <span style={{ color: 'var(--ds-color-accent-primary)', marginRight: '0.4rem' }}>✓</span>
+          MANERAS DE PRESENTAR MI ENTRADA
+        </h3>
+
+        {paymentMethod === 'Pago en Puerta' || paymentMethod === 'efectivo' ? (
+          <>
+            <div className={styles.instructionStep}>
+              <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
+              <div>
+                <div className={styles.stepTitle}>Captura de pantalla de esta página</div>
+                <div className={styles.stepDesc}>Guardá una captura de esta pantalla mostrando tu código QR y los datos de tu reserva anticipada.</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '-0.5rem 0', paddingLeft: '0.2rem' }}>
+              <span style={{ height: '1px', width: '24px', background: 'var(--ds-color-border-editorial-mid)' }} />
+              <span style={{ color: 'var(--ds-color-text-editorial-muted)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>o</span>
+              <span style={{ height: '1px', width: '24px', background: 'var(--ds-color-border-editorial-mid)' }} />
+            </div>
+
+            <div className={styles.instructionStep}>
+              <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
+              <div>
+                <div className={styles.stepTitle}>Pago en transferencia o efectivo en puerta</div>
+                <div className={styles.stepDesc}>Presentá la captura en el ingreso para abonar tu entrada anticipada en efectivo o transferencia al ingresar.</div>
+              </div>
+            </div>
+            <div className={styles.instructionStep}>
+              <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
+              <div>
+                <div className={styles.stepTitle}>Presentá tu DNI si te lo piden</div>
+                <div className={styles.stepDesc}>El titular de la reserva puede ser solicitado para validación en puerta.</div>
+              </div>
+            </div>
+            <div className={styles.instructionStep}>
+              <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
+              <div>
+                <div className={styles.stepTitle}>¡A disfrutar!</div>
+                <div className={styles.stepDesc}>Recordá llegar antes de las {eventData?.time ?? '19:00 HS'} al evento.</div>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={styles.instructionStep}>
+              <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
+              <div>
+                <div className={styles.stepTitle}>Captura de esta pantalla</div>
+                <div className={styles.stepDesc}>Guardá una captura de pantalla de esta página con tu código QR e información completa del show.</div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', margin: '-0.5rem 0', paddingLeft: '0.2rem' }}>
+              <span style={{ height: '1px', width: '24px', background: 'var(--ds-color-border-editorial-mid)' }} />
+              <span style={{ color: 'var(--ds-color-text-editorial-muted)', fontSize: '0.75rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em' }}>o</span>
+              <span style={{ height: '1px', width: '24px', background: 'var(--ds-color-border-editorial-mid)' }} />
+            </div>
+
+            <div className={styles.instructionStep}>
+              <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
+              <div>
+                <div className={styles.stepTitle}>Comprobante de pago Mercado Pago</div>
+                <div className={styles.stepDesc}>Mostrá el comprobante de pago de Mercado Pago o una captura de pantalla del comprobante de la transacción.</div>
+              </div>
+            </div>
+            <div className={styles.instructionStep}>
+              <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
+              <div>
+                <div className={styles.stepTitle}>Presentá tu DNI si te lo piden</div>
+                <div className={styles.stepDesc}>El titular de la entrada puede ser solicitado para verificación en puerta.</div>
+              </div>
+            </div>
+            <div className={styles.instructionStep}>
+              <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
+              <div>
+                <div className={styles.stepTitle}>¡A disfrutar!</div>
+                <div className={styles.stepDesc}>Recordá llegar antes de las {eventData?.time ?? '19:00 HS'} al evento.</div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
 
-      {/* Botonera de acciones */}
       <div className={styles.actions}>
         <button
           onClick={handleDownloadPDF}

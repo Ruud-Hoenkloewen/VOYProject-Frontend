@@ -117,7 +117,7 @@ export default function LoginPage() {
       {/* Nav mínima */}
       <nav className={styles.nav}>
         <div className={styles.navLogo}>
-          <LogoVoy />
+          <LogoVoy inverse={true} />
         </div>
       </nav>
 

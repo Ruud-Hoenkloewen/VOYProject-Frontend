@@ -2,14 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { Link, NavLink, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 import LogoVoy from "../../../components/LogoVoy/LogoVoy";
-import UserAvatar from "../../../components/UserAvatar/UserAvatar";
+import ThemeToggler from "../../../components/ThemeToggler/ThemeToggler";
+import HowItWorksModal from "../../../components/HowItWorksModal/HowItWorksModal";
 import styles from "./EditorialHeader.module.css";
 
-/**
- * COMPONENTE: EditorialHeader
- * Header editorial compartido — scroll-aware con hide/show por dirección.
- * Mobile: menú hamburguesa con drawer animado.
- */
 export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login" }) {
   const { user, isAuthenticated, logout, role } = useAuth();
   const navigate = useNavigate();
@@ -17,10 +13,19 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showHowModal, setShowHowModal] = useState(false);
+  const [badgeVisible, setBadgeVisible] = useState(true);
   const lastScrollY = useRef(0);
   const dropdownRef = useRef(null);
 
-  // Close dropdown on outside click
+  // Ocultar la píldora de ayuda automáticamente a los 4.5s
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setBadgeVisible(false);
+    }, 4500);
+    return () => clearTimeout(timer);
+  }, []);
+
   useEffect(() => {
     function handleClickOutside(event) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -30,9 +35,6 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  // Verificar si el productor está aprobado
-  const isApprovedProducer = role === "producer" && user?.isVerifiedProducer === true;
 
   function handleLogout() {
     logout();
@@ -70,12 +72,10 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
   ];
 
   if (isAuthenticated) {
-    if (role === "client" && !user?.isPendingApproval) {
-      navLinks.push({ to: `/profile/${user?.username || user?._id || 'me'}`, label: "MIS ENTRADAS" });
-    } else if (role === "producer") {
+    if (role === "producer") {
       navLinks.push({ to: "/dashboard/producer", label: "PANEL PRODUCTOR" });
-    } else if (role === "admin") {
-      navLinks.push({ to: "/dashboard/admin", label: "PANEL ADMIN" });
+    } else if (role === "artist") {
+      navLinks.push({ to: "/dashboard/artist", label: "PANEL ARTISTA" });
     }
   }
 
@@ -90,12 +90,10 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
           }
         }}
       >
-        {/* LOGO */}
         <div className={styles.leftContainer} onClick={closeMenu} style={{ cursor: "pointer" }}>
-          <LogoVoy />
+          <LogoVoy inverse={true} />
         </div>
 
-        {/* NAV LINKS — desktop */}
         <nav className={styles.nav}>
           {navLinks.map(({ to, label, end }) => (
             <NavLink
@@ -111,7 +109,6 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
           ))}
         </nav>
 
-        {/* CTA / Usuario / Hamburger — desktop & mobile */}
         <div className={styles.rightContainer}>
           {isAuthenticated ? (
             <div className={styles.userArea}>
@@ -127,7 +124,11 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
                     className={styles.userAvatar}
                     style={{ backgroundColor: user?.avatarColor || 'var(--ds-color-brand-lime)' }}
                   >
-                    {(user?.nombre || user?.username || 'U').charAt(0).toUpperCase()}
+                    {(user?.avatar || user?.avatarUrl || user?.fotoPerfil) ? (
+                      <img src={user.avatar || user.avatarUrl || user.fotoPerfil} alt="Avatar" className={styles.userAvatarImg} />
+                    ) : (
+                      (user?.nombre || user?.username || 'U').charAt(0).toUpperCase()
+                    )}
                   </div>
                   <div className={styles.userInfo} style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                     <span className={styles.userNombre}>
@@ -141,7 +142,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
                     <Link to={`/profile/${user?.username || user?._id || 'me'}`} onClick={() => setDropdownOpen(false)}>
                       Mi Perfil
                     </Link>
-                    <Link to="/profile/me?tab=ajustes" onClick={() => setDropdownOpen(false)}>
+                    <Link to="/profile/edit" onClick={() => setDropdownOpen(false)}>
                       Ajustes de perfil
                     </Link>
                     <hr />
@@ -158,7 +159,8 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
             </Link>
           )}
 
-          {/* HAMBURGER — mobile only */}
+          <ThemeToggler style={{ color: "#c8c8c8", borderColor: "#3a3a3a" }} />
+
           <button
             className={styles.hamburger}
             onClick={() => setMenuOpen((o) => !o)}
@@ -172,7 +174,6 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         </div>
       </header>
 
-      {/* MOBILE DRAWER */}
       <div
         className={`${styles.drawer} ${menuOpen ? styles.drawerOpen : ""}`}
         aria-hidden={!menuOpen}
@@ -205,9 +206,34 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         <p className={styles.drawerFooter}>VOY PROJECT · TUCUMÁN · 2026</p>
       </div>
 
-      {/* OVERLAY */}
       {menuOpen && (
         <div className={styles.drawerOverlay} onClick={closeMenu} aria-hidden="true" />
+      )}
+
+      {/* Botón flotante inferior derecho con animación ¿Necesitás ayuda? */}
+      <div 
+        className={styles.floatingHelpWrapper}
+        onMouseEnter={() => setBadgeVisible(false)}
+      >
+        <div className={`${styles.floatingHelpBadge} ${!badgeVisible ? styles.floatingHelpBadgeHidden : ""}`}>
+          <span className={styles.floatingHelpDot} />
+          <span>¿Necesitás ayuda?</span>
+        </div>
+        <button
+          type="button"
+          className={styles.floatingHelpBtn}
+          onClick={() => {
+            setBadgeVisible(false);
+            setShowHowModal(true);
+          }}
+          aria-label="¿Cómo funciona VOY Project?"
+        >
+          ?
+        </button>
+      </div>
+
+      {showHowModal && (
+        <HowItWorksModal onClose={() => setShowHowModal(false)} />
       )}
     </>
   );

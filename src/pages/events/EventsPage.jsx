@@ -4,7 +4,7 @@ import Stack from "../../design-system/layout/Stack/Stack";
 import Typography from "../../design-system/primitives/Typography/Typography";
 import EventCard from "../../design-system/composites/EventCard/EventCard";
 import Button from "../../design-system/primitives/Button/Button";
-import SearchBar from "../../design-system/composites/SearchBar/SearchBar";
+import BookingSearchBar from "../../design-system/composites/BookingSearchBar/BookingSearchBar";
 import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
 import { useEvents } from "../../hooks/useEvents";
 import { useState, useEffect } from "react";
@@ -50,53 +50,16 @@ export default function EventsPage() {
             <h1 className={styles.heroTitle}>BIENVENIDO A LA BUENA MÚSICA</h1>
             <p className={styles.heroSubtitle}>SELECCIONÁ TUS FILTROS O BUSCÁ EVENTOS</p>
             <div className={styles.heroSearch}>
-              <SearchBar placeholder="Buscar bandas, lugares, fechas..." />
-            </div>
-          </div>
-
-          {/* ── FILTROS ──────────────────────────────────── */}
-          <div className={styles.filtersRow}>
-            <div className={styles.filterGroupLarge}>
-              <Typography variant="caption" className={styles.filterLabel}>GÉNERO</Typography>
-              <div className={styles.genresList}>
-                {GENRES.map(genre => (
-                  <button
-                    key={genre}
-                    onClick={() => toggleCategory(genre)}
-                    className={`${styles.genreBtn} ${activeCategories.includes(genre) ? styles.genreBtnActive : ""}`}
-                  >
-                    {genre}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            <div className={styles.filterGroupSmall}>
-              <Typography variant="caption" className={styles.filterLabel}>LUGAR</Typography>
-              <select
-                className={styles.filterSelect}
-                value={activeLugar}
-                onChange={(e) => setActiveLugar(e.target.value)}
-              >
-                <option value="TODOS">Todos los lugares</option>
-                {availableLugares.map(lugar => (
-                  <option key={lugar} value={lugar}>{lugar}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className={styles.filterGroupSmall}>
-              <Typography variant="caption" className={styles.filterLabel}>FECHA</Typography>
-              <select
-                className={styles.filterSelect}
-                value={activeFecha}
-                onChange={(e) => setActiveFecha(e.target.value)}
-              >
-                <option value="TODOS">Todas las fechas</option>
-                {availableFechas.map(fecha => (
-                  <option key={fecha} value={fecha}>{fecha}</option>
-                ))}
-              </select>
+              <BookingSearchBar
+                availableLugares={availableLugares}
+                availableFechas={availableFechas}
+                activeLugar={activeLugar}
+                setActiveLugar={setActiveLugar}
+                activeFecha={activeFecha}
+                setActiveFecha={setActiveFecha}
+                activeCategories={activeCategories}
+                toggleCategory={toggleCategory}
+              />
             </div>
           </div>
 

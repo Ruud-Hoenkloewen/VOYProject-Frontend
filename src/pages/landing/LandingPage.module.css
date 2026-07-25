@@ -8,7 +8,7 @@
 /* Los estilos del header están en el componente compartido */
 
 .page {
-  background: var(--ds-color-bg-editorial);
+  background: transparent;
   color: var(--ds-color-text-primary);
   min-height: 100vh;
   overflow-x: hidden;
@@ -41,7 +41,7 @@
 
 .howCard:hover {
   transform: translateY(-5px);
-  background: var(--ds-color-bg-editorial-surface);
+  background: transparent;
 }
 
 .howStep {
@@ -96,9 +96,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  min-height: 65vh;
-  padding: 5.5rem 4rem 4rem;
-  gap: 2rem;
+  min-height: auto;
+  padding: 4.25rem 4rem 2rem;
+  gap: 1.5rem;
   position: relative;
 }
 
@@ -106,8 +106,8 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  gap: 3rem;
-  margin-top: 3rem;
+  gap: 2.5rem;
+  margin-top: 2rem;
 }
 
 @media (min-width: 1024px) {
@@ -177,24 +177,30 @@
 .hwList {
   list-style: none;
   padding: 0;
-  margin: 0;
+  margin: 1.25rem 0 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: 0.85rem;
 }
 
 .hwListItem {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 0.85rem;
+  gap: 0.85rem;
+  font-size: 0.88rem;
+  font-weight: 600;
   color: var(--ds-color-text-editorial-subtle);
+  line-height: 1;
 }
 
 .hwListItemIcon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: var(--ds-color-accent-primary);
   flex-shrink: 0;
-  display: flex;
 }
 
 .hwBtnPrimary {
@@ -248,6 +254,7 @@
 
 .hwTopRow {
   border: 1px solid var(--ds-color-border-editorial-mid);
+  background: #08090d;
   padding: 1rem 1.25rem;
   display: flex;
   justify-content: space-between;
@@ -328,6 +335,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   border: 1px solid var(--ds-color-border-editorial-mid);
+  background: #08090d;
 }
 
 .hwStatBox {
@@ -411,7 +419,7 @@
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  background: var(--ds-color-bg-editorial);
+  background: #08090d;
 }
 
 .hwSectionHeader {
@@ -519,7 +527,200 @@
 /* ── BARRA SUPERIOR CONECTADA (Desktop / Mobile) ── */
 .heroTopBar {
   position: absolute;
-  top: 2.5rem;
+  top: 1.85rem;
+  left: 4rem;
+  right: 4rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.heroEyebrowLeft,
+.heroEyebrowRight {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ds-color-accent-secondary); /* Usa el nuevo cyan global */
+  white-space: nowrap;
+}
+
+/* Línea extensora central para que se conecten ambos extremos */
+.heroTopBarLine {
+  flex: 1;
+  height: 1px;
+  background: var(--ds-color-border-editorial-mid);
+}
+
+/* Versión responsive para pantallas pequeñas donde las columnas colapsan */
+.flyerEyebrowMobile {
+  display: none;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ds-color-accent-secondary);
+  text-align: center;
+  width: 100%;
+}
+
+.heroTitle {
+  font-size: clamp(4rem, 9vw, 9rem);
+  font-weight: 900;
+  line-height: 0.9;
+  text-transform: uppercase;
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.heroTitleAccent {
+  color: var(--ds-color-accent-secondary); /* Usa el nuevo cyan global */
+}
+
+.heroSubtitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ds-color-text-editorial-muted);
+  margin: 0;
+}
+
+.heroDescription {
+  font-size: 1rem;
+  color: var(--ds-color-text-editorial-subtle);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 420px;
+}
+
+.heroCtas {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+/* GRAIN OVERLAY — textura de película análoga (sutil) */
+.heroGrain {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23g)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  mix-blend-mode: overlay;
+}
+
+/* META STRIP del flyer — datos del evento bajo el botón VER DETALLES */
+.flyerMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ds-color-text-editorial-muted);
+  pointer-events: none;
+  user-select: none;
+  white-space: nowrap;
+}
+
+.hwSectionLink {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--ds-color-text-editorial-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: color 0.2s ease;
+}
+
+.hwSectionLink:hover {
+  color: var(--ds-color-accent-secondary);
+}
+
+
+
+.hwChipsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.hwChip {
+  padding: 0.35rem 0.6rem;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ds-color-text-editorial-subtle);
+  background: rgba(255, 255, 255, 0.02);
+  transition: all 0.2s ease;
+}
+
+.hwChip:hover {
+  border-color: var(--ds-color-accent-primary);
+  color: var(--ds-color-accent-primary);
+  background: transparent;
+}
+
+.hwCommunity {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.hwAvatarGroup {
+  display: flex;
+  align-items: center;
+}
+
+.hwAvatarMini {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ds-color-border-editorial-mid);
+  border: 2px solid var(--ds-color-bg-editorial);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: 800;
+  margin-left: -8px;
+}
+
+.hwAvatarMini:first-child {
+  margin-left: 0;
+  background: var(--ds-color-accent-secondary);
+  color: var(--ds-color-bg-editorial);
+}
+
+.hwAvatarMini:nth-child(2) {
+  background: var(--ds-color-accent-primary);
+  color: var(--ds-color-bg-editorial);
+}
+
+.hwCommunityText {
+  font-size: 0.75rem;
+  color: var(--ds-color-text-editorial-subtle);
+}
+
+.hwCommunityText strong {
+  color: var(--ds-color-text-primary);
+}
+
+/* ── BARRA SUPERIOR CONECTADA (Desktop / Mobile) ── */
+.heroTopBar {
+  position: absolute;
+  top: 1.85rem;
   left: 4rem;
   right: 4rem;
   display: flex;
@@ -643,21 +844,26 @@
 /* ── BOTONES CTA ───────────────────────── */
 .ctaPrimary {
   display: inline-block;
-  background: var(--ds-color-accent-primary);
-  color: var(--ds-color-bg-editorial);
-  font-size: 0.8rem;
+  background: rgba(0, 255, 159, 0.12);
+  color: var(--ds-color-accent-primary, #00FF9F);
+  font-size: 0.82rem;
   font-weight: 900;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  padding: 0.75rem 1.5rem;
+  padding: 0.85rem 2.2rem;
   text-decoration: none;
-  border: 2px solid var(--ds-color-accent-primary);
-  transition: background 0.2s, color 0.2s;
+  border: 1px solid rgba(0, 255, 159, 0.5);
+  border-radius: 6px;
+  box-shadow: 0 4px 20px rgba(0, 255, 159, 0.12);
+  transition: all 0.25s ease;
 }
 
 .ctaPrimary:hover {
-  background: var(--ds-color-bg-editorial);
-  color: var(--ds-color-accent-primary);
+  background: var(--ds-color-accent-primary, #00FF9F);
+  color: #0a0b10;
+  border-color: var(--ds-color-accent-primary, #00FF9F);
+  box-shadow: 0 6px 25px rgba(0, 255, 159, 0.4);
+  transform: translateY(-2px);
 }
 
 .ctaSecondary {
@@ -812,24 +1018,13 @@
 /* ── FEATURED CAROUSEL ───────────────────────────────────── */
 .featuredSection {
   padding: 0 0 3rem;
-  background: var(--ds-color-bg-editorial);
+  background: transparent;
   position: relative;
   overflow: hidden;
 }
 
-/* Glow ambiental azul/purpura — sutil, igual al mockup */
 .featuredSection::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse 80% 60% at 50% 30%,
-    rgba(88, 28, 255, 0.08) 0%,
-    rgba(0, 140, 255, 0.05) 40%,
-    transparent 70%
-  );
-  pointer-events: none;
-  z-index: 0;
+  display: none;
 }
 
 /* Todo el contenido de la sección por encima del glow */
@@ -922,7 +1117,7 @@
   flex-direction: column;
   gap: 0.25rem;
   padding: 2rem 0.75rem 0.75rem;
-  background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.5) 55%, transparent 100%);
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 60%, transparent 100%);
   pointer-events: none;
 }
 
@@ -931,17 +1126,15 @@
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  color: var(--ds-color-text-primary);
+  color: var(--ds-color-static-white);
   line-height: 1.1;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
 }
 
 .flyerCardLabelSub {
   font-size: 0.62rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  color: rgba(255,255,255,0.72);
-  text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+  color: var(--ds-color-static-light-gray);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -1077,12 +1270,12 @@
 }
 
 .badge_warning {
-  background: #f5a623;
+  background: var(--ds-color-state-warning);
   color: var(--ds-color-bg-editorial);
 }
 
 .badge_danger {
-  background: #e53e3e;
+  background: var(--ds-color-state-danger);
   color: white;
 }
 
@@ -1119,9 +1312,8 @@
   grid-template-columns: 1fr 1fr;
   gap: 0;
   margin: 0 2rem 2.5rem;
-  border: 1px solid rgba(255,255,255,0.1);
-  /* Fondo opaco oscuro con tinte sutil — igual al mockup */
-  background: rgba(18, 18, 26, 0.97);
+  border: 1px solid var(--ds-color-border-editorial);
+  background: var(--ds-color-bg-editorial-surface);
   position: relative;
   overflow: hidden;
   animation: fecFadeIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
@@ -1132,11 +1324,11 @@
   grid-column: 1 / -1;
   height: 320px;
   margin: 0 2rem 2.5rem;
-  border: 1px solid rgba(255,255,255,0.1);
+  border: 1px solid var(--ds-color-border-editorial);
   background: linear-gradient(90deg,
-    var(--ds-color-border-editorial) 25%,
-    rgba(255,255,255,0.05) 50%,
-    var(--ds-color-border-editorial) 75%
+    var(--ds-color-bg-surface-muted) 25%,
+    var(--ds-color-border-editorial-mid) 50%,
+    var(--ds-color-bg-surface-muted) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 1.4s infinite;
@@ -1264,7 +1456,7 @@
   align-items: center;
   gap: 0;
   padding: 0.3rem 0;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  border-bottom: 1px solid var(--ds-color-border-subtle);
 }
 
 .fecLineupNum {
@@ -1282,7 +1474,7 @@
 .fecLineupBar {
   width: 1px;
   height: 1.1em;
-  background: rgba(255,255,255,0.2);
+  background: var(--ds-color-border-strong);
   flex-shrink: 0;
   margin-right: 0.65rem;
 }
@@ -1398,10 +1590,13 @@
 /* ── MARQUEE TICKER ────────────────────── */
 
 .marqueeWrapper {
-  background: var(--ds-color-accent-primary);
+  background: linear-gradient(90deg, #0e3528 0%, #08261c 50%, #0e3528 100%);
+  border-top: 1px solid rgba(0, 255, 159, 0.3);
+  border-bottom: 1px solid rgba(0, 255, 159, 0.3);
   overflow: hidden;
-  padding: 0.6rem 0;
+  padding: 0.75rem 0;
   white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
 }
 
 .marqueeTrack {
@@ -1410,10 +1605,10 @@
 }
 
 .marqueeItem {
-  color: var(--ds-color-bg-editorial);
+  color: #00FF9F;
   font-size: 0.75rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
+  font-weight: 800;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   padding: 0 2rem;
 }
@@ -1434,7 +1629,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 2rem;
+  margin-bottom: 2.5rem;
   gap: 1rem;
 }
 
@@ -1470,118 +1665,49 @@
   color: var(--ds-color-accent-primary);
 }
 
-/* ── QUÉ ES VOY ────────────────────────── */
-.featuresGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-}
-
-.featureCard {
-  border: 1px solid var(--ds-color-border-editorial);
-  padding: 2rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  transition: border-color 0.2s, background 0.2s, opacity 0.5s ease var(--entry-delay, 0s), transform 0.5s ease var(--entry-delay, 0s);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Línea fucsia en la parte superior al hacer hover para coincidir con el estilo de LA ESCENA */
-.featureCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--ds-color-accent-secondary);
-  transform: scaleX(0);
-  transition: transform 0.2s ease;
-  transform-origin: left;
-}
-
-.featureCard:hover {
-  border-color: var(--ds-color-accent-secondary);
-  background: var(--ds-color-bg-editorial-surface);
-}
-
-.featureCard:hover::before {
-  transform: scaleX(1);
-}
-
-.featureIcon {
-  font-size: 1.75rem;
-}
-
-.featureTitle {
-  font-size: 0.95rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0;
-  color: var(--ds-color-text-primary);
-  transition: color 0.2s;
-}
-
-.featureCard:hover .featureTitle {
-  color: var(--ds-color-accent-secondary);
-}
-
-.featureDescription {
-  font-size: 0.85rem;
-  color: var(--ds-color-text-editorial-subtle);
-  line-height: 1.5;
-  margin: 0;
-}
-
-/* ── TICKER DE EVENTOS ─────────────────── */
-
-/* Contenedor con overflow oculto y máscaras de fade lateral */
+/* ── TICKER DE EVENTOS (CARTELERA DE EVENTOS) ─── */
 .eventsTicker {
   overflow: hidden;
-  /* Fade lateral para que las cards entren y salgan suavemente */
+  padding: 16px 0;
+  margin-top: -8px;
   mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 8%,
-    black 92%,
+    black 6%,
+    black 94%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 8%,
-    black 92%,
+    black 6%,
+    black 94%,
     transparent 100%
   );
   margin-bottom: 2.5rem;
+  width: 100%;
 }
 
-/* Track animado que se desliza */
 .eventsTrack {
   display: flex;
   gap: 1.5rem;
-  /* Ancho: necesita ser suficiente para contener el doble de cards */
   width: max-content;
   animation: eventsScroll 32s linear infinite;
+  align-items: stretch;
 }
 
-/* Pausa al hacer hover en cualquier parte del ticker */
 .eventsTicker:hover .eventsTrack {
   animation-play-state: paused;
 }
 
-/* Cada item del ticker — ancho fijo para que las cards sean uniformes */
 .eventsTickerItem {
   flex: 0 0 340px;
-  /* Sutil elevación en hover para dar feedback */
-  transition: transform 0.25s ease;
+  width: 340px;
+  max-width: 340px;
 }
 
 .eventsTickerItem:hover {
-  transform: translateY(-4px);
+  /* Eliminado transform: translateY para prevenir recorte superior */
 }
 
 @keyframes eventsScroll {
@@ -1589,161 +1715,69 @@
   to   { transform: translateX(-50%); }
 }
 
-
-
 .eventsCtaWrapper {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  align-items: center;
+  width: 100%;
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-/* ── GÉNEROS — LA ESCENA ───────────────── */
-.genresGrid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0;
-}
-
-.genreCard {
-  border: 1px solid var(--ds-color-border-editorial);
-  padding: 2rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  transition: border-color 0.2s, background 0.2s, opacity 0.5s ease var(--entry-delay, 0s), transform 0.5s ease var(--entry-delay, 0s);
-  position: relative;
-  overflow: hidden;
-}
-
-/* Línea fucsia en la parte superior al hacer hover */
-.genreCard::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: var(--ds-color-accent-secondary);
-  transform: scaleX(0);
-  transition: transform 0.2s ease;
-  transform-origin: left;
-}
-
-.genreCard:hover {
-  border-color: var(--ds-color-accent-secondary);
-  background: var(--ds-color-bg-editorial-surface);
-}
-
-.genreCard:hover::before {
-  transform: scaleX(1);
-}
-
-.genreCardIcon {
-  font-size: 1.75rem;
-}
-
-.genreCardName {
-  font-size: 0.95rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin: 0;
-  color: var(--ds-color-text-primary);
-  transition: color 0.2s;
-}
-
-.genreCard:hover .genreCardName {
-  color: var(--ds-color-accent-secondary);
-}
-
-.genreCardDesc {
-  font-size: 0.82rem;
-  color: var(--ds-color-text-editorial-muted);
-  line-height: 1.5;
-  margin: 0;
-}
-
-/* Responsive genresGrid */
-@media (max-width: 1024px) {
-  .genresGrid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (max-width: 480px) {
-  .genresGrid {
-    grid-template-columns: 1fr;
-  }
-  .genreCard {
-    padding: 1.5rem 1.1rem;
-  }
-}
-
-/* Clase chip legacy — mantenida por si algo la referencia */
-.genreChip {
-  border: 1px solid var(--ds-color-border-editorial-mid);
-  color: var(--ds-color-text-editorial-muted);
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  padding: 0.4rem 1rem;
-  transition: border-color 0.2s, color 0.2s;
-  cursor: default;
-}
-
-.genreChip:hover {
-  border-color: var(--ds-color-accent-secondary);
-  color: var(--ds-color-accent-secondary);
-}
-
-
-/* ── FOOTER ───────────────────────────────────────────── */
+/* ── FOOTER BANNER BAR ────────────────────── */
 .footer {
-  border-top: 1px solid var(--ds-color-border-editorial);
-  margin-top: 2rem;
+  margin-top: 3rem;
+  width: 100%;
 }
 
 .footerBar {
-  background: var(--ds-color-accent-primary);
-  color: var(--ds-color-bg-editorial);
+  background: linear-gradient(90deg, #0e3528 0%, #08261c 50%, #0e3528 100%);
+  border-top: 1px solid rgba(0, 255, 159, 0.3);
+  color: #00FF9F;
   font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   text-align: center;
-  padding: 0.65rem 2rem;
+  padding: 0.85rem 2rem;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* ── MODO CLARO — PALETA NARANJA / SUNSET AMBER ── */
+:global([data-theme="light"]) .marqueeWrapper {
+  background: linear-gradient(90deg, #4d1c0b 0%, #2e1006 50%, #4d1c0b 100%);
+  border-top: 1px solid rgba(255, 87, 34, 0.35);
+  border-bottom: 1px solid rgba(255, 87, 34, 0.35);
+  box-shadow: 0 4px 20px rgba(255, 87, 34, 0.1);
+}
+
+:global([data-theme="light"]) .marqueeItem {
+  color: #FF5722;
+}
+
+:global([data-theme="light"]) .footerBar {
+  background: linear-gradient(90deg, #4d1c0b 0%, #2e1006 50%, #4d1c0b 100%);
+  border-top: 1px solid rgba(255, 87, 34, 0.35);
+  color: #FF5722;
+  box-shadow: 0 -4px 20px rgba(255, 87, 34, 0.1);
+}
+
+:global([data-theme="light"]) .ctaPrimary {
+  background: rgba(255, 87, 34, 0.1);
+  color: #FF5722;
+  border-color: rgba(255, 87, 34, 0.5);
+  box-shadow: 0 4px 20px rgba(255, 87, 34, 0.15);
+}
+
+:global([data-theme="light"]) .ctaPrimary:hover {
+  background: #FF5722;
+  color: #ffffff;
+  border-color: #FF5722;
+  box-shadow: 0 6px 25px rgba(255, 87, 34, 0.4);
 }
 
 /* ── RESPONSIVE ────────────────────────── */
 @media (max-width: 1024px) {
-  .hero {
-    grid-template-columns: 1fr;
-    padding: 5rem 2.5rem 3rem;
-    text-align: center;
-    min-height: auto;
-    gap: 3rem;
-  }
-
-  .heroDecoration {
-    display: none;
-  }
-
-  .heroCtas {
-    justify-content: center;
-  }
-
-  .heroDescription {
-    max-width: 100%;
-    margin: 0 auto;
-  }
-
-  .heroTopBar {
-    left: 0;
-    right: 0;
-    top: 2rem;
-    justify-content: center;
-  }
 
   .heroTopBarLine,
   .heroEyebrowRight {
@@ -1894,6 +1928,7 @@
   }
 
   .featureCard {
+  background: var(--ds-color-bg-editorial-surface);
     padding: 1.5rem 1.1rem;
   }
 
@@ -1960,7 +1995,7 @@
 .modalBackdrop {
   position: fixed;
   inset: 0;
-  z-index: 1000;
+  z-index: 50;
   background: rgba(0, 0, 0, 0.82);
   backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
@@ -2112,3 +2147,5 @@
   border-top: 1px solid var(--ds-color-border-editorial);
   margin-top: auto;
 }
+
+

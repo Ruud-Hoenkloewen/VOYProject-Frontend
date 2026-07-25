@@ -15,28 +15,28 @@ export default function HeroWidgetLoggedOut() {
 
         <ul className={styles.hwList}>
           <li className={styles.hwListItem}>
-            <span className={styles.hwListItemIcon}><HeartIcon /></span>
-            Guardá tus shows favoritos
+            <span className={styles.hwListItemIcon}><HeartIcon size={18} /></span>
+            <span>Guardá tus shows favoritos</span>
           </li>
           <li className={styles.hwListItem}>
-            <span className={styles.hwListItemIcon}><TicketIcon /></span>
-            Comprá entradas sin fila
+            <span className={styles.hwListItemIcon}><TicketIcon size={18} /></span>
+            <span>Comprá entradas sin fila</span>
           </li>
           <li className={styles.hwListItem}>
-            <span className={styles.hwListItemIcon}><UsersIcon /></span>
-            Seguí artistas locales
+            <span className={styles.hwListItemIcon}><UsersIcon size={18} /></span>
+            <span>Seguí artistas locales</span>
           </li>
           <li className={styles.hwListItem}>
-            <span className={styles.hwListItemIcon}><UserCheckIcon /></span>
-            Creá tu perfil de la escena
+            <span className={styles.hwListItemIcon}><UserCheckIcon size={18} /></span>
+            <span>Creá tu perfil de la escena</span>
           </li>
           <li className={styles.hwListItem}>
-            <span className={styles.hwListItemIcon}><MusicIcon /></span>
-            Conocé a nuestros artistas
+            <span className={styles.hwListItemIcon}><MusicIcon size={18} /></span>
+            <span>Conocé a nuestros artistas</span>
           </li>
           <li className={styles.hwListItem}>
-            <span className={styles.hwListItemIcon}><ZapIcon /></span>
-            Hacete parte de nuestra comunidad
+            <span className={styles.hwListItemIcon}><ZapIcon size={18} /></span>
+            <span>Hacete parte de nuestra comunidad</span>
           </li>
         </ul>
 

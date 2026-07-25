@@ -6,7 +6,7 @@
 
 /* ── PAGE WRAPPER ──────────────────────────────────────── */
 .pageWrapper {
-  background: var(--ds-color-bg-editorial);
+  background: transparent;
   min-height: 100vh;
   color: var(--ds-color-text-primary);
   overflow-x: hidden;
@@ -49,8 +49,8 @@
 
 .heroSearch {
   width: 100%;
-  max-width: 580px;
-  margin-top: 0.5rem;
+  max-width: 900px;
+  margin-top: 1rem;
 }
 
 /* ── FILTROS ───────────────────────────────────────────── */
@@ -195,3 +195,4 @@
     padding: 0.22rem 0.65rem;
   }
 }
+

@@ -1,29 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { fetchEventById } from "../../services/eventService";
-import { updateMyProfile } from "../../services/userService";
 import { useAuth } from "../../context/AuthContext";
 import Button from "../../design-system/primitives/Button/Button";
 import Typography from "../../design-system/primitives/Typography/Typography";
+import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
 import styles from "./EventDetailPage.module.css";
-import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L from 'leaflet';
-import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png';
-import markerIcon from 'leaflet/dist/images/marker-icon.png';
-import markerShadow from 'leaflet/dist/images/marker-shadow.png';
-
-delete L.Icon.Default.prototype._getIconUrl;
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl: markerIcon2x,
-  iconUrl: markerIcon,
-  shadowUrl: markerShadow,
-});
 
 import {
   CalendarIcon, ClockIcon, MapPinIcon, WarningIcon, MusicIcon,
-  HeartIcon, UsersIcon, ZapIcon, UserCheckIcon, ShirtIcon, RefreshIcon,
-  AccessibilityIcon, CameraIcon, UtensilsIcon, CigaretteIcon, PeopleIcon
+  HeartIcon, UsersIcon, ZapIcon, RefreshIcon, UtensilsIcon, PeopleIcon
 } from "../../components/icons";
 import { addMinutes } from "../../utils/helpers";
 import { CONCERT_PHOTOS, BAND_DESCRIPTIONS } from "../../utils/mockData";
@@ -32,21 +19,26 @@ import Timeline from "./components/Timeline/Timeline";
 import ArtistGrid from "./components/ArtistGrid/ArtistGrid";
 import TicketCard from "./components/TicketCard/TicketCard";
 
-// Duración de cada set en minutos
 const SET_DURATION   = 55;
-const PUERTAS_OFFSET = 30; // primer set empieza 30 min después de puertas
+const PUERTAS_OFFSET = 30;
 
 export default function EventDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { user, updateUser, isAuthenticated, handleToggleFavorite } = useAuth();
+  const { user, isAuthenticated, handleToggleFavorite } = useAuth();
   
   const [eventData, setEventData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]   = useState(null);
   const [isTogglingFav, setIsTogglingFav] = useState(false);
+  const [toastNotice, setToastNotice] = useState("");
 
   const isFavorite = user?.favoritos?.includes(id) || false;
+
+  const showToast = (msg) => {
+    setToastNotice(msg);
+    setTimeout(() => setToastNotice(""), 3000);
+  };
 
   const toggleFavAction = async () => {
     if (!isAuthenticated) {
@@ -57,6 +49,7 @@ export default function EventDetailPage() {
       setIsTogglingFav(true);
       if (handleToggleFavorite) {
         await handleToggleFavorite(id);
+        showToast(isFavorite ? "Quitado de tus guardados" : "¡Guardado en tus favoritos! ❤️");
       }
     } catch (err) {
       console.error(err);
@@ -81,7 +74,6 @@ export default function EventDetailPage() {
 
   useEffect(() => { if (id) getEventDetail(); }, [id, getEventDetail]);
 
-  // ─── Loading ───────────────────────────────────────────────────────────────
   if (loading) return (
     <div className={styles.root}>
       <div className={styles.skeletonHero} />
@@ -94,7 +86,6 @@ export default function EventDetailPage() {
     </div>
   );
 
-  // ─── Error ─────────────────────────────────────────────────────────────────
   if (error) return (
     <div className={styles.errorState}>
       <Typography variant="display">{error === "not_found" ? "404" : "Ups"}</Typography>
@@ -106,44 +97,13 @@ export default function EventDetailPage() {
   if (!eventData) return null;
 
   const isSoldOut = eventData.status === "AGOTADO";
-  const baseTime  = eventData.time?.replace(/\s*HS\s*/i, "") || "19:00";
-
-  // ─── Build Timeline ────────────────────────────────────────────────────────
-  const n = eventData.artists?.length || 0;
-  const timelineItems = n ? [
-    {
-      time: baseTime,
-      title: "PUERTAS ABREN",
-      subtitle: "Ingreso al venue",
-      role: "puertas",
-      badge: null,
-    },
-    ...eventData.artists.map((artist, idx) => {
-      const isHeadliner = idx === n - 1;
-      const isApertura  = idx === 0;
-      const isInvitada  = idx === 1 && n > 2;
-      const startTime   = addMinutes(baseTime, PUERTAS_OFFSET + idx * SET_DURATION);
-      const endTime     = addMinutes(baseTime, PUERTAS_OFFSET + (idx + 1) * SET_DURATION);
-      const role        = isHeadliner ? "headliner" : isApertura ? "apertura" : "default";
-      const badge       = isHeadliner ? "HEADLINER" : isApertura ? "APERTURA" : isInvitada ? "INVITADA" : null;
-      const subtitle    = isHeadliner
-        ? `Headliner · hasta las ${endTime} hs`
-        : isApertura
-        ? `Apertura · hasta las ${endTime} hs`
-        : `Set completo · hasta las ${endTime} hs`;
-      return { time: startTime, title: artist.nombre, subtitle, role, badge };
-    }),
-    {
-      time: addMinutes(baseTime, PUERTAS_OFFSET + n * SET_DURATION),
-      title: "CIERRE DEL VENUE",
-      subtitle: "Fin del evento",
-      role: "cierre",
-      badge: null,
-    },
-  ] : [];
+  const doorsOpenTime = eventData.time?.replace(/\s*HS\s*/i, "") || "22:00";
+  const numArtists    = eventData.artists?.length || 1;
+  const venueCloseTime = addMinutes(doorsOpenTime, PUERTAS_OFFSET + numArtists * SET_DURATION);
 
   return (
     <div className={styles.root}>
+      <EditorialHeader transparent={true} />
 
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <div className={styles.hero}>
@@ -152,29 +112,24 @@ export default function EventDetailPage() {
         )}
         <div className={styles.heroOverlay} />
 
-        {/* Nav buttons */}
-        <button className={styles.heroBack} onClick={() => navigate("/events")}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-        </button>
-        <button 
-          className={`${styles.heroHeart} ${isFavorite ? styles.heroHeartActive : ''}`}
-          onClick={toggleFavAction}
-          disabled={isTogglingFav}
-          style={{ color: isFavorite ? 'var(--ds-color-magenta-400)' : 'currentColor' }}
-        >
-          <HeartIcon />
-        </button>
-
-        {/* Bottom-left big title */}
         <div className={styles.heroTitleBlock}>
-          <h1 className={styles.heroTitle}>{eventData.title}</h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <h1 className={styles.heroTitle}>{eventData.title}</h1>
+            <button 
+              className={`${styles.heroFavBtn} ${isFavorite ? styles.heroFavBtnActive : ""}`}
+              onClick={toggleFavAction}
+              disabled={isTogglingFav}
+              aria-label="Guardar en favoritos"
+            >
+              <HeartIcon />
+            </button>
+          </div>
         </div>
       </div>
 
       {/* ── MAIN GRID ─────────────────────────────────────────────────────── */}
       <main className={styles.container}>
 
-        {/* ── COLUMNA IZQUIERDA ─────────────────────────────────────────── */}
         <div className={styles.leftColumn}>
 
           {/* BARRA: Fecha / Puertas / Lugar */}
@@ -216,16 +171,18 @@ export default function EventDetailPage() {
             </p>
           </div>
 
-          {/* ORDEN DEL SHOW — Timeline */}
-          {timelineItems.length > 0 && (
-            <div className={styles.section}>
-              <div className={styles.sectionHeader}>
-                <span className={styles.iconMagenta}><MusicIcon /></span>
-                <h2 className={styles.sectionTitle}>ORDEN DEL SHOW</h2>
-              </div>
-              <Timeline items={timelineItems} />
+          {/* ORDEN DEL SHOW — Timeline Reworked */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.iconMagenta}><MusicIcon /></span>
+              <h2 className={styles.sectionTitle}>ORDEN DEL SHOW</h2>
             </div>
-          )}
+            <Timeline 
+              doorsOpenTime={doorsOpenTime}
+              venueCloseTime={venueCloseTime}
+              artists={eventData.artists}
+            />
+          </div>
 
           {/* ARTISTAS */}
           {eventData.artists?.length > 0 && (
@@ -235,7 +192,6 @@ export default function EventDetailPage() {
                   <span className={styles.iconMagenta}><UsersIcon /></span>
                   <h2 className={styles.sectionTitle}>ARTISTAS</h2>
                 </div>
-                <span className={styles.inDev}>● EN DESARROLLO</span>
               </div>
               <ArtistGrid 
                 artists={eventData.artists} 
@@ -245,7 +201,7 @@ export default function EventDetailPage() {
             </div>
           )}
 
-          {/* INFO DEL EVENTO */}
+          {/* INFO DEL EVENTO — Reworked (Solo 4 ítems esenciales) */}
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
               <span className={styles.iconNeon}><ZapIcon /></span>
@@ -254,14 +210,27 @@ export default function EventDetailPage() {
 
             <div className={styles.infoGrid}>
               {[
-                { icon: <UserCheckIcon />, label: "EDAD MÍNIMA",   value: "Apto todo público" },
-                { icon: <ShirtIcon />,     label: "VESTIMENTA",    value: "Libre" },
-                { icon: <RefreshIcon />,   label: "REINGRESO",     value: "Permitido", highlight: true },
-                { icon: <AccessibilityIcon />, label: "ACCESIBILIDAD", value: "Consultar con el organizador" },
-                { icon: <CameraIcon />,    label: "FOTOGRAFÍA",    value: "Sí, compartí y etiquetá" },
-                { icon: <UtensilsIcon />,  label: "CONSUMICIONES", value: eventData.rawPrice === 0 ? "Feria y bares propios" : "Bar del lugar" },
-                { icon: <CigaretteIcon />, label: "FUMADORES",     value: "Área exterior" },
-                { icon: <PeopleIcon />,    label: "CAPACIDAD",     value: eventData.capacity ? `${eventData.capacity} personas` : "Venue chico — llegá temprano" },
+                { 
+                  icon: <PeopleIcon />, 
+                  label: "CAPACIDAD", 
+                  value: eventData.capacity ? `${eventData.capacity} personas` : "Venue chico (40 personas)" 
+                },
+                { 
+                  icon: <UtensilsIcon />, 
+                  label: "BAR / CONSUMICIONES", 
+                  value: "Tragos y comida" 
+                },
+                { 
+                  icon: <MapPinIcon />, 
+                  label: "PISOS / ESTRUCTURA", 
+                  value: "Planta baja" 
+                },
+                { 
+                  icon: <RefreshIcon />, 
+                  label: "REINGRESO", 
+                  value: "Permitido", 
+                  highlight: true 
+                },
               ].map((item, idx) => (
                 <div key={idx} className={styles.infoCell}>
                   <div className={styles.infoCellIcon}>{item.icon}</div>
@@ -276,14 +245,20 @@ export default function EventDetailPage() {
             </div>
           </div>
 
-        </div>{/* /leftColumn */}
+        </div>
 
-        {/* ── COLUMNA DERECHA: TICKET CARD ──────────────────────────────── */}
         <div className={styles.rightColumn}>
-          <TicketCard eventData={eventData} isSoldOut={isSoldOut} id={id} />
+          <TicketCard eventData={eventData} isSoldOut={isSoldOut} id={id} onShowToast={showToast} />
         </div>
 
       </main>
+
+      {/* TOAST NOTICE */}
+      {toastNotice && (
+        <div className={styles.toastNotice}>
+          {toastNotice}
+        </div>
+      )}
     </div>
   );
 }

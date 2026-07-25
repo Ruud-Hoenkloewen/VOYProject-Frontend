@@ -1,8 +1,8 @@
 /* EventFormPage.module.css */
 
 .root {
-  background-color: #050505;
-  color: #f5f5f5;
+  background-color: var(--ds-color-bg-canvas);
+  color: var(--ds-color-text-primary);
   min-height: 100vh;
   padding-top: 90px;
   padding-bottom: 80px;
@@ -41,7 +41,7 @@
 }
 
 .backBtn {
-  color: #888;
+  color: var(--ds-color-text-secondary);
   text-decoration: none;
   font-size: 12px;
   font-weight: 800;
@@ -70,8 +70,8 @@
 }
 
 .card {
-  background: #0c0c0c;
-  border: 1px solid #161616;
+  background: var(--ds-color-bg-surface-muted);
+  border: 1px solid var(--ds-color-border-editorial);
   border-radius: 8px;
   padding: 24px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
@@ -118,14 +118,14 @@
 .label {
   font-size: 11px;
   font-weight: 800;
-  color: #666;
+  color: var(--ds-color-text-muted);
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
 
 .input, .textarea, .select {
   background: var(--ds-color-bg-surface);
-  border: 1px solid #222;
+  border: 1px solid var(--ds-color-border-editorial-mid);
   border-radius: 4px;
   color: var(--ds-color-text-primary);
   padding: 12px 16px;
@@ -160,11 +160,11 @@
 
 /* File Upload & Preview */
 .uploadContainer {
-  border: 2px dashed #222;
+  border: 2px dashed var(--ds-color-border-editorial-mid);
   border-radius: 6px;
   padding: 24px;
   text-align: center;
-  background: #0a0a0a;
+  background: var(--ds-color-bg-surface);
   cursor: pointer;
   transition: border-color 0.2s;
   display: flex;
@@ -233,8 +233,8 @@
 
 .tag {
   background: var(--ds-color-bg-surface);
-  border: 1px solid #222;
-  color: #aaa;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  color: var(--ds-color-text-secondary);
   border-radius: 20px;
   padding: 6px 14px;
   font-size: 12px;
@@ -294,7 +294,7 @@
   align-items: center;
   gap: 6px;
   font-size: 12px;
-  color: #aaa;
+  color: var(--ds-color-text-secondary);
   cursor: pointer;
   user-select: none;
 }
@@ -309,7 +309,7 @@
 .deleteArtistBtn {
   background: transparent;
   border: none;
-  color: #666;
+  color: var(--ds-color-text-muted);
   cursor: pointer;
   padding: 4px;
   transition: color 0.2s;
@@ -334,15 +334,15 @@
 }
 
 .addArtistBtn:hover {
-  border-color: #666;
+  border-color: var(--ds-color-text-muted);
   background: rgba(255,255,255,0.01);
 }
 
 /* Map Preview Simulation */
 .mapWrapper {
-  border: 1px solid #222;
+  border: 1px solid var(--ds-color-border-editorial-mid);
   height: 180px;
-  background: #0a0a0a;
+  background: var(--ds-color-bg-surface);
   position: relative;
   overflow: hidden;
   display: flex;
@@ -397,7 +397,7 @@
   padding: 4px 8px;
   font-size: 10px;
   font-family: var(--ds-font-family-mono, monospace);
-  color: #888;
+  color: var(--ds-color-text-secondary);
   z-index: 3;
 }
 
@@ -414,7 +414,7 @@
 .cancelBtn {
   background: transparent;
   color: var(--ds-color-text-primary);
-  border: 1px solid #222;
+  border: 1px solid var(--ds-color-border-editorial-mid);
   padding: 12px 24px;
   font-weight: 800;
   font-size: 12px;
@@ -426,7 +426,7 @@
 }
 
 .cancelBtn:hover {
-  border-color: #666;
+  border-color: var(--ds-color-text-muted);
 }
 
 .submitBtn {
@@ -457,12 +457,12 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 1000;
+  z-index: 50;
 }
 
 .toast {
   padding: 16px 24px;
-  background: #0c0c0c;
+  background: var(--ds-color-bg-surface-muted);
   color: var(--ds-color-text-primary);
   border: 1px solid var(--ds-color-accent-primary);
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);

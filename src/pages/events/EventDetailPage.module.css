@@ -37,27 +37,55 @@
   );
 }
 
-/* Nav icon buttons */
-.heroBack,
-.heroHeart {
+/* Bottom-left big title */
+.heroTitleBlock {
   position: absolute;
-  top: 20px;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: var(--ds-color-text-primary);
+  bottom: 24px;
+  left: 40px;
+  z-index: 5;
+  max-width: 80%;
+}
+.heroTitle {
+  margin: 0;
+  font-size: clamp(1.5rem, 5vw, 3.5rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  line-height: 1;
+  color: var(--ds-color-static-white);
+  letter-spacing: -0.5px;
+  word-break: break-word;
+}
+
+.heroFavBtn {
+  background: transparent;
+  border: none;
+  color: var(--ds-color-static-white);
+  cursor: pointer;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  z-index: 10;
-  transition: background 0.2s;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  backdrop-filter: blur(4px);
+  background: rgba(0,0,0,0.3);
 }
-.heroBack  { left:  20px; }
-.heroHeart { right: 20px; }
-.heroBack:hover, .heroHeart:hover { background: rgba(255,255,255,0.15); }
+
+.heroFavBtn:hover {
+  background: rgba(255,255,255,0.1);
+  transform: scale(1.2);
+}
+
+.heroFavBtnActive {
+  animation: heartPulse 0.35s ease-in-out;
+  color: var(--ds-color-magenta-400) !important;
+}
+
+@keyframes heartPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
 
 /* Top-right meta */
 .heroMeta {
@@ -75,13 +103,13 @@
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
-  color: var(--ds-color-text-primary);
+  color: var(--ds-color-static-white);
   line-height: 1.3;
 }
 .heroBy {
   margin: 0;
   font-size: 0.8rem;
-  color: var(--ds-color-text-secondary);
+  color: var(--ds-color-static-light-gray);
 }
 .heroGenres {
   display: flex;
@@ -96,39 +124,21 @@
   border: 1px solid rgba(255,255,255,0.3);
   border-radius: 2px;
   text-transform: uppercase;
-  color: var(--ds-color-text-primary);
+  color: var(--ds-color-static-white);
 }
 .heroPrice {
   margin: 0;
   font-size: 0.85rem;
-  color: var(--ds-color-text-secondary);
+  color: var(--ds-color-static-light-gray);
 }
 .heroVenue {
   margin: 0;
   font-size: 0.8rem;
-  color: var(--ds-color-text-editorial-subtle);
+  color: var(--ds-color-static-mid-gray);
   display: flex;
   align-items: center;
   gap: 4px;
   justify-content: flex-end;
-}
-
-/* Bottom-left big title */
-.heroTitleBlock {
-  position: absolute;
-  bottom: 24px;
-  left: 40px;
-  z-index: 5;
-  max-width: 60%;
-}
-.heroTitle {
-  margin: 0;
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  font-weight: 900;
-  text-transform: uppercase;
-  line-height: 1;
-  color: var(--ds-color-text-primary);
-  letter-spacing: -0.5px;
 }
 
 /* ─── MAIN GRID ─────────────────────────────────────────────────────────── */
@@ -185,7 +195,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 32px;
-  background-color: var(--ds-color-bg-surface);
+  background-color: transparent;
   padding: 20px 28px;
   border-radius: 4px;
   border: 1px solid var(--ds-color-border-subtle);
@@ -231,7 +241,6 @@
   align-items: flex-start;
 }
 
-/* Timeline time: monospace for all times */
 .tlTime {
   width: 52px;
   flex-shrink: 0;
@@ -246,7 +255,6 @@
 .tlTimeGrey    { color: var(--ds-color-border-editorial-mid); }
 .tlTimeWhite   { color: var(--ds-color-text-secondary); }
 
-/* Dot + line column */
 .tlDivider {
   display: flex;
   flex-direction: column;
@@ -280,7 +288,6 @@
   margin-top: 4px;
 }
 
-/* Content column */
 .tlContent {
   padding-bottom: 28px;
   flex: 1;
@@ -311,6 +318,50 @@
 }
 .badgeGreen   { background-color: var(--ds-color-accent-primary); color: var(--ds-color-neutral-0); }
 .badgeMagenta { background-color: var(--ds-color-magenta-400); color: var(--ds-color-neutral-0); }
+
+.lineupLine {
+  width: 1px;
+  height: 100%;
+  min-height: 40px;
+  background-color: var(--ds-color-border-editorial-mid);
+}
+
+.lineupContent {
+  padding-bottom: 20px;
+  flex: 1;
+}
+
+.lineupList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.artistRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.artistNum {
+  font-family: var(--ds-font-family-mono);
+  font-size: 0.85rem;
+  color: var(--ds-color-text-editorial-muted);
+  font-weight: 800;
+}
+
+.artistName {
+  font-weight: 900;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--ds-color-text-primary);
+}
+
+.artistHeadliner {
+  color: var(--ds-color-magenta-400);
+}
 .badgeCyan    { background-color: var(--ds-color-cyan-400); color: var(--ds-color-neutral-0); }
 
 /* ─── ARTISTAS SECTION ──────────────────────────────────────────────────── */
@@ -339,7 +390,7 @@
 @media (max-width: 600px) { .artistsGrid { grid-template-columns: 1fr; } }
 
 .artistCard {
-  background-color: var(--ds-color-bg-surface);
+  background-color: transparent;
   border: 1px solid var(--ds-color-border-subtle);
   border-radius: 4px;
   overflow: hidden;
@@ -410,11 +461,13 @@
   gap: 6px;
   border: 1px solid var(--ds-color-border-editorial-mid);
   padding: 6px 10px;
-  border-radius: 2px;
-  font-size: 0.78rem;
-  color: var(--ds-color-text-secondary);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--ds-color-text-editorial-muted);
+  border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
+  white-space: nowrap;
 }
 .artistIgBadge:hover { background: var(--ds-color-bg-surface-muted); color: var(--ds-color-text-primary); border-color: var(--ds-color-text-editorial-muted); }
 
@@ -450,7 +503,7 @@
   align-items: flex-start;
   gap: 14px;
   padding: 20px;
-  background: var(--ds-color-bg-surface);
+  background: transparent;
   border: 1px solid var(--ds-color-border-subtle);
   transition: background 0.15s;
 }
@@ -485,7 +538,6 @@
 .ubicacionAddress { margin: 0; font-size: 0.95rem; color: var(--ds-color-text-editorial-subtle); }
 
 /* ─── RIGHT COLUMN: TICKET CARD ─────────────────────────────────────────── */
-/* Sticky lives on the column, not the card, so it works in a grid */
 .rightColumn {
   position: sticky;
   top: 24px;
@@ -494,13 +546,12 @@
 }
 
 .ticketCard {
-  background-color: var(--ds-color-bg-surface);
+  background-color: var(--ds-color-bg-canvas);
   padding: 28px;
   border-radius: 4px;
   border: 1px solid var(--ds-color-border-subtle);
-  /* Gradient top border */
   border-top: 3px solid transparent;
-  background-image: linear-gradient(var(--ds-color-bg-surface), var(--ds-color-bg-surface)),
+  background-image: linear-gradient(var(--ds-color-bg-canvas), var(--ds-color-bg-canvas)),
     linear-gradient(90deg, var(--ds-color-accent-primary), var(--ds-color-magenta-400), var(--ds-color-cyan-400));
   background-origin: border-box;
   background-clip: padding-box, border-box;
@@ -587,10 +638,10 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
-  transition: opacity 0.2s;
+  transition: opacity 0.2s, transform 0.15s ease;
   letter-spacing: 0.5px;
 }
-.buyButton:hover:not(:disabled) { opacity: 0.88; }
+.buyButton:hover:not(:disabled) { opacity: 0.92; transform: translateY(-1px); }
 .buyButton:disabled { background-color: var(--ds-color-border-editorial-mid); color: var(--ds-color-text-editorial-muted); cursor: not-allowed; }
 
 .outlineButton {
@@ -612,82 +663,70 @@
 }
 .outlineButton:hover { background: var(--ds-color-bg-surface-muted); border-color: var(--ds-color-text-editorial-muted); color: var(--ds-color-text-primary); }
 
-.termsText {
-  color: var(--ds-color-text-editorial-muted);
-  font-size: 0.72rem;
-  text-align: center;
-  margin: 0;
-  line-height: 1.5;
-}
-.termsText a { color: var(--ds-color-text-editorial-subtle); text-decoration: underline; }
-
-/* ─── ERROR STATE ───────────────────────────────────────────────────────── */
-.errorState {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  text-align: center;
-  padding: 24px;
+/* ─── STICKY BOTTOM QUICK-BUY BAR (SCRUM-191) ────────────────────────── */
+.stickyBuyBar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
   background: var(--ds-color-bg-canvas);
+  border-top: 1px solid var(--ds-color-border-editorial-mid);
+  padding: 12px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(12px);
+  background: rgba(10, 11, 16, 0.92);
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.stickyBuyTitle {
+  font-weight: 900;
+  font-size: 1.1rem;
   color: var(--ds-color-text-primary);
+  text-transform: uppercase;
+  margin: 0;
 }
 
-/* ─── SKELETON / LOADING ────────────────────────────────────────────────── */
-.skeletonHero {
-  width: 100%;
-  height: 340px;
-  background: var(--ds-color-bg-surface);
-  animation: pulse 1.5s infinite ease-in-out;
-}
-.skeletonPulse {
-  background: var(--ds-color-bg-surface-muted);
-  animation: pulse 1.5s infinite ease-in-out;
-}
-@keyframes pulse {
-  0%   { opacity: 0.6; }
-  50%  { opacity: 0.3; }
-  100% { opacity: 0.6; }
-}
-
-.sectionHeader {
+.stickyBuyRight {
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin-bottom: 2rem;
-  margin-top: 2rem;
-  gap: 1rem;
+  gap: 16px;
 }
 
-.sectionLabel {
-  font-size: 0.9rem;
-  font-weight: 800;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: var(--ds-color-accent-secondary);
-  white-space: nowrap;
-}
-
-.sectionDivider {
-  flex: 1;
-  height: 1px;
-  background: var(--ds-color-border-editorial-mid);
-}
-
-.diamond {
+.stickyBuyPrice {
   color: var(--ds-color-accent-primary);
-  font-size: 0.8em;
-  vertical-align: middle;
-  margin: 0 0.3rem;
+  font-weight: 900;
+  font-size: 1.3rem;
 }
 
-.mapContainer {
-  width: 100%;
-  height: 350px;
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--ds-color-border-editorial);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+/* Toast alert notification styling */
+.toastNotice {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--ds-color-accent-primary);
+  color: var(--ds-color-neutral-0);
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 12px 24px;
+  border-radius: 4px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  animation: toastFadeIn 0.3s ease;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+@keyframes toastFadeIn {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
 }

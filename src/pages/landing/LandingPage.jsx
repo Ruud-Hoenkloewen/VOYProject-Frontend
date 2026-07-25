@@ -116,7 +116,6 @@ export default function LandingPage() {
         <div className={`${styles.heroTopBar} ${styles.animateStagger} ${styles.delay1}`}>
           <span className={styles.heroEyebrowLeft}><span className={styles.diamond}>♦</span> BIENVENIDO</span>
           <div className={styles.heroTopBarLine} />
-          <span className={styles.heroEyebrowRight}>ESCENA UNDERGROUND · NOA · TUCUMÁN <span className={styles.diamond}>♦</span></span>
         </div>
 
         <div className={styles.heroInner}>
@@ -147,7 +146,6 @@ export default function LandingPage() {
       {/* ── SHOWS DESTACADOS — CARRUSEL ───────────────────── */}
       <FeaturedCarousel />
 
-
       {/* ── MARQUEE TICKER ───────────────────────────────────── */}
       <div className={styles.marqueeWrapper} aria-hidden="true">
         <div className={styles.marqueeTrack}>
@@ -161,70 +159,11 @@ export default function LandingPage() {
         </div>
       </div>
 
-      {/* ── QUÉ ES VOY ───────────────────────────────────────── */}
-      <section className={styles.features}>
-        <div className={styles.sectionHeader} data-animate>
-          <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}><span className={styles.diamond}>♦</span> QUÉ ES VOY <span className={styles.diamond}>♦</span></span>
-          <div className={styles.sectionDivider} />
-        </div>
-        <div className={styles.featuresGrid}>
-          {FEATURES.map((f, i) => (
-            <div key={i} className={styles.featureCard} data-animate style={{ "--entry-delay": `${i * 80}ms` }}>
-              <span className={styles.featureIcon}>{f.icon}</span>
-              <h3 className={styles.featureTitle}>{f.title}</h3>
-              <p className={styles.featureDescription}>{f.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── CÓMO FUNCIONA ───────────────────────────────────────── */}
-      <section className={styles.howItWorks}>
-        <div className={styles.sectionHeader} data-animate>
-          <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}><span className={styles.diamond}>♦</span> CÓMO FUNCIONA <span className={styles.diamond}>♦</span></span>
-          <div className={styles.sectionDivider} />
-        </div>
-        <div className={styles.howGrid}>
-          {HOW_IT_WORKS.map((h, i) => (
-            <div key={i} className={styles.howCard} data-animate style={{ "--entry-delay": `${i * 100}ms` }}>
-              <div className={styles.howStep}>{h.step}</div>
-              <h3 className={styles.howTitle}>{h.title}</h3>
-              <p className={styles.howDesc}>{h.desc}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── LA ESCENA — GÉNEROS ─────────────────────────────── */}
-      <section className={styles.genresSection}>
-        <div className={styles.sectionHeader} data-animate>
-          <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}><span className={styles.diamond}>♦</span> NUESTROS GÉNEROS <span className={styles.diamond}>♦</span></span>
-          <div className={styles.sectionDivider} />
-        </div>
-        <div className={styles.genresGrid}>
-          {GENRES.map((g, i) => (
-            <div
-              key={i}
-              className={styles.genreCard}
-              data-animate
-              style={{ "--entry-delay": `${i * 60}ms` }}
-            >
-              <span className={styles.genreCardIcon}>{g.icon}</span>
-              <h3 className={styles.genreCardName}>{g.name}</h3>
-              <p className={styles.genreCardDesc}>{g.description}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
       {/* ── EVENTOS DESTACADOS — ticker horizontal ───────────── */}
       <section className={styles.eventsPreview}>
         <div className={styles.sectionHeader} data-animate>
           <div className={styles.sectionDivider} />
-          <span className={styles.sectionLabel}><span className={styles.diamond}>♦</span> EN CARTELERA <span className={styles.diamond}>♦</span></span>
+          <span className={styles.sectionLabel}><span className={styles.diamond}>♦</span> CARTELERA DE EVENTOS <span className={styles.diamond}>♦</span></span>
           <div className={styles.sectionDivider} />
         </div>
 

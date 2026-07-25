@@ -1,12 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import { TicketIcon, HeartIcon, ShareIcon } from "../../../../components/icons";
-import { shareEvent } from "../../../../utils/helpers";
+import { TicketIcon, ShareIcon } from "../../../../components/icons";
 import styles from "../../EventDetailPage.module.css";
 
-export default function TicketCard({ eventData, isSoldOut, id }) {
+export default function TicketCard({ eventData, isSoldOut, id, onShowToast }) {
   const navigate = useNavigate();
+
   const handleShare = () => {
-    shareEvent({ ...eventData, id });
+    const url = `${window.location.origin}/events/${id}`;
+    if (navigator.share) {
+      navigator.share({ title: eventData?.title, url });
+    } else {
+      navigator.clipboard.writeText(url);
+      if (onShowToast) {
+        onShowToast("¡Enlace del evento copiado al portapapeles! 📋");
+      }
+    }
   };
 
   return (
@@ -24,20 +32,6 @@ export default function TicketCard({ eventData, isSoldOut, id }) {
             {eventData.status}
           </span>
         </div>
-        <div className={styles.ticketRow}>
-          <span className={styles.ticketLabel}>CAPACIDAD</span>
-          <span className={styles.ticketValue}>
-            {eventData.capacity ? `${eventData.capacity} personas` : "Venue chico"}
-          </span>
-        </div>
-        <div className={styles.ticketRow}>
-          <span className={styles.ticketLabel}>RESTRICCIÓN</span>
-          <span className={styles.ticketValue}>Apto todo público</span>
-        </div>
-        <div className={styles.ticketRow}>
-          <span className={styles.ticketLabel}>REINGRESO</span>
-          <span className={`${styles.ticketValue} ${styles.textNeon}`}>Permitido</span>
-        </div>
       </div>
 
       <div className={styles.actionButtons}>
@@ -48,8 +42,9 @@ export default function TicketCard({ eventData, isSoldOut, id }) {
         >
           <TicketIcon /> {isSoldOut ? "AGOTADO" : "COMPRAR ENTRADA"}
         </button>
-        <button className={styles.outlineButton}><HeartIcon /> GUARDAR EVENTO</button>
-        <button className={styles.outlineButton} onClick={handleShare}><ShareIcon /> COMPARTIR EVENTO</button>
+        <button className={styles.outlineButton} onClick={handleShare}>
+          <ShareIcon /> COMPARTIR EVENTO
+        </button>
       </div>
 
       <p className={styles.termsText}>

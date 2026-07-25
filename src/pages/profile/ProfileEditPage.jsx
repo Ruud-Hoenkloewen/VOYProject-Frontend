@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { getMyProfile, updateMyProfile, checkUsername, GRADIENTS, AVATAR_COLORS } from "../../services/userService";
 import LogoVoy from "../../components/LogoVoy/LogoVoy";
-import { MapPinIcon, TicketIcon } from "../../components/icons";
+import { MapPinIcon, EditIcon } from "../../components/icons";
 import styles from "./ProfileEditPage.module.css";
 
 const GENEROS_MUSICALES = [
@@ -21,12 +21,15 @@ const VIBES_OPTIONS = [
 export default function ProfileEditPage() {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
+  const fileInputRef = useRef(null);
 
   const [form, setForm] = useState({
     nombre:           "",
     username:         "",
     bio:              "",
     ubicacion:        "",
+    avatarUrl:        "",
+    artistasFavoritos:"",
     redesSociales:    { instagram: "", twitter: "", spotify: "" },
     generosMusicales: [],
     vibes:            [],
@@ -42,6 +45,17 @@ export default function ProfileEditPage() {
   const debounceRef      = useRef(null);
   const originalUsername = useRef("");
 
+  const handleFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Data = event.target.result;
+      handleChange("avatarUrl", base64Data);
+    };
+    reader.readAsDataURL(file);
+  };
+
   // ── Cargar perfil ──────────────────────────────────────────────
   useEffect(() => {
     getMyProfile()
@@ -50,8 +64,8 @@ export default function ProfileEditPage() {
         if (!initialUsername && profile.nombre) {
           initialUsername = profile.nombre.toLowerCase()
             .trim()
-            .normalize("NFD").replace(/[\u0300-\u036f]/g, "") // remove accents
-            .replace(/[^a-z0-9._]/g, ""); // keep only valid characters
+            .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+            .replace(/[^a-z0-9._]/g, "");
         }
         
         originalUsername.current = profile.username || "";
@@ -76,6 +90,8 @@ export default function ProfileEditPage() {
           username:         initialUsername,
           bio:              profile.bio                   || "",
           ubicacion:        profile.ubicacion             || "",
+          avatarUrl:        profile.avatarUrl || profile.fotoPerfil || profile.avatar || "",
+          artistasFavoritos:profile.artistasFavoritos    || "",
           redesSociales: {
             instagram: profile.redesSociales?.instagram  || "",
             twitter:   profile.redesSociales?.twitter    || "",
@@ -98,58 +114,51 @@ export default function ProfileEditPage() {
     if (!value.trim()) { setUsernameStatus("empty"); return; }
     if (value === originalUsername.current) { setUsernameStatus("own"); return; }
     setUsernameStatus("checking");
-    debounceRef.current = setTimeout(async () => {
-      try {
-        const { available } = await checkUsername(value);
-        setUsernameStatus(available ? "available" : "taken");
-      } catch { setUsernameStatus(null); }
-    }, 500);
+    debounceRef.current = setTimeout(() => {
+      checkUsername(value)
+        .then(({ available }) => setUsernameStatus(available ? "available" : "taken"))
+        .catch(() => setUsernameStatus(null));
+    }, 400);
   }, []);
 
-  function handleChange(field, value) {
-    setForm((prev) => ({ ...prev, [field]: value }));
-  }
+  const handleChange = (field, val) => {
+    setForm((prev) => ({ ...prev, [field]: val }));
+  };
 
-  function handleRedSocial(red, value) {
+  const handleRedSocial = (network, val) => {
     setForm((prev) => ({
       ...prev,
-      redesSociales: { ...prev.redesSociales, [red]: value },
+      redesSociales: { ...prev.redesSociales, [network]: val },
     }));
-  }
+  };
 
-  function toggleGenero(g) {
+  const toggleGenero = (g) => {
     setForm((prev) => {
-      const next = prev.generosMusicales.includes(g)
+      const exists = prev.generosMusicales.includes(g);
+      const next   = exists
         ? prev.generosMusicales.filter((x) => x !== g)
         : [...prev.generosMusicales, g];
       return { ...prev, generosMusicales: next };
     });
-  }
+  };
 
-  function toggleVibe(v) {
+  const toggleVibe = (v) => {
     setForm((prev) => {
-      const next = prev.vibes.includes(v)
+      const exists = prev.vibes.includes(v);
+      const next   = exists
         ? prev.vibes.filter((x) => x !== v)
         : [...prev.vibes, v];
       return { ...prev, vibes: next };
     });
-  }
+  };
 
-  // ── Guardar ────────────────────────────────────────────────────
-  async function handleSave() {
-    if (!form.nombre.trim()) {
-      setFeedback({ type: "error", msg: "El nombre es obligatorio." });
-      return;
-    }
-    if (!form.username.trim()) {
-      setFeedback({ type: "error", msg: "El nombre de usuario es obligatorio." });
-      return;
-    }
+  // ── Guardar ───────────────────────────────────────────────────
+  const handleSave = async () => {
     if (usernameStatus === "taken") {
       setFeedback({ type: "error", msg: "El nombre de usuario ya está en uso." });
       return;
     }
-    
+
     setSaving(true);
     setFeedback(null);
     try {
@@ -158,46 +167,66 @@ export default function ProfileEditPage() {
         username:         form.username,
         bio:              form.bio,
         ubicacion:        form.ubicacion,
+        avatar:           form.avatarUrl,
+        avatarUrl:        form.avatarUrl,
+        fotoPerfil:       form.avatarUrl,
+        artistasFavoritos:form.artistasFavoritos,
+        recitalMemorable: form.recitalMemorable,
         redesSociales:    form.redesSociales,
         generosMusicales: form.generosMusicales,
         vibeEnShows:      form.vibes,
         avatarColor:      form.avatarColor,
         bannerGradiente:  form.gradientKey,
       };
-      const result = await updateMyProfile(payload);
-      if (updateUser) updateUser(result.user || result);
-      originalUsername.current = form.username;
-      setUsernameStatus("own");
+
+      const updated = await updateMyProfile(payload);
+      if (updateUser) updateUser(updated);
       setFeedback({ type: "success", msg: "¡Perfil actualizado con éxito!" });
-      setTimeout(() => navigate(`/profile/${form.username}`), 1200);
+      setTimeout(() => {
+        navigate(`/profile/${form.username || user?.username || "me"}`);
+      }, 1200);
     } catch (err) {
-      const msg = err.response?.data?.mensaje || "Error al guardar. Intentá de nuevo.";
+      console.error("[ProfileEdit] Error al guardar:", err);
+      const msg = err.response?.data?.message || "No se pudo guardar el perfil.";
       setFeedback({ type: "error", msg });
     } finally {
       setSaving(false);
     }
-  }
+  };
 
   if (loading) {
     return (
-      <div className={styles.page}>
-        <div className={styles.loader}>Cargando perfil...</div>
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'var(--ds-color-bg-canvas)',
+        backgroundImage: 'none',
+        zIndex: 9999,
+      }}>
+        <span style={{
+          color: '#4b5563',
+          fontFamily: 'monospace',
+          fontSize: '0.78rem',
+          letterSpacing: '0.06em',
+        }}>
+          cargando...{' '}
+          <span style={{ color: '#00FF9F' }}>perfil</span>
+        </span>
       </div>
     );
   }
 
-  const initial    = (form.nombre || form.username || user?.nombre || "U").charAt(0).toUpperCase();
-  const bannerBg   = GRADIENTS?.[form.gradientKey] || "linear-gradient(90deg,var(--ds-color-accent-primary),#A044FF)";
+  const bannerBg = GRADIENTS[form.gradientKey] || GRADIENTS.g1;
+  const initial  = (form.nombre || form.username || "U").charAt(0).toUpperCase();
 
   return (
     <div className={styles.page}>
-      <div className={styles.grain} aria-hidden="true" />
-
-      {/* ── HEADER CON NAV Y PORTADA ── */}
       <div className={styles.headerContainer}>
-        {/* ── NAV — MODO EDICIÓN ── */}
         <nav className={styles.nav}>
-          <div className={styles.navLogo}><LogoVoy /></div>
+          <div className={styles.navLogo}><LogoVoy inverse={true} /></div>
           <div className={styles.navActions}>
             <Link
               to={`/profile/${originalUsername.current || "me"}`}
@@ -223,9 +252,29 @@ export default function ProfileEditPage() {
 
         {/* ── PERFIL HEADER (Avatar + Nombre + Handle en Banner) ── */}
         <div className={styles.profileHeader}>
-          <div className={styles.avatarSquare} style={{ backgroundColor: form.avatarColor }}>
-            {initial}
+          <div 
+            className={styles.avatarSquare} 
+            style={{ backgroundColor: form.avatarColor }}
+            onClick={() => fileInputRef.current?.click()}
+            title="Hacé clic para cambiar tu foto de perfil"
+          >
+            {form.avatarUrl ? (
+              <img src={form.avatarUrl} alt={form.nombre} className={styles.avatarImage} />
+            ) : (
+              initial
+            )}
+            <div className={styles.avatarOverlay}>
+              <EditIcon size={20} />
+              <span>CAMBIAR FOTO</span>
+            </div>
           </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className={styles.hiddenFileInput}
+            onChange={handleFileChange}
+          />
           
           <div className={styles.userInfoEdit}>
             <div className={styles.nameInputWrapper}>
@@ -256,20 +305,14 @@ export default function ProfileEditPage() {
 
         {/* FEEDBACK INTEGRADO */}
         {feedback && (
-          <div className={`${styles.feedback} ${feedback.type === "success" ? styles.feedbackSuccess : styles.feedbackError}`} style={{ margin: '0 0 20px 0' }}>
+          <div className={`${styles.feedback} ${feedback.type === "success" ? styles.feedbackSuccess : styles.feedbackError}`}>
             {feedback.msg}
           </div>
         )}
 
         <div className={styles.topGrid}>
-          {/* LEFT: BIO */}
+          {/* LEFT: BIO & ARTISTAS */}
           <div className={styles.topGridLeft}>
-            <div className={styles.rolBadgeWrapper}>
-              <span className={styles.rolBadge}>
-                <TicketIcon size={12} /> FAN
-              </span>
-            </div>
-            
             <div className={styles.fieldGroup}>
               <label className={styles.label}>BIO</label>
               <textarea
@@ -277,14 +320,54 @@ export default function ProfileEditPage() {
                 maxLength={160}
                 value={form.bio}
                 onChange={(e) => handleChange("bio", e.target.value)}
-                rows={4}
+                rows={3}
+                placeholder="Contanos tu movida..."
               />
+            </div>
+
+            <div className={`${styles.fieldGroup} ${styles.fieldGroupMarginTop}`}>
+              <label className={styles.label}>ARTISTAS FAVORITOS</label>
+              <div className={styles.inputWrapper}>
+                <input
+                  type="text"
+                  className={styles.inputInner}
+                  placeholder="Ej: La Mugre, Código Rojo, Palco Roto..."
+                  value={form.artistasFavoritos}
+                  onChange={(e) => handleChange("artistasFavoritos", e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className={`${styles.fieldGroup} ${styles.fieldGroupMarginTop}`}>
+              <label className={styles.label}>SHOW O RECITAL INOLVIDABLE</label>
+              <div className={styles.inputWrapper}>
+                <input
+                  type="text"
+                  className={styles.inputInner}
+                  placeholder="Ej: Wos en la Plaza de Toros, La Renga..."
+                  value={form.recitalMemorable || ""}
+                  onChange={(e) => handleChange("recitalMemorable", e.target.value)}
+                />
+              </div>
             </div>
           </div>
 
-          {/* RIGHT: APARIENCIA */}
+          {/* RIGHT: APARIENCIA & FOTO */}
           <div className={styles.topGridRight}>
             <span className={styles.appearanceTitle}>APARIENCIA</span>
+
+            <div className={styles.appearanceSection}>
+              <span className={styles.appearanceLabel}>FOTO DE PERFIL (URL)</span>
+              <div className={styles.inputWrapper}>
+                <input
+                  type="url"
+                  className={styles.inputInner}
+                  placeholder="https://link-a-tu-foto.jpg"
+                  value={form.avatarUrl}
+                  onChange={(e) => handleChange("avatarUrl", e.target.value)}
+                />
+              </div>
+            </div>
 
             <div className={styles.appearanceSection}>
               <span className={styles.appearanceLabel}>COLOR DE AVATAR</span>
@@ -341,7 +424,7 @@ export default function ProfileEditPage() {
             <div className={styles.fieldGroup}>
               <label className={styles.label}>UBICACIÓN</label>
               <div className={styles.inputWrapper}>
-                <MapPinIcon size={14} style={{ color: 'var(--ds-color-brand-lime)', flexShrink: 0, marginLeft: '12px' }} />
+                <MapPinIcon size={14} className={styles.locationIcon} />
                 <input
                   className={styles.inputInner}
                   placeholder="San Miguel de Tucumán, Argentina"
@@ -352,7 +435,7 @@ export default function ProfileEditPage() {
             </div>
           </div>
 
-          <div className={styles.fieldGroup} style={{ marginTop: '24px' }}>
+          <div className={`${styles.fieldGroup} ${styles.fieldGroupMarginTop}`}>
             <label className={styles.label}>GÉNEROS</label>
             <div className={styles.chipGrid}>
               {GENEROS_MUSICALES.map((g) => (
@@ -362,13 +445,13 @@ export default function ProfileEditPage() {
                   className={`${styles.chip} ${form.generosMusicales.includes(g) ? styles.chipActiveGenre : ""}`}
                   onClick={() => toggleGenero(g)}
                 >
-                  {form.generosMusicales.includes(g) && <span style={{ marginRight: '4px' }}></span>}{g}
+                  {g}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className={styles.fieldGroup} style={{ marginTop: '24px' }}>
+          <div className={`${styles.fieldGroup} ${styles.fieldGroupMarginTop}`}>
             <label className={styles.label}>VIBES</label>
             <div className={styles.chipGrid}>
               {VIBES_OPTIONS.map((v) => (
@@ -384,8 +467,6 @@ export default function ProfileEditPage() {
             </div>
           </div>
         </div>
-
-
 
       </div>
     </div>

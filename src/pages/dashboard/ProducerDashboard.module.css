@@ -1,8 +1,8 @@
 /* ProducerDashboard.module.css */
 
 .root {
-  background-color: #050505;
-  color: #f5f5f5;
+  background-color: var(--ds-color-bg-canvas);
+  color: var(--ds-color-text-primary);
   min-height: 100vh;
   padding-top: 90px;
   padding-bottom: 60px;
@@ -71,8 +71,8 @@
 }
 
 .metricCard {
-  background: #0c0c0c;
-  border: 1px solid #161616;
+  background: var(--ds-color-bg-surface-muted);
+  border: 1px solid var(--ds-color-border-editorial);
   border-radius: 8px;
   padding: 24px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.4);
@@ -81,7 +81,7 @@
 .metricLabel {
   font-size: 11px;
   font-weight: 700;
-  color: #666;
+  color: var(--ds-color-text-muted);
   letter-spacing: 0.1em;
 }
 
@@ -113,7 +113,7 @@
 }
 
 .eventCard {
-  background: #0c0c0c;
+  background: var(--ds-color-bg-surface-muted);
   border: 1px solid var(--ds-color-border-editorial);
   border-radius: 8px;
   overflow: hidden;
@@ -132,7 +132,7 @@
   position: relative;
   background-size: cover;
   background-position: center;
-  background-color: #141414;
+  background-color: var(--ds-color-bg-surface);
 }
 
 .cardBannerOverlay {
@@ -188,7 +188,7 @@
 
 .eventDetails {
   font-size: 13px;
-  color: #888;
+  color: var(--ds-color-text-secondary);
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -211,7 +211,7 @@
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  color: #666;
+  color: var(--ds-color-text-muted);
 }
 
 .progressBarBg {
@@ -230,15 +230,15 @@
   display: flex;
   gap: 8px;
   padding: 16px 20px 20px;
-  border-top: 1px solid #161616;
-  background: #0a0a0a;
+  border-top: 1px solid var(--ds-color-border-editorial);
+  background: var(--ds-color-bg-surface);
 }
 
 .actionBtn {
   flex: 1;
   background: transparent;
   color: var(--ds-color-text-primary);
-  border: 1px solid #222;
+  border: 1px solid var(--ds-color-border-editorial-mid);
   padding: 8px;
   font-size: 11px;
   font-weight: 800;
@@ -251,7 +251,7 @@
 }
 
 .actionBtn:hover {
-  border-color: #666;
+  border-color: var(--ds-color-text-muted);
   background: rgba(255,255,255,0.02);
 }
 
@@ -269,7 +269,7 @@
   position: fixed;
   bottom: 24px;
   right: 24px;
-  z-index: 1000;
+  z-index: 50;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -277,7 +277,7 @@
 
 .toast {
   padding: 16px 24px;
-  background: #0c0c0c;
+  background: var(--ds-color-bg-surface-muted);
   color: var(--ds-color-text-primary);
   border: 1px solid var(--ds-color-accent-primary);
   box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);

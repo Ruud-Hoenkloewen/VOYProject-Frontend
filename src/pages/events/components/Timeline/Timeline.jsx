@@ -1,66 +1,74 @@
 import styles from "../../EventDetailPage.module.css";
 
-export default function Timeline({ items }) {
-  if (!items || items.length === 0) return null;
-
+export default function Timeline({ doorsOpenTime = "22:00", venueCloseTime = "01:15", artists = [] }) {
   return (
     <div className={styles.timeline}>
-      {items.map((item, idx) => {
-        const isPast   = item.role === "cierre";
-        const isGreen  = item.role === "puertas";
-        const isMag    = item.role === "headliner";
-        const timeClass = isGreen
-          ? styles.tlTimeGreen
-          : isMag
-          ? styles.tlTimeMagenta
-          : isPast
-          ? styles.tlTimeGrey
-          : styles.tlTimeWhite;
-        const dotClass = isGreen
-          ? styles.dotGreen
-          : isMag
-          ? styles.dotMagenta
-          : styles.dotGrey;
-        const titleClass = isPast
-          ? styles.tlTitleGrey
-          : isMag
-          ? styles.tlTitleMagenta
-          : styles.tlTitleWhite;
+      
+      {/* 1. INGRESO AL VENUE */}
+      <div className={styles.tlRow}>
+        <div className={`${styles.tlTime} ${styles.tlTimeGreen}`}>{doorsOpenTime}</div>
+        <div className={styles.tlDivider}>
+          <div className={`${styles.tlDot} ${styles.dotGreen}`} />
+          <div className={styles.tlLine} />
+        </div>
+        <div className={styles.tlContent}>
+          <div className={styles.tlTitleRow}>
+            <span className={`${styles.tlTitle} ${styles.tlTitleWhite}`}>PUERTAS ABREN</span>
+          </div>
+          <span className={styles.tlSubtitle}>Ingreso al venue</span>
+        </div>
+      </div>
 
-        return (
-          <div key={`${item.time}-${idx}`} className={styles.tlRow}>
-            {/* Hora */}
-            <div className={`${styles.tlTime} ${timeClass}`}>{item.time}</div>
+      {/* 2. ORDEN DE BANDAS NUMERADAS EN LA MISMA LÍNEA */}
+      {artists && artists.length > 0 && (
+        <div className={styles.tlRow}>
+          <div className={styles.tlTime}></div>
+          <div className={styles.tlDivider}>
+            <div className={styles.lineupLine} />
+          </div>
+          <div className={styles.lineupContent}>
+            <div className={styles.lineupList}>
+              {artists.map((artist, idx) => {
+                const num = String(idx + 1).padStart(2, "0");
+                const isHeadliner = artist.headliner || idx === artists.length - 1;
+                const isApertura = artist.apertura || idx === 0;
 
-            {/* Dot + line */}
-            <div className={styles.tlDivider}>
-              <div className={`${styles.tlDot} ${dotClass}`} />
-              {idx !== items.length - 1 && (
-                <div className={styles.tlLine} />
-              )}
-            </div>
-
-            {/* Content */}
-            <div className={styles.tlContent}>
-              <div className={styles.tlTitleRow}>
-                <span className={`${styles.tlTitle} ${titleClass}`}>{item.title}</span>
-                {item.badge && (
-                  <span className={`${styles.tlBadge} ${
-                    item.role === "headliner"
-                      ? styles.badgeMagenta
-                      : item.role === "apertura"
-                      ? styles.badgeGreen
-                      : styles.badgeCyan
-                  }`}>
-                    {item.badge}
-                  </span>
-                )}
-              </div>
-              <span className={styles.tlSubtitle}>{item.subtitle}</span>
+                return (
+                  <div key={idx} className={styles.artistRow}>
+                    <span className={styles.artistNum}>
+                      {num}
+                    </span>
+                    <span className={`${styles.artistName} ${isHeadliner ? styles.artistHeadliner : ""}`}>
+                      {artist.nombre}
+                    </span>
+                    {isHeadliner && (
+                      <span className={`${styles.tlBadge} ${styles.badgeMagenta}`}>HEADLINER</span>
+                    )}
+                    {!isHeadliner && isApertura && artists.length > 1 && (
+                      <span className={`${styles.tlBadge} ${styles.badgeGreen}`}>APERTURA</span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
-        );
-      })}
+        </div>
+      )}
+
+      {/* 3. CIERRE DEL VENUE */}
+      <div className={styles.tlRow}>
+        <div className={`${styles.tlTime} ${styles.tlTimeGrey}`}>{venueCloseTime}</div>
+        <div className={styles.tlDivider}>
+          <div className={`${styles.tlDot} ${styles.dotGrey}`} />
+        </div>
+        <div className={styles.tlContent}>
+          <div className={styles.tlTitleRow}>
+            <span className={`${styles.tlTitle} ${styles.tlTitleGrey}`}>CIERRE DEL VENUE</span>
+          </div>
+          <span className={styles.tlSubtitle}>Fin del evento</span>
+        </div>
+      </div>
+
     </div>
   );
 }

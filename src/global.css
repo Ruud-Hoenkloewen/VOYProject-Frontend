@@ -44,6 +44,11 @@
   --ds-color-cyan-400: #22d3ee;
   --ds-color-cyan-300: #67e8f9;
 
+  /* Colores estaticos */
+  --ds-color-static-white: #ffffff;
+  --ds-color-static-light-gray: #d4d4d4;
+  --ds-color-static-mid-gray: #a3a3a3;
+
 
   --ds-font-family-base: "Inter", "Segoe UI", Roboto, Arial, sans-serif;
   --ds-font-family-display: "Outfit", "Segoe UI", Roboto, Arial, sans-serif;
@@ -154,6 +159,7 @@
 
   --ds-color-state-success: var(--ds-color-lime-400);
   --ds-color-state-danger: var(--ds-color-red-400);
+  --ds-color-state-warning: #f5a623;
   --ds-color-state-highlight: var(--ds-color-magenta-400);
 
   /* Aliases semánticos editoriales — landing page + brand */
@@ -164,7 +170,13 @@
   --ds-color-text-editorial-subtle: var(--ds-color-editorial-subtle);
   --ds-color-border-editorial: var(--ds-color-editorial-border);
   --ds-color-border-editorial-mid: var(--ds-color-editorial-border-mid);
-  --ds-color-bg-editorial-surface: var(--ds-color-editorial-surface);
+    --ds-color-bg-editorial-surface: var(--ds-color-editorial-surface);
+
+  /* Background Glows and Texture for Dark Mode */
+  --ds-bg-glow-1: radial-gradient(circle at 15% 0%, rgba(255, 123, 238, 0.08) 0%, transparent 50%);
+  --ds-bg-glow-2: radial-gradient(circle at 85% 100%, rgba(0, 255, 159, 0.06) 0%, transparent 50%);
+  --ds-bg-overlay: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.9));
+  --ds-bg-texture: url('/assets/images/dark-bg.png');
 
 
   /* Duraciones */
@@ -187,6 +199,53 @@
 
 }
 
+/* Light Theme */
+[data-theme="light"] {
+  --ds-color-bg-canvas: #fdfbf7; /* Warm off-white / beige */
+  --ds-color-bg-surface: #ffffff;
+  --ds-color-bg-surface-muted: #f4f1eb; /* Muted beige */
+
+  --ds-color-text-primary: #1e293b; /* Darker slate 800 for stronger text */
+  --ds-color-text-secondary: #334155;
+  --ds-color-text-muted: #64748b;
+
+  --ds-color-border-subtle: rgba(0, 0, 0, 0.12); /* Stronger subtle border */
+  --ds-color-border-strong: rgba(0, 0, 0, 0.25);
+  
+  /* Vivid accents for light mode to contrast with warm beige */
+  --ds-color-accent-primary: #ff5722; /* Vivid Deep Orange */
+  --ds-color-accent-secondary: #4f46e5; /* Vivid Indigo/Purple */
+  
+  --ds-color-border-accent: var(--ds-color-accent-primary);
+
+  --ds-color-action-primary-bg: var(--ds-color-lime-500);
+  --ds-color-action-primary-text: #ffffff;
+  --ds-color-action-primary-bg-hover: var(--ds-color-lime-400);
+  --ds-color-action-primary-bg-active: var(--ds-color-lime-600);
+
+  --ds-color-action-secondary-bg: #e2e8f0;
+  --ds-color-action-secondary-text: #0a0b10;
+
+  --ds-color-state-success: var(--ds-color-lime-500);
+  --ds-color-state-danger: var(--ds-color-red-400);
+  --ds-color-state-warning: #d97706; /* Amber 600 for light mode warning */
+  --ds-color-state-highlight: var(--ds-color-magenta-500);
+
+  --ds-color-bg-editorial: #f7f4ec; /* Warmer editorial background */
+  --ds-color-text-editorial-muted: #5e6b7d;
+  --ds-color-text-editorial-subtle: #414d5e;
+  --ds-color-border-editorial: #e2e8f0;
+  --ds-color-border-editorial-mid: #cbd5e1;
+    --ds-color-bg-editorial-surface: #ffffff;
+
+  /* Background Glows and Texture for Light Mode */
+  --ds-bg-glow-1: radial-gradient(circle at 85% 10%, rgba(255, 87, 34, 0.05) 0%, transparent 60%);
+  --ds-bg-glow-2: radial-gradient(circle at 15% 90%, rgba(79, 70, 229, 0.04) 0%, transparent 60%);
+  --ds-bg-overlay: linear-gradient(rgba(253, 251, 247, 0.5), rgba(253, 251, 247, 0.95));
+  --ds-bg-texture: url('/assets/images/light-bg.png');
+}
+
+
 
 *,
 *::before,
@@ -202,7 +261,13 @@ body,
 
 body {
   margin: 0;
-  background: var(--ds-color-bg-canvas);
+  background-color: var(--ds-color-bg-canvas);
+  background-image: var(--ds-bg-glow-1), var(--ds-bg-glow-2), var(--ds-bg-overlay), var(--ds-bg-texture);
+  background-size: 140% 140%, 140% 140%, 100% 100%, 110% 110%;
+  background-attachment: fixed, fixed, fixed, fixed;
+  background-position: center, center, center, center;
+  background-blend-mode: screen, screen, normal, normal;
+  animation: dsBgAmbientDrift 45s ease-in-out infinite alternate;
   color: var(--ds-color-text-primary);
   font-family: var(--ds-font-family-base);
   line-height: var(--ds-line-height-normal);
@@ -230,7 +295,13 @@ body {
 /* ── PAGE LOADER (App.jsx Suspense fallback) ──────────── */
 .page-loader {
   min-height: 100vh;
-  background: var(--ds-color-bg-canvas);
+  background-color: var(--ds-color-bg-canvas);
+  background-image: var(--ds-bg-glow-1), var(--ds-bg-glow-2), var(--ds-bg-overlay), var(--ds-bg-texture);
+  background-size: 140% 140%, 140% 140%, 100% 100%, 110% 110%;
+  background-attachment: fixed, fixed, fixed, fixed;
+  background-position: center, center, center, center;
+  background-blend-mode: screen, screen, normal, normal;
+  animation: dsBgAmbientDrift 45s ease-in-out infinite alternate;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -241,4 +312,17 @@ body {
   font-size: 0.7rem;
   letter-spacing: 0.2em;
   font-family: var(--ds-font-family-mono);
+}
+
+
+
+
+/* -- ANIMACI�N DE FONDO AMBIENTAL ------------------------ */
+@keyframes dsBgAmbientDrift {
+  0% {
+    background-position: 0% 0%, 100% 100%, center, 0% 0%;
+  }
+  100% {
+    background-position: 100% 100%, 0% 0%, center, 100% 100%;
+  }
 }

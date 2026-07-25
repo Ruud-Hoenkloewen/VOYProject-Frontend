@@ -1,0 +1,27 @@
+.toggler {
+  background: transparent;
+  border: 1px solid var(--ds-color-border-editorial-mid);
+  color: var(--ds-color-text-primary);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 1rem;
+}
+
+.toggler:hover {
+  background: var(--ds-color-bg-surface-muted);
+  transform: scale(1.05);
+}
+
+.icon {
+  transition: transform 0.3s ease;
+}
+
+.toggler:active .icon {
+  transform: scale(0.9);
+}

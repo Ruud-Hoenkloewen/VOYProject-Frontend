@@ -21,8 +21,8 @@
   justify-content: center;
   height: 26px;
   padding: 0 10px;
-  background-color: var(--ds-color-accent-secondary);
-  color: var(--ds-color-bg-canvas);
+  background-color: var(--ds-color-brand-fuchsia);
+  color: #0a0b10;
   
   /* Ticket cutout effect using CSS masks */
   mask-image: radial-gradient(circle at 0 50%, transparent 4px, black 4.5px),
@@ -72,8 +72,13 @@
   color: var(--ds-color-text-primary);
   letter-spacing: 0.15em;
   text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.inverse .logoProject {
+  color: #e8e8e8;
 }
 
 .logoContainer:hover .logoProject {
-  color: var(--ds-color-accent-secondary);
+  color: var(--ds-color-brand-fuchsia);
 }

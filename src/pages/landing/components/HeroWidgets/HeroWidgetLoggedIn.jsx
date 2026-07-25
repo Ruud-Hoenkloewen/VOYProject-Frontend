@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import styles from "../../LandingPage.module.css";
-import { TicketIcon } from "../../../../components/icons";
+import { TicketIcon, PeopleIcon } from "../../../../components/icons";
 import { getMyOrders } from "../../../../services/orderService";
 import { fetchMyEvents } from "../../../../services/eventService";
 import EmptyState from "../../../../components/EmptyState/EmptyState";
@@ -41,11 +41,21 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
   }).format(totalRevenue);
 
 
+  // Greeting based on system hour
+  const getGreetingByHour = () => {
+    const hour = new Date().getHours();
+    if (hour >= 6 && hour < 12) return "BUENOS DÍAS";
+    if (hour >= 12 && hour < 20) return "BUENAS TARDES";
+    return "BUENAS NOCHES";
+  };
+
   // Render options based on role
-  const greetingSub = userRole === "admin" ? "ADMINISTRADOR" : userRole === "producer" ? "PRODUCTOR" : "BUENAS TARDES";
+  const greetingSub = userRole === "admin" ? "ADMINISTRADOR" : userRole === "producer" ? "PRODUCTOR" : getGreetingByHour();
   const avatarChar = userRole === "admin" ? "A" : userRole === "producer" ? "P" : userName.charAt(0).toUpperCase();
   const avatarBg = userRole === "producer" ? "var(--ds-color-cyan-400)" : "var(--ds-color-accent-primary)";
   const avatarColor = userRole === "producer" ? "var(--ds-color-bg-canvas)" : "var(--ds-color-bg-editorial)";
+
+  const avatarPhoto = user?.avatar || user?.avatarUrl || user?.fotoPerfil;
 
   return (
     <div className={styles.heroWidget}>
@@ -54,8 +64,24 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
         {/* Top Row: Greeting & Profile */}
         <div className={styles.hwTopRow}>
           <div className={styles.hwTopLeft}>
-            <div className={styles.hwUserLevel} style={{ backgroundColor: avatarBg, color: avatarColor }}>
-              {avatarChar}
+            <div 
+              className={styles.hwUserLevel} 
+              style={{ 
+                backgroundColor: avatarPhoto ? 'transparent' : avatarBg, 
+                color: avatarColor, 
+                borderRadius: '6px',
+                overflow: 'hidden' 
+              }}
+            >
+              {avatarPhoto ? (
+                <img 
+                  src={avatarPhoto} 
+                  alt="Avatar" 
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} 
+                />
+              ) : (
+                avatarChar
+              )}
             </div>
             <div className={styles.hwGreeting}>
               <span className={styles.hwGreetingSub}>{greetingSub}</span>
@@ -215,7 +241,7 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
             <div className={styles.hwSection}>
               <div className={styles.hwSectionHeader}>
                 <h3 className={styles.hwSectionTitle}>MIS ENTRADAS</h3>
-                <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}`} className={styles.hwSectionLink}>VER BILLETERA</Link>
+                <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}?tab=HISTORIAL`} className={styles.hwSectionLink}>VER HISTORIAL</Link>
               </div>
               {myOrders.length === 0 ? (
                 <EmptyState 
@@ -224,39 +250,53 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
                   compact
                 />
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "10px", color: "var(--ds-color-text-editorial-subtle)" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {myOrders.slice(0, 3).map((order) => {
-                    const ev = order.evento;
-                    if (!ev) return null;
-                    const artistName = ev.artistas && ev.artistas.length > 0 ? (typeof ev.artistas[0] === 'string' ? ev.artistas[0] : ev.artistas[0].nombre) : "Varios Artistas";
-                    // Sanitize backend image
-                    let imageUrl = ev.imagen || '';
+                    const ev = order.evento || {};
+                    const isPaid = (order.estado === 'completado' || order.estado === 'paid' || order.estado === 'pagado' || order.status === 'completed');
+                    const statusLabel = isPaid ? "PAGADO" : "PENDIENTE";
+                    const statusBg = isPaid ? "rgba(0, 255, 159, 0.12)" : "rgba(255, 193, 7, 0.12)";
+                    const statusColor = isPaid ? "#00FF9F" : "#FFC107";
+                    const statusBorder = isPaid ? "1px solid rgba(0, 255, 159, 0.3)" : "1px solid rgba(255, 193, 7, 0.3)";
+
+                    let imageUrl = ev.imagen || ev.imageUrl || '';
                     if (imageUrl.startsWith('/public/') || !imageUrl) {
                       const titleLower = (ev.nombre || '').toLowerCase();
-                      if (titleLower.includes('danny') || titleLower.includes('proyectil')) imageUrl = '/flyer-danny-proyectil.png';
-                      else if (titleLower.includes('lacrifagia') || titleLower.includes('oscuridad')) imageUrl = '/flyer-lacrifagia.png';
-                      else if (titleLower.includes('inexplicables')) imageUrl = '/flyer-las-cosas-inexplicables.png';
+                      if (titleLower.includes('danny') || titleLower.includes('proyectil') || titleLower.includes('oqlta')) imageUrl = '/flyer-danny-proyectil.png';
+                      else if (titleLower.includes('lacrifagia') || titleLower.includes('hardcore')) imageUrl = '/flyer-lacrifagia.png';
                       else imageUrl = '/flyer-sabbath-fest.png';
                     }
 
                     // Format date
                     const dateObj = new Date(ev.fecha);
                     const isDateValid = !isNaN(dateObj.getTime());
-                    const dateStr = isDateValid ? dateObj.toLocaleDateString('es-AR', { weekday: 'short', day: 'numeric', month: 'short' }).toUpperCase() : (ev.fecha || "Fecha a confirmar");
+                    const dateStr = isDateValid ? dateObj.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }).toUpperCase() : (ev.fecha || "A CONFIRMAR");
 
                     return (
-                      <div key={order._id} style={{ display: "flex", gap: "10px", alignItems: "center", paddingBottom: "8px", borderBottom: "1px dashed var(--ds-color-border-editorial-mid)" }}>
-                        <div style={{ width: "45px", height: "60px", flexShrink: 0, borderRadius: "4px", overflow: "hidden", background: "#1a1a1a" }}>
+                      <div key={order._id} style={{ display: "flex", gap: "10px", alignItems: "center", padding: "8px 10px", background: "rgba(255, 255, 255, 0.02)", border: "1px solid var(--ds-color-border-editorial-mid)", borderRadius: "8px" }}>
+                        <div style={{ width: "42px", height: "54px", flexShrink: 0, borderRadius: "5px", overflow: "hidden", background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}>
                           <img src={imageUrl} alt={ev.nombre} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                         </div>
-                        <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, justifyContent: "center" }}>
-                          <strong style={{ color: "var(--ds-color-text-primary)", fontSize: "0.85rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", lineHeight: "1.2", marginBottom: "2px" }}>{ev.nombre}</strong>
-                          <span style={{ fontSize: "0.75rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "var(--ds-color-text-editorial-subtle)", marginBottom: "4px" }}>{artistName}</span>
-                          <span style={{ fontSize: "0.7rem", color: "var(--ds-color-text-primary)", fontWeight: "500" }}>{dateStr} {ev.hora ? `• ${ev.hora}hs` : ''}</span>
+                        <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, gap: "2px" }}>
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "6px" }}>
+                            <strong style={{ color: "var(--ds-color-text-primary)", fontSize: "0.8rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textTransform: "uppercase" }}>
+                              {ev.nombre}
+                            </strong>
+                          </div>
+
+                          <span style={{ fontSize: "0.7rem", color: "var(--ds-color-text-editorial-subtle)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            📍 {ev.venue || "Tucumán"}
+                          </span>
+
+                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "0.68rem", color: "var(--ds-color-text-editorial-muted)" }}>
+                            <span>🗓 {dateStr} {ev.hora ? `• ${ev.hora} HS` : ''}</span>
+                            <span style={{ fontWeight: "800", color: "var(--ds-color-accent-primary)" }}>x{order.cantidad}</span>
+                          </div>
                         </div>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", justifyContent: "center" }}>
-                          <span style={{ color: "var(--ds-color-accent-primary)", fontWeight: "900", fontSize: "1rem", lineHeight: "1" }}>x{order.cantidad}</span>
-                          <span style={{ fontSize: "0.6rem", textTransform: "uppercase", letterSpacing: "0.05em", color: "var(--ds-color-text-editorial-subtle)", marginTop: "2px" }}>TICKETS</span>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", flexShrink: 0 }}>
+                          <span style={{ fontSize: "0.58rem", fontWeight: "900", letterSpacing: "0.06em", padding: "2px 6px", borderRadius: "4px", background: statusBg, color: statusColor, border: statusBorder }}>
+                            {statusLabel}
+                          </span>
                         </div>
                       </div>
                     );
@@ -271,14 +311,42 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
                 <h3 className={styles.hwSectionTitle}>COMUNIDAD</h3>
                 <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}`} className={styles.hwSectionLink}>VER TODOS</Link>
               </div>
-              <div className={styles.hwCommunity}>
-                <div className={styles.hwAvatarGroup}>
-                  <div className={styles.hwAvatarMini}>DP</div>
-                  <div className={styles.hwAvatarMini}>LC</div>
-                  <div className={styles.hwAvatarMini}>+3</div>
-                </div>
-                <span className={styles.hwCommunityText}>Siguiendo a <strong>5 artistas locales</strong></span>
-              </div>
+              {(() => {
+                const siguiendoList = user?.siguiendo || [];
+                const followedArtistsCount = user?.siguiendoArtistasCount ?? (
+                  siguiendoList.filter(item => typeof item === 'object' ? (item.role === 'producer' || item.rol === 'producer' || item.isArtist) : true).length
+                );
+                const followedUsersCount = user?.siguiendoPersonasCount ?? (
+                  siguiendoList.filter(item => typeof item === 'object' ? (item.role === 'client' || item.rol === 'client' || item.role === 'user') : false).length
+                );
+
+                const hasConnections = followedArtistsCount > 0 || followedUsersCount > 0;
+
+                if (!hasConnections) {
+                  return (
+                    <EmptyState 
+                      icon={<PeopleIcon size={24} />}
+                      title="Sin conexiones activas"
+                      compact
+                    />
+                  );
+                }
+
+                return (
+                  <div className={styles.hwCommunity} style={{ flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
+                    {followedArtistsCount > 0 && (
+                      <span className={styles.hwCommunityText} style={{ fontSize: "0.78rem" }}>
+                        Siguiendo a <strong>{followedArtistsCount} artista{followedArtistsCount > 1 ? 's' : ''} {followedArtistsCount > 1 ? 'locales' : 'local'}</strong>
+                      </span>
+                    )}
+                    {followedUsersCount > 0 && (
+                      <span className={styles.hwCommunityText} style={{ fontSize: "0.78rem" }}>
+                        Siguiendo a <strong>{followedUsersCount} persona{followedUsersCount > 1 ? 's' : ''}</strong>
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
           </>
         )}

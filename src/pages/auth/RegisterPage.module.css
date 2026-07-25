@@ -1,7 +1,7 @@
 /* ─────────────────────────────────────────────────────
    RegisterPage.module.css
    Estética editorial underground — misma paleta que LandingPage
-   Negro #080808 · blanco · verde ácido var(--ds-color-accent-primary)
+   Negro var(--ds-color-brand-canvas) · blanco · verde ácido var(--ds-color-accent-primary)
 ───────────────────────────────────────────────────── */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800;900&display=swap');
@@ -38,7 +38,8 @@
   display: flex;
   align-items: center;
   padding: 1.4rem 3rem;
-  border-bottom: 1px solid var(--ds-color-border-subtle);
+  background: var(--ds-color-brand-canvas); /* Fixed black header */
+  border-bottom: 1px solid var(--ds-color-editorial-border);
 }
 
 .navLogo {
@@ -82,7 +83,7 @@
 
 /* ── ASIDE — branding ────────────────── */
 .aside {
-  background: var(--ds-color-bg-canvas);
+  background: transparent;
   border-right: 1px solid var(--ds-color-border-subtle);
   display: flex;
   align-items: center;
@@ -383,7 +384,7 @@
   }
 
   .formSection {
-    padding: 2rem 1.1rem;
+    padding: 2.5rem 1.5rem;
   }
 
   .formTitle {
@@ -407,7 +408,7 @@
 
 @media (max-width: 360px) {
   .formSection {
-    padding: 1.75rem 0.9rem;
+    padding: 2rem 1.25rem;
   }
 
   .formTitle {
@@ -622,3 +623,20 @@
 .onboardingLoginLink:hover {
   opacity: 0.8;
 }
+
+@media (max-width: 768px) {
+  .onboardingStep {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .onboardingStep {
+    padding: 1.5rem 1rem;
+  }
+  .onboardingCards {
+    flex-direction: column;
+  }
+}
+
+
