@@ -75,6 +75,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
   ];
 
   if (isAuthenticated) {
+    navLinks.push({ to: "/community", label: "COMUNIDAD" });
     if (role === "producer") {
       navLinks.push({ to: "/dashboard/producer", label: "PANEL PRODUCTOR" });
     } else if (role === "artist") {

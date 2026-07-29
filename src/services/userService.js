@@ -10,6 +10,11 @@ export const getProfileByUsername = async (username) => {
   return data;
 };
 
+export const getCommunityUsers = async () => {
+  const { data } = await api.get('/users/community');
+  return data;
+};
+
 export const followUser = async (userId) => {
   const { data } = await api.post(`/users/${userId}/follow`);
   return data;
