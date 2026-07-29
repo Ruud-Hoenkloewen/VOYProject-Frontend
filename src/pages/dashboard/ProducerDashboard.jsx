@@ -1,269 +1,88 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
-import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
-import Container from "../../design-system/layout/Container/Container";
-import { useAuth } from "../../context/AuthContext";
-import { fetchMyEvents, deleteEvent } from "../../services/eventService";
-import api from "../../services/api";
-import { CalendarIcon, MapPinIcon, TicketIcon, EditIcon, TrashIcon } from "../../components/icons";
-import styles from "./ProducerDashboard.module.css";
+import { Link } from 'react-router-dom';
+import DashboardLayout from '../../components/Dashboard/DashboardLayout';
+import { useDashboardData } from '../../hooks/useDashboardData';
+import styles from './ProducerDashboard.module.css';
 
 export default function ProducerDashboard() {
-  const { user } = useAuth();
-  const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [toast, setToast] = useState(null); // { message: string, error: boolean }
-
-  const showToastMsg = (message, isError = false) => {
-    setToast({ message, error: isError });
-    setTimeout(() => {
-      setToast(null);
-    }, 4000);
-  };
-
-  useEffect(() => {
-    loadEvents();
-  }, []);
-
-  const loadEvents = async () => {
-    try {
-      setLoading(true);
-      const data = await fetchMyEvents();
-      setEvents(data);
-    } catch (err) {
-      console.error(err);
-      showToastMsg("Error al obtener tus eventos del servidor.", true);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleTogglePause = (id, currentStatus) => {
-    const isPaused = currentStatus === "PAUSADO";
-    const nextStatus = isPaused ? "DISPONIBLE" : "PAUSADO";
-    
-    // Cambiamos el estado localmente para simulación visual
-    setEvents(prev => prev.map(evt => {
-      if (evt.id === id) {
-        return { 
-          ...evt, 
-          status: nextStatus,
-          statusTone: nextStatus === "PAUSADO" ? "warning" : "success"
-        };
-      }
-      return evt;
-    }));
-    
-    showToastMsg(`Venta de entradas ${isPaused ? "reactivada" : "pausada"} con éxito`);
-  };
-
-  const handleCancelEvent = async (id) => {
-    if (!window.confirm("¿Estás seguro de que deseas cancelar este evento? Esto lo eliminará permanentemente del servidor.")) {
-      return;
-    }
-    
-    try {
-      await deleteEvent(id);
-      setEvents(prev => prev.filter(evt => evt.id !== id));
-      showToastMsg("Evento cancelado y eliminado correctamente");
-    } catch (err) {
-      console.error(err);
-      showToastMsg("Error al eliminar el evento del servidor.", true);
-    }
-  };
-
-  // Métricas en tiempo real calculadas de los eventos cargados
-  const totalShows = events.length;
-  const ticketsSold = events.reduce((acc, evt) => acc + (Math.max(0, (evt.capacity || 0) - (evt.stock || 0))), 0);
-  const totalCapacity = events.reduce((acc, evt) => acc + (evt.capacity || 0), 0);
-  const fillRate = totalCapacity > 0 ? Math.round((ticketsSold / totalCapacity) * 100) : 0;
-  const totalRevenue = events.reduce((acc, evt) => acc + (Math.max(0, (evt.capacity || 0) - (evt.stock || 0)) * (evt.rawPrice || 0)), 0);
-
-  const formattedRevenue = new Intl.NumberFormat('es-AR', {
-    style: 'currency',
-    currency: 'ARS',
-    maximumFractionDigits: 0
-  }).format(totalRevenue);
-
-  const [producerStatus, setProducerStatus] = useState({ 
-    isVerifiedProducer: user?.isVerifiedProducer === true, 
-    isPendingApproval: false 
-  });
-
-  useEffect(() => {
-    const verifyStatus = async () => {
-      try {
-        const { data } = await api.get('/users/me');
-        if (data && data.isVerifiedProducer !== undefined) {
-          setProducerStatus({ 
-            isVerifiedProducer: data.isVerifiedProducer, 
-            isPendingApproval: !data.isVerifiedProducer
-          });
-        }
-      } catch (err) {
-        console.error('Error verificando status:', err);
-      }
-    };
-    if (user && user.role === 'producer') {
-      verifyStatus();
-    }
-  }, [user]);
+  const { metrics, events, loading } = useDashboardData('producer');
 
   return (
-    <div className={styles.root}>
-      <EditorialHeader />
+    <DashboardLayout
+      eyebrow="PANEL DE PRODUCTORA"
+      title="GESTIÓN DE FECHAS Y METRICAS"
+      subtitle="Administrá tus eventos, monitoreá ventas y gestioná tus publicaciones."
+      metrics={metrics}
+      actions={
+        <Link to="/events/create" className={styles.createBtn}>
+          + CREAR NUEVO EVENTO
+        </Link>
+      }
+    >
+      <div className={styles.sectionHeader}>
+        <h2 className={styles.sectionTitle}>Tus Shows Programados</h2>
+      </div>
 
-      <Container>
-        {/* Header Section */}
-        <div className={styles.headerRow}>
-          <div className={styles.titleArea}>
-            <span className={styles.eyebrow}>PRODUCTOR DIGITAL</span>
-            <h1 className={styles.title}>PANEL PRODUCTOR</h1>
-          </div>
-          <div>
-            <Link to="/events/create" className={styles.createBtn}>
-              + Crear Nuevo Evento
-            </Link>
-          </div>
+      {loading ? (
+        <div className={styles.emptyState}>
+          <span>Cargando eventos de la productora...</span>
         </div>
-
-        {/* Metrics Grid */}
-        <div className={styles.metricsGrid}>
-          <div className={styles.metricCard}>
-            <span className={styles.metricLabel}>SHOWS PROGRAMADOS</span>
-            <div className={styles.metricValue} style={{ color: "var(--ds-color-cyan-400)" }}>{totalShows}</div>
-          </div>
-          <div className={styles.metricCard}>
-            <span className={styles.metricLabel}>TICKETS VENDIDOS (MES)</span>
-            <div className={styles.metricValue} style={{ color: "var(--ds-color-text-primary)" }}>{ticketsSold}</div>
-          </div>
-          <div className={styles.metricCard}>
-            <span className={styles.metricLabel}>CAPACIDAD PROMEDIO</span>
-            <div className={styles.metricValue} style={{ color: "var(--ds-color-accent-primary)" }}>{fillRate}%</div>
-          </div>
-          <div className={styles.metricCard}>
-            <span className={styles.metricLabel}>INGRESOS TOTALES</span>
-            <div className={styles.metricValue} style={{ color: "var(--ds-color-accent-secondary)" }}>{formattedRevenue}</div>
-          </div>
+      ) : events.length === 0 ? (
+        <div className={styles.emptyState}>
+          <p>No tenés eventos creados actualmente.</p>
+          <Link to="/events/create" className={styles.createBtn} style={{ marginTop: 12 }}>
+            Crear primer show
+          </Link>
         </div>
+      ) : (
+        <div className={styles.eventsGrid}>
+          {events.map((evt) => {
+            const sold = evt.ticketsSold || 0;
+            const cap = evt.totalCapacity || 100;
+            const pct = Math.min(100, Math.round((sold / cap) * 100));
 
-        {/* Core Content */}
-        <h2 className={styles.sectionTitle}>Tus Shows y Eventos</h2>
+            return (
+              <div key={evt.id} className={styles.eventCard}>
+                <div
+                  className={styles.cardBanner}
+                  style={{
+                    backgroundImage: `url(${evt.image || 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80'})`,
+                  }}
+                >
+                  <div className={styles.cardBannerOverlay} />
+                  <span className={styles.statusBadge}>{evt.status || 'Publicado'}</span>
+                </div>
 
-        {loading ? (
-          <div style={{ textAlign: "center", padding: "40px", color: "#666" }}>Cargando eventos de la base de datos...</div>
-        ) : events.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "80px 20px", border: "1px dashed #222", background: "#0c0c0c" }}>
-            <span style={{ fontSize: "24px", display: "block", marginBottom: "12px" }}>🎫</span>
-            <p style={{ color: "#666", margin: "0 0 20px 0" }}>No tenés ningún evento creado todavía en la plataforma.</p>
-            <Link to="/events/create" className={styles.createBtn} style={{ display: "inline-block" }}>
-              Crear mi primer show
-            </Link>
-          </div>
-        ) : (
-          <div className={styles.eventsGrid}>
-            {events.map((evt) => {
-              const capacity = evt.capacity || 100;
-              const ticketsRemaining = evt.stock !== undefined ? evt.stock : capacity;
-              const remainingPercentage = capacity > 0 ? Math.round((ticketsRemaining / capacity) * 100) : 0;
-              const isPaused = evt.status === "PAUSADO";
-              const isAgotado = evt.status === "AGOTADO";
-              
-              const progressLabel = (ticketsRemaining < 20 && ticketsRemaining > 0) ? "Últimas entradas" : "Entradas";
-
-              return (
-                <div key={evt.id} className={styles.eventCard}>
-                  {/* Banner Image */}
-                  <div 
-                    className={styles.cardBanner}
-                    style={{ backgroundImage: `url(${evt.imageUrl || "https://images.unsplash.com/photo-1501386761578-eac5c94b800a?auto=format&fit=crop&w=600&q=80"})` }}
-                  >
-                    <div className={styles.cardBannerOverlay} />
-                    <span className={`${styles.statusBadge} ${
-                      isPaused 
-                        ? styles.statusPaused 
-                        : isAgotado 
-                          ? styles.statusCancelled 
-                          : styles.statusActive
-                    }`}>
-                      {evt.status}
-                    </span>
+                <div className={styles.cardContent}>
+                  <h3 className={styles.eventTitle}>{evt.title}</h3>
+                  <div className={styles.metaRow}>
+                    <span>📅 {evt.date}</span>
+                    <span>📍 {evt.venue}{evt.city ? `, ${evt.city}` : ''}</span>
                   </div>
 
-                  {/* Card Content */}
-                  <div className={styles.cardContent}>
-                    <h3 className={styles.eventTitle}>{evt.title}</h3>
-                    
-                    <div className={styles.eventDetails}>
-                      <div className={styles.detailItem}>
-                        <CalendarIcon size={14} color="#666" />
-                        <span>{evt.date} • {evt.time}</span>
-                      </div>
-                      <div className={styles.detailItem}>
-                        <MapPinIcon size={14} color="#666" />
-                        <span>{evt.venue}</span>
-                      </div>
-                      <div className={styles.detailItem}>
-                        <TicketIcon size={14} color="#666" />
-                        <span>Precio: {evt.price}</span>
-                      </div>
+                  <div className={styles.salesBar}>
+                    <div className={styles.salesText}>
+                      <span>Entradas: {sold} / {cap}</span>
+                      <span>{pct}%</span>
                     </div>
-
-                    {/* Progress capacity */}
-                    <div className={styles.progressContainer}>
-                      <div className={styles.progressText}>
-                        <span style={progressLabel === "Últimas entradas" ? { color: "var(--ds-color-brand-lime, #a3e635)", fontWeight: "bold" } : {}}>
-                          {progressLabel}: {ticketsRemaining}/{capacity}
-                        </span>
-                        <span>{remainingPercentage}%</span>
-                      </div>
-                      <div className={styles.progressBarBg}>
-                        <div 
-                          className={styles.progressBarFill} 
-                          style={{ 
-                            width: `${remainingPercentage}%`,
-                            background: isPaused ? "var(--ds-color-yellow-300)" : (ticketsRemaining < 20 ? "var(--ds-color-brand-lime, #a3e635)" : "var(--ds-color-cyan-400)")
-                          }} 
-                        />
-                      </div>
+                    <div className={styles.progressTrack}>
+                      <div className={styles.progressFill} style={{ width: `${pct}%` }} />
                     </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className={styles.cardActions}>
-                    <Link to={`/events/edit/${evt.id}`} className={styles.actionBtn}>
-                      <EditIcon size={12} style={{ verticalAlign: "middle", marginRight: "4px" }} />
-                      Editar
-                    </Link>
-                    <button 
-                      className={styles.actionBtn}
-                      onClick={() => handleTogglePause(evt.id, evt.status)}
-                    >
-                      {isPaused ? "Reactivar" : "Pausar"}
-                    </button>
-                    <button 
-                      className={`${styles.actionBtn} ${styles.actionBtnDanger}`}
-                      onClick={() => handleCancelEvent(evt.id)}
-                    >
-                      <TrashIcon size={12} style={{ verticalAlign: "middle", marginRight: "4px" }} />
-                      Cancelar
-                    </button>
                   </div>
                 </div>
-              );
-            })}
-          </div>
-        )}
-      </Container>
 
-      {/* Toast Alert Feedback */}
-      {toast && (
-        <div className={styles.toastContainer}>
-          <div className={`${styles.toast} ${toast.error ? styles.toastError : ""}`}>
-            {toast.message}
-          </div>
+                <div className={styles.cardActions}>
+                  <Link to={`/events/edit/${evt.id}`} className={styles.actionBtn}>
+                    EDITAR
+                  </Link>
+                  <Link to={`/events/${evt.id}`} className={styles.actionBtn}>
+                    VER PÁGINA
+                  </Link>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
-    </div>
+    </DashboardLayout>
   );
 }
