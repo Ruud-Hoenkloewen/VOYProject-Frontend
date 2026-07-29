@@ -9,22 +9,14 @@ import { useSearchParams } from 'react-router-dom';
  * @returns {Object} { activeCategories, toggleCategory, activeLugar, setActiveLugar, availableLugares, activeFecha, setActiveFecha, availableFechas, filteredEvents }
  */
 export function useEventFilters(events = []) {
-  // Estado para las categorías seleccionadas (soporta multiselección)
   const [activeCategories, setActiveCategories] = useState(["TODOS"]);
   const [activeLugar,       setActiveLugar]       = useState("TODOS");
   const [activeFecha,       setActiveFecha]       = useState("TODOS");
+  const [sortBy,            setSortBy]            = useState("fecha");
 
-  // Extrae el valor de 'q' de la URL para la búsqueda global (Navbar)
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const searchQuery = (searchParams.get("q") || "").toLowerCase();
 
-  /**
-   * Alterna la selección de un género musical en el filtro.
-   * Si se hace clic en "TODOS", resetea la selección.
-   * Si se deseleccionan todos, vuelve automáticamente a "TODOS".
-   * 
-   * @param {string} genre - El género a alternar.
-   */
   const toggleCategory = (genre) => {
     if (genre === "TODOS") {
       setActiveCategories(["TODOS"]);
@@ -33,44 +25,66 @@ export function useEventFilters(events = []) {
 
     setActiveCategories((prev) => {
       const withoutTodos = prev.filter(c => c !== "TODOS");
-      
       if (withoutTodos.includes(genre)) {
-        // Quita el género si ya estaba
         const newSelection = withoutTodos.filter(c => c !== genre);
         return newSelection.length === 0 ? ["TODOS"] : newSelection;
       } else {
-        // Añade el género si no estaba
         return [...withoutTodos, genre];
       }
     });
   };
 
-  /**
-   * Motor de filtrado — memoizado para evitar recálculos innecesarios.
-   * Solo se recomputa cuando cambian los eventos o alguno de los filtros activos.
-   */
-  const filteredEvents = useMemo(() => events.filter((evt) => {
-    const matchesSearch = searchQuery === "" ||
-      evt.title.toLowerCase().includes(searchQuery) ||
-      (evt.venue   && evt.venue.toLowerCase().includes(searchQuery)) ||
-      (evt.artists && evt.artists.some(a => a.nombre && a.nombre.toLowerCase().includes(searchQuery)));
+  const resetFilters = () => {
+    setActiveCategories(["TODOS"]);
+    setActiveLugar("TODOS");
+    setActiveFecha("TODOS");
+    setSortBy("fecha");
+    searchParams.delete("q");
+    searchParams.delete("maxPrice");
+    setSearchParams(searchParams, { replace: true });
+  };
 
-    const matchesCategories = activeCategories.includes("TODOS") ||
-      (evt.genres && evt.genres.some(g => activeCategories.includes(g.toUpperCase())));
+  const filteredEvents = useMemo(() => {
+    const list = events.filter((evt) => {
+      const matchesSearch = searchQuery === "" ||
+        (evt.title && evt.title.toLowerCase().includes(searchQuery)) ||
+        (evt.venue && evt.venue.toLowerCase().includes(searchQuery)) ||
+        (evt.artists && evt.artists.some(a => a.nombre && a.nombre.toLowerCase().includes(searchQuery)));
 
-    const matchesLugar = activeLugar === "TODOS" || evt.venue === activeLugar;
-    const matchesFecha = activeFecha === "TODOS" || evt.date  === activeFecha;
-    const matchesPrice = !searchParams.get("maxPrice") || evt.rawPrice <= Number(searchParams.get("maxPrice"));
+      const matchesCategories = activeCategories.includes("TODOS") ||
+        (evt.genres && evt.genres.some(g => activeCategories.includes(g.toUpperCase())));
 
-    return matchesSearch && matchesCategories && matchesLugar && matchesFecha && matchesPrice;
-  }), [events, searchQuery, activeCategories, activeLugar, activeFecha, searchParams]);
+      const matchesLugar = activeLugar === "TODOS" || evt.venue === activeLugar;
+      const matchesFecha = activeFecha === "TODOS" || evt.date  === activeFecha;
+      
+      const maxP = searchParams.get("maxPrice");
+      let matchesPrice = true;
+      if (maxP !== null && maxP !== undefined && maxP !== "") {
+        const numericMax = Number(maxP);
+        matchesPrice = (evt.rawPrice || 0) <= numericMax;
+      }
 
-  // Opciones únicas extraídas dinámicamente — también memoizadas
+      return matchesSearch && matchesCategories && matchesLugar && matchesFecha && matchesPrice;
+    });
+
+    // Ordenamiento
+    const sorted = [...list];
+    if (sortBy === "precio_asc") {
+      sorted.sort((a, b) => (a.rawPrice || 0) - (b.rawPrice || 0));
+    } else if (sortBy === "precio_desc") {
+      sorted.sort((a, b) => (b.rawPrice || 0) - (a.rawPrice || 0));
+    } else if (sortBy === "popular") {
+      sorted.sort((a, b) => (b.attendeesCount || 0) - (a.attendeesCount || 0));
+    }
+
+    return sorted;
+  }, [events, searchQuery, activeCategories, activeLugar, activeFecha, searchParams, sortBy]);
+
   const availableLugares = useMemo(
     () => [...new Set(events.map(e => e.venue).filter(Boolean))].sort(),
     [events]
   );
-  // Fechas sin ordenar para preservar el orden cronológico de la DB
+  
   const availableFechas = useMemo(
     () => [...new Set(events.map(e => e.date).filter(Boolean))],
     [events]
@@ -85,6 +99,9 @@ export function useEventFilters(events = []) {
     activeFecha,
     setActiveFecha,
     availableFechas,
+    sortBy,
+    setSortBy,
+    resetFilters,
     filteredEvents
   };
 }

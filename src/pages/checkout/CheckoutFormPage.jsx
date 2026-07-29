@@ -1,8 +1,9 @@
 
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { User, Mail, IdCard, ArrowLeft, ArrowRight } from 'lucide-react';
 import { fetchEventById } from '../../services/eventService';
-import CheckoutLayout from '../../components/checkout/CheckoutLayout';
+import CheckoutLayout from './components/CheckoutLayout/CheckoutLayout';
 import styles from './CheckoutFormPage.module.css';
 
 /**
@@ -145,7 +146,9 @@ export default function CheckoutFormPage() {
       <div className={styles.stepCard}>
         {/* Título */}
         <div className={styles.stepHeader}>
-          <span className={styles.stepIcon}>👤</span>
+          <span className={styles.stepIcon}>
+            <User size={24} color="#00FF9F" />
+          </span>
           <h1 className={styles.stepTitle}>TUS DATOS</h1>
         </div>
 
@@ -159,6 +162,7 @@ export default function CheckoutFormPage() {
             {/* Nombre */}
             <div className={styles.field}>
               <label className={styles.label} htmlFor="nombre">
+                <User size={13} className={styles.labelIcon} />
                 NOMBRE
               </label>
 
@@ -183,6 +187,7 @@ export default function CheckoutFormPage() {
             {/* Apellido */}
             <div className={styles.field}>
               <label className={styles.label} htmlFor="apellido">
+                <User size={13} className={styles.labelIcon} />
                 APELLIDO
               </label>
 
@@ -208,6 +213,7 @@ export default function CheckoutFormPage() {
           {/* Email */}
           <div className={styles.field}>
             <label className={styles.label} htmlFor="email">
+              <Mail size={13} className={styles.labelIcon} />
               CORREO ELECTRÓNICO
             </label>
 
@@ -232,6 +238,7 @@ export default function CheckoutFormPage() {
           {/* DNI */}
           <div className={styles.field}>
             <label className={styles.label} htmlFor="dni">
+              <IdCard size={13} className={styles.labelIcon} />
               DNI
             </label>
 
@@ -262,6 +269,7 @@ export default function CheckoutFormPage() {
               className={styles.backBtn}
               onClick={handleVolver}
             >
+              <ArrowLeft size={16} style={{ marginRight: 8 }} />
               VOLVER
             </button>
 
@@ -270,7 +278,7 @@ export default function CheckoutFormPage() {
               className={styles.ctaBtn}
               disabled={!isFormValid}
             >
-              CONTINUAR AL PAGO →
+              CONTINUAR AL PAGO <ArrowRight size={16} style={{ marginLeft: 8 }} />
             </button>
           </div>
         </form>

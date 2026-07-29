@@ -50,9 +50,9 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
   };
 
   // Render options based on role
-  const greetingSub = userRole === "admin" ? "ADMINISTRADOR" : userRole === "producer" ? "PRODUCTOR" : getGreetingByHour();
-  const avatarChar = userRole === "admin" ? "A" : userRole === "producer" ? "P" : userName.charAt(0).toUpperCase();
-  const avatarBg = userRole === "producer" ? "var(--ds-color-cyan-400)" : "var(--ds-color-accent-primary)";
+  const greetingSub = userRole === "producer" ? "PRODUCTOR" : userRole === "artist" ? "ARTISTA" : getGreetingByHour();
+  const avatarChar = userRole === "producer" ? "P" : userRole === "artist" ? "A" : userName.charAt(0).toUpperCase();
+  const avatarBg = userRole === "producer" ? "var(--ds-color-cyan-400)" : userRole === "artist" ? "var(--ds-color-accent-secondary)" : "var(--ds-color-accent-primary)";
   const avatarColor = userRole === "producer" ? "var(--ds-color-bg-canvas)" : "var(--ds-color-bg-editorial)";
 
   const avatarPhoto = user?.avatar || user?.avatarUrl || user?.fotoPerfil;
@@ -86,7 +86,7 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
             <div className={styles.hwGreeting}>
               <span className={styles.hwGreetingSub}>{greetingSub}</span>
               <span className={styles.hwGreetingName}>
-                {userName} <span className={styles.hwDiamond} style={{ color: userRole === "producer" ? "var(--ds-color-cyan-400)" : "var(--ds-color-accent-primary)" }}>♦</span>
+                {userName} <span className={styles.hwDiamond} style={{ color: userRole === "producer" ? "var(--ds-color-cyan-400)" : userRole === "artist" ? "var(--ds-color-accent-secondary)" : "var(--ds-color-accent-primary)" }}>♦</span>
               </span>
             </div>
           </div>
@@ -107,21 +107,6 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
             <div className={styles.hwStatBox}>
               <span className={styles.hwStatValue} style={{ color: "var(--ds-color-accent-secondary)" }}>{formattedRevenue}</span>
               <span className={styles.hwStatLabel}>INGRESOS</span>
-            </div>
-          </div>
-        ) : userRole === "admin" ? (
-          <div className={styles.hwStatsRow}>
-            <div className={styles.hwStatBox}>
-              <span className={styles.hwStatValue} style={{ color: "var(--ds-color-accent-primary)" }}>1.2K</span>
-              <span className={styles.hwStatLabel}>USUARIOS</span>
-            </div>
-            <div className={styles.hwStatBox}>
-              <span className={styles.hwStatValue} style={{ color: "var(--ds-color-text-primary)" }}>{activeShowsCount}</span>
-              <span className={styles.hwStatLabel}>EVENTOS</span>
-            </div>
-            <div className={styles.hwStatBox}>
-              <span className={styles.hwStatValue} style={{ color: "var(--ds-color-accent-secondary)" }}>$4.8M</span>
-              <span className={styles.hwStatLabel}>RECAUDACIÓN</span>
             </div>
           </div>
         ) : (
@@ -207,30 +192,6 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
               <div style={{ display: "flex", gap: "8px" }}>
                 <Link to="/dashboard/producer" className={styles.hwBtnPrimary} style={{ textDecoration: "none", textAlign: "center", fontSize: "0.75rem", padding: "0.6rem 0", flex: 1, margin: 0 }}>
                   + CREAR EVENTO
-                </Link>
-              </div>
-            </div>
-          </>
-        ) : userRole === "admin" ? (
-          <>
-            <div className={styles.hwSection}>
-              <div className={styles.hwSectionHeader}>
-                <h3 className={styles.hwSectionTitle}>PANEL DE CONTROL</h3>
-                <Link to="/dashboard/admin" className={styles.hwSectionLink}>VER PANEL</Link>
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "8px", fontSize: "0.8rem", color: "var(--ds-color-text-editorial-subtle)" }}>
-                <div style={{ borderBottom: "1px solid #141414", paddingBottom: "4px" }}>
-                  <strong>Usuario reg:</strong> carlos_pogo@email.com
-                </div>
-                <div style={{ borderBottom: "1px solid #141414", paddingBottom: "4px" }}>
-                  <strong>Evento pub:</strong> Festival Tucumán Hardcore
-                </div>
-              </div>
-            </div>
-            <div className={styles.hwSection}>
-              <div style={{ display: "flex", gap: "8px" }}>
-                <Link to="/dashboard/admin" className={styles.hwBtnPrimary} style={{ textDecoration: "none", textAlign: "center", fontSize: "0.75rem", padding: "0.6rem 0", flex: 1, margin: 0 }}>
-                  AUDITAR LOGS
                 </Link>
               </div>
             </div>

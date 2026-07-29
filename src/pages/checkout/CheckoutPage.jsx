@@ -1,7 +1,8 @@
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { Ticket, ArrowRight } from 'lucide-react';
 import { fetchEventById } from '../../services/eventService';
-import CheckoutLayout from '../../components/checkout/CheckoutLayout';
+import CheckoutLayout from './components/CheckoutLayout/CheckoutLayout';
 import styles from './CheckoutPage.module.css';
 
 /**
@@ -54,7 +55,9 @@ export default function CheckoutPage() {
 
         {/* Título */}
         <div className={styles.stepHeader}>
-          <span className={styles.stepIcon}>🎫</span>
+          <span className={styles.stepIcon}>
+            <Ticket size={24} color="#00FF9F" />
+          </span>
           <h1 className={styles.stepTitle}>ELEGÍ TUS ENTRADAS</h1>
         </div>
         <p className={styles.stepSubtitle}>Seleccioná la cantidad que querés comprar.</p>
@@ -102,7 +105,7 @@ export default function CheckoutPage() {
           onClick={handleContinuar}
           disabled={isSoldOut}
         >
-          CONTINUAR →
+          CONTINUAR <ArrowRight size={16} style={{ marginLeft: 6 }} />
         </button>
 
       </div>

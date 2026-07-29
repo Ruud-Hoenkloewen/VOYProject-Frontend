@@ -3,7 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import EditorialHeader from "../../design-system/composites/EditorialHeader/EditorialHeader";
 import Container from "../../design-system/layout/Container/Container";
 import { fetchEventById, createEvent, updateEvent } from "../../services/eventService";
-import { MapPinIcon, TrashIcon, PlusIcon } from "../../components/icons";
+import { MapPinIcon, TrashIcon, PlusIcon, CalendarIcon, TicketIcon, DiscIcon, EyeIcon, PeopleIcon, DollarIcon } from "../../components/icons";
 import styles from "./EventFormPage.module.css";
 
 const DEFAULT_GENRES = ["Punk", "Rock", "Metal", "Hardcore", "Post-Hardcore", "Grunge", "Post-Punk", "Noise Rock", "Shoegaze", "Indie"];
@@ -38,6 +38,19 @@ export default function EventFormPage() {
   const [isGeocoding, setIsGeocoding] = useState(false);
   const [mapAddress, setMapAddress] = useState("");
   const geocodeTimeout = useRef(null);
+
+  // Date and Time inputs ref
+  const dateInputRef = useRef(null);
+  const timeInputRef = useRef(null);
+
+  // Section completion status
+  const isInfoComplete = form.nombre.trim() !== "" && form.fecha !== "" && form.hora !== "";
+  const isVenueComplete = form.lugar.trim() !== "";
+  const isTicketsComplete = form.precio >= 0 && form.capacidadTotal > 0;
+  const isLineupComplete = artists.some(art => art.nombre.trim() !== "");
+  const isFlyerComplete = Boolean(flyerPreview);
+  const isGenresComplete = selectedGenres.length > 0;
+  const isDescComplete = form.descripcion.trim() !== "";
 
   const showToastMsg = (message, isError = false) => {
     setToast({ message, error: isError });
@@ -280,13 +293,23 @@ export default function EventFormPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
               
               {/* Sección 1: Información Básica */}
-              <div className={styles.card}>
-                <h2 className={styles.sectionTitle}>
-                  <span>ℹ️</span> Información Básica
-                </h2>
+              <div id="sec-info" className={styles.card}>
+                <div className={styles.sectionHeader}>
+                  <span className={`${styles.sectionBadge} ${isInfoComplete ? styles.badgeSuccess : styles.badgeCyan}`}>
+                    {isInfoComplete ? '✓' : '01'}
+                  </span>
+                  <div>
+                    <h2 className={styles.sectionTitle}>
+                      <CalendarIcon size={16} color="var(--ds-color-cyan-400)" /> Información Básica
+                    </h2>
+                    <p className={styles.sectionSubtitle}>Nombre, fecha y horario de inicio del show</p>
+                  </div>
+                </div>
 
                 <div className={styles.field} style={{ marginBottom: "20px" }}>
-                  <label className={styles.label} htmlFor="nombre">Nombre del Evento *</label>
+                  <label className={styles.label} htmlFor="nombre">
+                    Nombre del Evento <span className={styles.requiredStar}>*</span>
+                  </label>
                   <input 
                     id="nombre"
                     type="text" 
@@ -301,27 +324,35 @@ export default function EventFormPage() {
 
                 <div className={styles.fieldGroup} style={{ gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))" }}>
                   <div className={styles.field}>
-                    <label className={styles.label} htmlFor="fecha">Fecha *</label>
+                    <label className={styles.label} htmlFor="fecha">
+                      Fecha <span className={styles.requiredStar}>*</span>
+                    </label>
                     <input 
+                      ref={dateInputRef}
                       id="fecha"
                       type="date" 
                       name="fecha"
                       value={form.fecha}
                       onChange={handleChange}
-                      className={`${styles.input} ${errors.fecha ? styles.inputError : ""}`}
+                      onClick={(e) => e.target.showPicker && e.target.showPicker()}
+                      className={`${styles.input} ${styles.pickerInput} ${errors.fecha ? styles.inputError : ""}`}
                     />
                     {errors.fecha && <span className={styles.errorMsg}>{errors.fecha}</span>}
                   </div>
 
                   <div className={styles.field}>
-                    <label className={styles.label} htmlFor="hora">Hora *</label>
+                    <label className={styles.label} htmlFor="hora">
+                      Hora <span className={styles.requiredStar}>*</span>
+                    </label>
                     <input 
+                      ref={timeInputRef}
                       id="hora"
                       type="time" 
                       name="hora"
                       value={form.hora}
                       onChange={handleChange}
-                      className={`${styles.input} ${errors.hora ? styles.inputError : ""}`}
+                      onClick={(e) => e.target.showPicker && e.target.showPicker()}
+                      className={`${styles.input} ${styles.pickerInput} ${errors.hora ? styles.inputError : ""}`}
                     />
                     {errors.hora && <span className={styles.errorMsg}>{errors.hora}</span>}
                   </div>
@@ -329,13 +360,23 @@ export default function EventFormPage() {
               </div>
 
               {/* Sección 2: Lugar e Ubicación */}
-              <div className={styles.card}>
-                <h2 className={styles.sectionTitle}>
-                  <span>📍</span> Ubicación y Venue
-                </h2>
+              <div id="sec-venue" className={styles.card}>
+                <div className={styles.sectionHeader}>
+                  <span className={`${styles.sectionBadge} ${isVenueComplete ? styles.badgeSuccess : styles.badgePurple}`}>
+                    {isVenueComplete ? '✓' : '02'}
+                  </span>
+                  <div>
+                    <h2 className={styles.sectionTitle}>
+                      <MapPinIcon size={16} color="#A855F7" /> Ubicación y Venue
+                    </h2>
+                    <p className={styles.sectionSubtitle}>Dirección del lugar y vista previa interactiva en mapa</p>
+                  </div>
+                </div>
 
                 <div className={styles.field} style={{ marginBottom: "20px" }}>
-                  <label className={styles.label} htmlFor="lugar">Dirección / Lugar *</label>
+                  <label className={styles.label} htmlFor="lugar">
+                    Dirección / Lugar <span className={styles.requiredStar}>*</span>
+                  </label>
                   <input 
                     id="lugar"
                     type="text" 
@@ -374,10 +415,18 @@ export default function EventFormPage() {
               </div>
 
               {/* Sección 3: Precio y Capacidad */}
-              <div className={styles.card}>
-                <h2 className={styles.sectionTitle}>
-                  <span>💵</span> Entradas y Stock
-                </h2>
+              <div id="sec-tickets" className={styles.card}>
+                <div className={styles.sectionHeader}>
+                  <span className={`${styles.sectionBadge} ${isTicketsComplete ? styles.badgeSuccess : styles.badgeLime}`}>
+                    {isTicketsComplete ? '✓' : '03'}
+                  </span>
+                  <div>
+                    <h2 className={styles.sectionTitle}>
+                      <DollarIcon size={16} color="#00FF9F" /> Entradas y Stock
+                    </h2>
+                    <p className={styles.sectionSubtitle}>Establecé el precio individual y la cantidad disponible de tickets</p>
+                  </div>
+                </div>
 
                 <div className={styles.fieldGroup} style={{ gridTemplateColumns: "1fr 1fr" }}>
                   <div className={styles.field}>
@@ -411,10 +460,18 @@ export default function EventFormPage() {
               </div>
 
               {/* Sección 4: Artistas (Dinámica) */}
-              <div className={styles.card}>
-                <h2 className={styles.sectionTitle}>
-                  <span>🎸</span> Lineup de Artistas
-                </h2>
+              <div id="sec-lineup" className={styles.card}>
+                <div className={styles.sectionHeader}>
+                  <span className={`${styles.sectionBadge} ${isLineupComplete ? styles.badgeSuccess : styles.badgeCyan}`}>
+                    {isLineupComplete ? '✓' : '04'}
+                  </span>
+                  <div>
+                    <h2 className={styles.sectionTitle}>
+                      <PeopleIcon size={16} color="var(--ds-color-cyan-400)" /> Lineup de Artistas <span className={styles.requiredStar}>*</span>
+                    </h2>
+                    <p className={styles.sectionSubtitle}>Agregá las bandas participantes y destacá al headliner principal</p>
+                  </div>
+                </div>
 
                 <div className={styles.artistsList}>
                   {artists.map((artist, idx) => (
@@ -470,10 +527,18 @@ export default function EventFormPage() {
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
               
               {/* Sección 5: Flyer / Foto */}
-              <div className={styles.card}>
-                <h2 className={styles.sectionTitle}>
-                  <span>🖼️</span> Imagen / Flyer
-                </h2>
+              <div id="sec-flyer" className={styles.card}>
+                <div className={styles.sectionHeader}>
+                  <span className={`${styles.sectionBadge} ${isFlyerComplete ? styles.badgeSuccess : styles.badgePink}`}>
+                    {isFlyerComplete ? '✓' : '05'}
+                  </span>
+                  <div>
+                    <h2 className={styles.sectionTitle}>
+                      <EyeIcon size={16} color="#FF007A" /> Imagen / Flyer
+                    </h2>
+                    <p className={styles.sectionSubtitle}>Subí la gráfica o cartelera oficial de tu show</p>
+                  </div>
+                </div>
 
                 <div className={styles.field}>
                   {flyerPreview ? (
@@ -490,11 +555,11 @@ export default function EventFormPage() {
                     </div>
                   ) : (
                     <label className={styles.uploadContainer}>
-                      <span style={{ fontSize: "32px" }}>📸</span>
-                      <span style={{ fontSize: "12px", fontWeight: "700", textTransform: "uppercase", color: "#666" }}>
+                      <EyeIcon size={28} color="var(--ds-color-cyan-400)" />
+                      <span style={{ fontSize: "12px", fontWeight: "700", textTransform: "uppercase", color: "var(--ds-color-text-secondary)" }}>
                         Seleccionar Flyer del Show
                       </span>
-                      <span style={{ fontSize: "10px", color: "#444" }}>Formatos recomendados: JPG, PNG</span>
+                      <span style={{ fontSize: "10px", color: "var(--ds-color-text-muted)" }}>Formatos recomendados: JPG, PNG</span>
                       <input 
                         type="file" 
                         accept="image/*" 
@@ -507,10 +572,18 @@ export default function EventFormPage() {
               </div>
 
               {/* Sección 6: Géneros Musicales */}
-              <div className={styles.card}>
-                <h2 className={styles.sectionTitle}>
-                  <span>🔊</span> Géneros Musicales
-                </h2>
+              <div id="sec-genres" className={styles.card}>
+                <div className={styles.sectionHeader}>
+                  <span className={`${styles.sectionBadge} ${isGenresComplete ? styles.badgeSuccess : styles.badgePurple}`}>
+                    {isGenresComplete ? '✓' : '06'}
+                  </span>
+                  <div>
+                    <h2 className={styles.sectionTitle}>
+                      <DiscIcon size={16} color="#A855F7" /> Géneros Musicales
+                    </h2>
+                    <p className={styles.sectionSubtitle}>Etiquetá los estilos musicales de tu evento</p>
+                  </div>
+                </div>
 
                 <div className={styles.genresSection}>
                   <div className={styles.tagsGrid}>
@@ -559,10 +632,18 @@ export default function EventFormPage() {
               </div>
 
               {/* Sección 7: Descripción */}
-              <div className={styles.card}>
-                <h2 className={styles.sectionTitle}>
-                  <span>📝</span> Descripción del Show
-                </h2>
+              <div id="sec-desc" className={styles.card}>
+                <div className={styles.sectionHeader}>
+                  <span className={`${styles.sectionBadge} ${isDescComplete ? styles.badgeSuccess : styles.badgeLime}`}>
+                    {isDescComplete ? '✓' : '07'}
+                  </span>
+                  <div>
+                    <h2 className={styles.sectionTitle}>
+                      <PlusIcon size={16} color="#00FF9F" /> Descripción del Show
+                    </h2>
+                    <p className={styles.sectionSubtitle}>Información adicional, condiciones de ingreso y detalles</p>
+                  </div>
+                </div>
 
                 <div className={styles.field}>
                   <label className={styles.label} htmlFor="descripcion">Detalles del evento</label>
@@ -581,18 +662,46 @@ export default function EventFormPage() {
 
           </div>
 
-          {/* Form Actions */}
+          {/* Form Actions with Integrated Stepper Progress Bar */}
           <div className={styles.submitRow}>
-            <Link to="/dashboard/producer" className={styles.cancelBtn}>
-              Cancelar
-            </Link>
-            <button 
-              type="submit" 
-              className={styles.submitBtn}
-              disabled={loading}
-            >
-              {loading ? "GUARDANDO..." : isEditMode ? "GUARDAR CAMBIOS" : "PUBLICAR EVENTO"}
-            </button>
+            {/* Left: Section Progress Tracker */}
+            <div className={styles.stepperTrack}>
+              <a href="#sec-info" className={`${styles.trackerItem} ${isInfoComplete ? styles.trackerItemCompleted : ""}`}>
+                <span className={styles.navNum}>01</span> Info Básica {isInfoComplete ? '✓' : <span className={styles.requiredStar}>*</span>}
+              </a>
+              <a href="#sec-venue" className={`${styles.trackerItem} ${isVenueComplete ? styles.trackerItemCompleted : ""}`}>
+                <span className={styles.navNum}>02</span> Ubicación {isVenueComplete ? '✓' : <span className={styles.requiredStar}>*</span>}
+              </a>
+              <a href="#sec-tickets" className={`${styles.trackerItem} ${isTicketsComplete ? styles.trackerItemCompleted : ""}`}>
+                <span className={styles.navNum}>03</span> Entradas {isTicketsComplete ? '✓' : ''}
+              </a>
+              <a href="#sec-lineup" className={`${styles.trackerItem} ${isLineupComplete ? styles.trackerItemCompleted : ""}`}>
+                <span className={styles.navNum}>04</span> Lineup {isLineupComplete ? '✓' : <span className={styles.requiredStar}>*</span>}
+              </a>
+              <a href="#sec-flyer" className={`${styles.trackerItem} ${isFlyerComplete ? styles.trackerItemCompleted : ""}`}>
+                <span className={styles.navNum}>05</span> Flyer {isFlyerComplete ? '✓' : ''}
+              </a>
+              <a href="#sec-genres" className={`${styles.trackerItem} ${isGenresComplete ? styles.trackerItemCompleted : ""}`}>
+                <span className={styles.navNum}>06</span> Géneros {isGenresComplete ? '✓' : ''}
+              </a>
+              <a href="#sec-desc" className={`${styles.trackerItem} ${isDescComplete ? styles.trackerItemCompleted : ""}`}>
+                <span className={styles.navNum}>07</span> Descripción {isDescComplete ? '✓' : ''}
+              </a>
+            </div>
+
+            {/* Right: Action Buttons */}
+            <div className={styles.actionBtns}>
+              <Link to="/dashboard/producer" className={styles.cancelBtn}>
+                Cancelar
+              </Link>
+              <button 
+                type="submit" 
+                className={styles.submitBtn}
+                disabled={loading}
+              >
+                {loading ? "GUARDANDO..." : isEditMode ? "GUARDAR CAMBIOS" : "PUBLICAR EVENTO"}
+              </button>
+            </div>
           </div>
         </form>
       </Container>

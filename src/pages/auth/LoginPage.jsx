@@ -70,20 +70,6 @@ export default function LoginPage() {
     setApiError("");
 
     try {
-      // Verificar si el usuario está suspendido en la base de datos simulada (localStorage)
-      const savedUsers = localStorage.getItem("voy_admin_users");
-      if (savedUsers) {
-        try {
-          const usersList = JSON.parse(savedUsers);
-          const found = usersList.find(u => u.email.toLowerCase() === form.email.toLowerCase());
-          if (found && found.isSuspended) {
-            throw new Error("Su cuenta ha sido suspendida. Contacte al administrador.");
-          }
-        } catch (e) {
-          if (e.message.includes("suspendida")) throw e;
-        }
-      }
-
       const data = await loginUser(form.email, form.password);
       // data = { _id, nombre, email, token, role }
       // The role will be extracted from JWT payload inside login()
@@ -141,7 +127,6 @@ export default function LoginPage() {
               <li><span className={styles.featureDot}>◆</span>Seguí a tus artistas favoritos</li>
               <li><span className={styles.featureDot}>◆</span>Descubrí shows antes que todos</li>
             </ul>
-            <p className={styles.asideMeta}>VOY·PROJECT·v0.1-BETA — SMT·TUC·ARG·2026</p>
           </div>
         </aside>
 
@@ -201,23 +186,22 @@ export default function LoginPage() {
               </button>
             </form>
 
-<div style={{ display: 'flex', alignItems: 'center', margin: '1.5rem 0' }}>
-              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--ds-color-border-editorial-mid)' }}></div>
-              <span style={{ padding: '0 1rem', fontSize: '0.8rem', color: 'var(--ds-color-text-editorial-subtle)' }}>O ingresá con email</span>
-              <div style={{ flex: 1, height: '1px', backgroundColor: 'var(--ds-color-border-editorial-mid)' }}></div>
+            <div className={styles.dividerRow}>
+              <div className={styles.dividerLine} />
+              <span className={styles.dividerText}>O continuá con Google</span>
+              <div className={styles.dividerLine} />
             </div>
 
-            <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
+            <div className={styles.googleBox}>
               <GoogleLogin
                 onSuccess={handleGoogleSuccess}
                 onError={() => setApiError("Falló la autenticación con Google")}
                 theme="filled_black"
                 text="signin_with"
                 shape="rectangular"
+                width="440"
               />
             </div>
-            
-            
 
             <p className={styles.altLink}>
               ¿No tenés cuenta?{" "}
@@ -225,11 +209,11 @@ export default function LoginPage() {
                 Registrate
               </Link>
             </p>
-          </div>
 
-          <p className={styles.footerNote}>
-            Al ingresar aceptás los términos de uso de VOY Project.
-          </p>
+            <p className={styles.footerNote}>
+              Al ingresar aceptás los términos de uso de VOY Project.
+            </p>
+          </div>
         </section>
       </main>
     </div>

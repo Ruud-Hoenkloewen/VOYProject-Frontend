@@ -66,7 +66,15 @@ export default function EventCard({
   return (
     <Card highlighted={highlighted} className={styles.card}>
       <div className={styles.media}>
-        {imageUrl && <img src={imageUrl} alt={title || "Evento"} loading="lazy" />}
+        {imageUrl && (
+          <img
+            src={imageUrl}
+            alt={title || "Evento"}
+            loading="lazy"
+            draggable={false}
+            onDragStart={(e) => e.preventDefault()}
+          />
+        )}
         <div className={styles.topBar}>
           {status && <Badge tone={statusTone}>{status}</Badge>}
           {price && <span className={styles.price}>{price}</span>}

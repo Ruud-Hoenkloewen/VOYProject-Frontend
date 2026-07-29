@@ -8,22 +8,22 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0.9rem 4rem;
+  padding: 0.55rem 3rem;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 50;
-  background: #0a0a0a;
-  border-bottom: 1px solid #1e1e1e;
-  transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1), background 0.38s ease, border-color 0.38s ease;
+  background: rgba(10, 10, 10, 0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background 0.35s ease;
   will-change: transform;
 }
 
 .hidden {
-  transform: translateY(calc(-100% + 4px));
-  background: #e8e8e8;
-  border-bottom-color: #e8e8e8;
+  transform: translateY(-100%);
+  border-bottom-color: transparent;
 }
 
 /* ── LOGO ─────────────────────────────────────────────── */

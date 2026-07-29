@@ -35,6 +35,7 @@ export default function EventsPage() {
     activeCategories, toggleCategory,
     activeLugar, setActiveLugar, availableLugares,
     activeFecha, setActiveFecha, availableFechas,
+    sortBy, setSortBy, resetFilters,
     filteredEvents
   } = useEventFilters(events);
 
@@ -59,6 +60,9 @@ export default function EventsPage() {
                 setActiveFecha={setActiveFecha}
                 activeCategories={activeCategories}
                 toggleCategory={toggleCategory}
+                sortBy={sortBy}
+                setSortBy={setSortBy}
+                resetFilters={resetFilters}
               />
             </div>
           </div>
@@ -82,7 +86,6 @@ export default function EventsPage() {
               <Typography variant="body" tone="muted" className={styles.emptyStateText}>
                 Parece que la movida está descansando temporalmente. ¡Volvé pronto!
               </Typography>
-              <Button variant="primary" onClick={() => navigate("/")}>Volver al inicio</Button>
             </div>
           ) : (
             <div className={styles.eventsGrid}>

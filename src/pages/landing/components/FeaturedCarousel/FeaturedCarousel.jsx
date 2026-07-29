@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEvents } from "../../../../hooks/useEvents";
 import FlyerCard3D from "../FlyerCard3D/FlyerCard3D";
@@ -150,6 +150,89 @@ export default function FeaturedCarousel() {
   // Para la card de evento usamos los datos reales del backend si existen
   const featuredEvent = activeShow?._raw || null;
 
+  const [dragX, setDragX] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const startXRef = useRef(0);
+  const hasDraggedRef = useRef(false);
+
+  const clampDrag = (rawDiff) => {
+    const maxOffset = 120;
+    if (Math.abs(rawDiff) <= maxOffset) return rawDiff;
+    // Resistencia elástica para evitar que las tarjetas salgan de los límites
+    const overdrag = Math.abs(rawDiff) - maxOffset;
+    const dampedOverdrag = Math.pow(overdrag, 0.65) * 2;
+    return Math.sign(rawDiff) * (maxOffset + dampedOverdrag);
+  };
+
+  const handleTouchStart = (e) => {
+    if (e.touches && e.touches[0]) {
+      setIsDragging(true);
+      hasDraggedRef.current = false;
+      startXRef.current = e.touches[0].clientX;
+    }
+  };
+
+  const handleTouchMove = (e) => {
+    if (!isDragging || !e.touches || !e.touches[0]) return;
+    const currentX = e.touches[0].clientX;
+    const rawDiff = currentX - startXRef.current;
+    if (Math.abs(rawDiff) > 5) {
+      hasDraggedRef.current = true;
+    }
+    setDragX(clampDrag(rawDiff));
+  };
+
+  const handleTouchEnd = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      if (dragX > 40) {
+        prev();
+      } else if (dragX < -40) {
+        next();
+      }
+      setDragX(0);
+    }
+  };
+
+  const handleMouseDown = (e) => {
+    setIsDragging(true);
+    hasDraggedRef.current = false;
+    startXRef.current = e.clientX;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const rawDiff = e.clientX - startXRef.current;
+    if (Math.abs(rawDiff) > 5) {
+      hasDraggedRef.current = true;
+    }
+    setDragX(clampDrag(rawDiff));
+  };
+
+  const handleMouseUp = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      if (dragX > 40) {
+        prev();
+      } else if (dragX < -40) {
+        next();
+      }
+      setDragX(0);
+    }
+  };
+
+  // Cálculo del progreso de arrastre (-1 a 1) para escalado y opacidad dinámica en tiempo real
+  const progress = Math.max(-1, Math.min(1, dragX / 120));
+
+  const leftScale     = 0.88 + Math.max(0, progress) * 0.12;
+  const leftOpacity   = 0.45 + Math.max(0, progress) * 0.55;
+
+  const centerScale   = 1 - Math.abs(progress) * 0.12;
+  const centerOpacity = 1 - Math.abs(progress) * 0.55;
+
+  const rightScale    = 0.88 + Math.max(0, -progress) * 0.12;
+  const rightOpacity  = 0.45 + Math.max(0, -progress) * 0.55;
+
   return (
     <section className={styles.featuredSection}>
       {/* Header estilo QUÉ ES VOY: centrado con líneas a los costados */}
@@ -163,8 +246,19 @@ export default function FeaturedCarousel() {
         <div className={styles.featuredDivider} />
       </div>
 
-      {/* Stage del carrusel */}
-      <div className={styles.carouselStage}>
+      {/* Stage del carrusel con soporte táctil y arrastre interactivo en tiempo real */}
+      <div
+        className={styles.carouselStage}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onDragStart={(e) => e.preventDefault()}
+        style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
+      >
         <button
           className={`${styles.carouselArrow} ${styles.carouselArrowLeft}`}
           onClick={prev}
@@ -173,10 +267,60 @@ export default function FeaturedCarousel() {
           ‹
         </button>
 
-        <div className={styles.carouselTrack}>
-          <FlyerCard3D show={shows[leftIdx]}   isCenter={false} key={`left-${leftIdx}`}   onCardClick={() => goTo(leftIdx)} />
-          <FlyerCard3D show={shows[centerIdx]} isCenter={true}  key={`center-${centerIdx}`} onCardClick={() => navigate(featuredEvent?.id ? `/events/${featuredEvent.id}` : '/events')} />
-          <FlyerCard3D show={shows[rightIdx]}  isCenter={false} key={`right-${rightIdx}`}  onCardClick={() => goTo(rightIdx)} />
+        <div
+          className={styles.carouselTrack}
+          style={{
+            transform: `translateX(${dragX}px)`,
+            transition: isDragging ? 'none' : 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+          }}
+        >
+          <div
+            style={{
+              transform: `scale(${leftScale})`,
+              opacity: leftOpacity,
+              transition: isDragging ? 'none' : 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+              pointerEvents: isDragging ? 'none' : 'auto',
+            }}
+          >
+            <FlyerCard3D
+              show={shows[leftIdx]}
+              isCenter={false}
+              key={`left-${leftIdx}`}
+              onCardClick={() => !hasDraggedRef.current && goTo(leftIdx)}
+            />
+          </div>
+
+          <div
+            style={{
+              transform: `scale(${centerScale})`,
+              opacity: centerOpacity,
+              transition: isDragging ? 'none' : 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+              pointerEvents: isDragging ? 'none' : 'auto',
+            }}
+          >
+            <FlyerCard3D
+              show={shows[centerIdx]}
+              isCenter={true}
+              key={`center-${centerIdx}`}
+              onCardClick={() => !hasDraggedRef.current && navigate(featuredEvent?.id ? `/events/${featuredEvent.id}` : '/events')}
+            />
+          </div>
+
+          <div
+            style={{
+              transform: `scale(${rightScale})`,
+              opacity: rightOpacity,
+              transition: isDragging ? 'none' : 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+              pointerEvents: isDragging ? 'none' : 'auto',
+            }}
+          >
+            <FlyerCard3D
+              show={shows[rightIdx]}
+              isCenter={false}
+              key={`right-${rightIdx}`}
+              onCardClick={() => !hasDraggedRef.current && goTo(rightIdx)}
+            />
+          </div>
         </div>
 
         <button

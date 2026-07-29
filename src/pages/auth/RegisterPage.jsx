@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { User, Building2, Guitar } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { registerUser } from "../../services/authService";
 import { checkUsername, updateMyProfile } from "../../services/userService";
@@ -67,11 +68,20 @@ export default function RegisterPage() {
     return next;
   }
 
-  async function handleSubmit(e) {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  async function handleOpenConfirm(e) {
     e.preventDefault();
     const errs = validate();
-    if (Object.keys(errs).length > 0) { setErrors(errs); return; }
+    if (Object.keys(errs).length > 0) { 
+      setErrors(errs); 
+      return; 
+    }
+    setApiError("");
+    setShowConfirmModal(true);
+  }
 
+  async function executeRegistration() {
     setSubmitting(true);
     setApiError("");
 
@@ -80,7 +90,7 @@ export default function RegisterPage() {
       const data = await registerUser(form.name, form.email, form.password, selectedRole);
       
       // Log in immediately after registration
-      await login({ _id: data._id, nombre: data.nombre, email: data.email, role: data.role }, data.token);
+      await login({ _id: data._id, nombre: data.nombre, username: data.username, email: data.email, role: data.role }, data.token);
 
       if (selectedRole === "producer" || selectedRole === "artist") {
         // Generate a unique username based on their name
@@ -107,6 +117,7 @@ export default function RegisterPage() {
         navigate("/onboarding");
       }
     } catch (err) {
+      setShowConfirmModal(false);
       const msg = err.response?.data?.mensaje || "Error al crear la cuenta. Intentá de nuevo.";
       setApiError(msg);
     } finally {
@@ -126,9 +137,8 @@ export default function RegisterPage() {
         </nav>
         
         <main className={styles.onboardingStep}>
-          <p className={styles.onboardingEyebrow}>BIENVENIDO A LA MOVIDA</p>
           <h1 className={styles.onboardingTitle}>
-            ¿QUÉ VENÍS <span className={styles.onboardingTitleAccent}>A HACER?</span>
+            BIENVENIDO A <span className={styles.onboardingTitleAccent}>VOY PROJECT</span>
           </h1>
           <p className={styles.onboardingSubtitle}>
             Elegí cómo querés ser parte de la escena.
@@ -136,10 +146,12 @@ export default function RegisterPage() {
 
           <div className={styles.onboardingCards}>
             <div 
-              className={styles.onboardingCard} 
+              className={`${styles.onboardingCard} ${selectedRole === "client" ? styles.onboardingCardActive : ""}`} 
               onClick={() => { setSelectedRole("client"); setStep(1); }}
             >
-              <div className={styles.onboardingCardIcon}>🎫</div>
+              <div className={styles.onboardingCardIcon}>
+                <User size={34} />
+              </div>
               <h3 className={styles.onboardingCardTitle}>SOY FAN</h3>
               <p className={styles.onboardingCardDesc}>
                 Seguí artistas, comprá entradas y conectá con la escena local.
@@ -147,10 +159,12 @@ export default function RegisterPage() {
             </div>
 
             <div 
-              className={styles.onboardingCard} 
+              className={`${styles.onboardingCard} ${selectedRole === "producer" ? styles.onboardingCardActive : ""}`} 
               onClick={() => { setSelectedRole("producer"); setStep(1); }}
             >
-              <div className={styles.onboardingCardIcon}>🏢</div>
+              <div className={styles.onboardingCardIcon}>
+                <Building2 size={34} />
+              </div>
               <h3 className={styles.onboardingCardTitle}>PRODUZCO EVENTOS</h3>
               <p className={styles.onboardingCardDesc}>
                 Publicá eventos, gestioná venues y vendé entradas.
@@ -158,10 +172,12 @@ export default function RegisterPage() {
             </div>
 
             <div 
-              className={styles.onboardingCard} 
+              className={`${styles.onboardingCard} ${selectedRole === "artist" ? styles.onboardingCardActive : ""}`} 
               onClick={() => { setSelectedRole("artist"); setStep(1); }}
             >
-              <div className={styles.onboardingCardIcon}>🎸</div>
+              <div className={styles.onboardingCardIcon}>
+                <Guitar size={34} />
+              </div>
               <h3 className={styles.onboardingCardTitle}>SOY ARTISTA</h3>
               <p className={styles.onboardingCardDesc}>
                 Mostrá tu música, conectá con venues y armá tu comunidad.
@@ -208,7 +224,6 @@ export default function RegisterPage() {
               <li><span className={styles.featureDot}>◆</span>Guardá eventos en tu agenda</li>
               <li><span className={styles.featureDot}>◆</span>Apoyá la escena local tucumana</li>
             </ul>
-            <p className={styles.asideMeta}>VOY·PROJECT·v0.1-BETA — SMT·TUC·ARG·2026</p>
           </div>
         </aside>
 
@@ -221,11 +236,11 @@ export default function RegisterPage() {
             {/* Error global del backend */}
             {apiError && (
               <div className={styles.apiError} role="alert">
-                {apiError}
+                ⚠️ {apiError}
               </div>
             )}
 
-            <form className={styles.form} onSubmit={handleSubmit} noValidate>
+            <form className={styles.form} onSubmit={handleOpenConfirm} noValidate>
               
 
               <div className={styles.field}>
@@ -283,6 +298,67 @@ export default function RegisterPage() {
           </p>
         </section>
       </main>
+
+      {/* MODAL DE CONFIRMACIÓN DE REGISTRO */}
+      {showConfirmModal && (
+        <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
+          <div className={styles.confirmCard}>
+            <div className={styles.confirmHeader}>
+              <span className={styles.confirmBadge}>CONFIRMACIÓN DE DATOS DE CUENTA</span>
+              <h2>¿Tus datos son correctos?</h2>
+              <p>Por favor verificá la información antes de crear tu cuenta para asegurar que puedas iniciar sesión sin problemas.</p>
+            </div>
+
+            <div className={styles.confirmBody}>
+              <div className={styles.confirmDataRow}>
+                <span className={styles.confirmLabel}>TIPO DE CUENTA:</span>
+                <span className={styles.confirmValueHighlight}>
+                  {selectedRole === "producer" ? (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><Building2 size={16} /> PRODUCCIÓN DE EVENTOS</span>
+                  ) : selectedRole === "artist" ? (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><Guitar size={16} /> ARTISTA</span>
+                  ) : (
+                    <span style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}><User size={16} /> FAN</span>
+                  )}
+                </span>
+              </div>
+
+              <div className={styles.confirmDataRow}>
+                <span className={styles.confirmLabel}>NOMBRE DE USUARIO:</span>
+                <span className={styles.confirmValue}>{form.name}</span>
+              </div>
+
+              <div className={styles.confirmDataRow}>
+                <span className={styles.confirmLabel}>CORREO DE ACCESO:</span>
+                <span className={styles.confirmValueMail}>{form.email}</span>
+              </div>
+            </div>
+
+            <div className={styles.confirmNotice}>
+              💡 <strong>Atención:</strong> El email <code>{form.email}</code> se asociará a tu usuario. Asegurate de que no tenga errores de tipeo.
+            </div>
+
+            <div className={styles.confirmActions}>
+              <button
+                type="button"
+                className={styles.btnConfirmEdit}
+                onClick={() => setShowConfirmModal(false)}
+                disabled={submitting}
+              >
+                ← EDITAR DATOS
+              </button>
+              <button
+                type="button"
+                className={styles.btnConfirmCreate}
+                onClick={executeRegistration}
+                disabled={submitting}
+              >
+                {submitting ? "CREANDO..." : "✓ CONFIRMAR Y REGISTRARME"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
 
     </div>

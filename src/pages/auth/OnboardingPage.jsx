@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { updateMyProfile, GRADIENTS, AVATAR_COLORS } from "../../services/userService";
@@ -80,27 +80,35 @@ function LivePreview({ data }) {
     userHandle = data.instagram.replace('@', '');
   }
   const userBio   = data.bio || user?.bio || "Sin bio todavía. Editá tu perfil para contarle algo a la comunidad.";
+  const avatarPhoto = user?.avatarUrl || user?.fotoPerfil || user?.avatar;
+  const avatarColor = (data.avatarColor && data.avatarColor !== 'transparent') ? data.avatarColor : '#00FF9F';
 
   return (
     <aside className={styles.previewSection}>
       <div className={styles.previewSticky}>
-        <Typography variant="caption" className={styles.previewTitle}>VISTA PREVIA EN TIEMPO REAL</Typography>
+        <Typography variant="caption" className={styles.previewTitle}>VISTA PREVIA</Typography>
         <Card className={styles.miniProfile}>
           <div
             className={styles.miniBanner}
-            style={{ background: GRADIENTS[data.gradientKey] }}
+            style={{ background: data.bannerImagen ? `url("${data.bannerImagen}") center/cover no-repeat` : (GRADIENTS[data.gradientKey] || GRADIENTS.g1) }}
           />
           <div className={styles.miniContent}>
             <div
               className={styles.miniAvatar}
-              style={{ backgroundColor: data.avatarColor }}
+              style={{ backgroundColor: avatarColor, padding: avatarPhoto ? 0 : '3px' }}
             >
-              <span className={styles.miniAvatarText}>{initials}</span>
+              {avatarPhoto ? (
+                <img src={avatarPhoto} alt="Avatar" className={styles.miniAvatarImg} />
+              ) : (
+                <span className={styles.miniAvatarText}>{initials}</span>
+              )}
             </div>
             <div className={styles.miniDetails}>
               <div className={styles.miniNameRow}>
                 <span className={styles.miniName}>{user?.nombre || "TU NOMBRE"}</span>
-                <span className={styles.miniBadge}>FAN</span>
+                <span className={user?.role === 'producer' ? styles.miniBadgeProducer : user?.role === 'artist' ? styles.miniBadgeArtist : styles.miniBadgeFan}>
+                  {user?.role === 'producer' ? 'PRODUCTORA' : user?.role === 'artist' ? 'ARTISTA' : 'FAN'}
+                </span>
               </div>
               <div className={styles.instagramPreviewBtn}>
                 <InstagramSVG />
@@ -283,41 +291,127 @@ function StepMusica({ data, onChange, onNext, onBack, onSkip }) {
   );
 }
 
-// ── Paso 3: Tu Estilo ─────────────────────────────────────────────────
-function StepEstilo({ data, onChange, onConfirm, onBack, submitting }) {
-  const { user } = useAuth();
-  const initials  = user?.nombre ? user.nombre.charAt(0).toUpperCase() : "U";
-  const userHandle = user?.nombre ? user.nombre.toLowerCase().replace(/\s+/g, "") : "usuario";
-  const userBio   = data.bio || user?.bio || "Sin bio todavía. Editá tu perfil para contarle algo a la comunidad.";
+// ── Paso 3: Tu Estilo ───────────────────────────────────────────────────
+function StepEstilo({ data, onChange, onConfirm, onBack, onSkip, submitting }) {
+  const bannerInputRef = useRef(null);
+  const avatarInputRef = useRef(null);
+  const { user, updateUser } = useAuth();
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+
+  const handleAvatarFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingAvatar(true);
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const base64 = event.target.result;
+      try {
+        const res = await updateMyProfile({ avatarUrl: base64, fotoPerfil: base64, avatar: base64 });
+        updateUser(res.user || res);
+      } catch (err) {
+        console.error("Error al subir avatar en onboarding:", err);
+      } finally {
+        setUploadingAvatar(false);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleBannerFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      onChange("bannerImagen", event.target.result);
+    };
+    reader.readAsDataURL(file);
+  };
 
   return (
     <div className={styles.gridContainer}>
-
-      {/* COLUMNA IZQUIERDA — CONTROLES */}
       <section className={styles.controlsSection}>
         <div className={styles.controlsCard}>
           <Typography variant="caption" className={styles.eyebrow}>PASO 3 — TU ESTILO</Typography>
-          <h1 className={styles.title}>Definí tu identidad visual</h1>
+          <h1 className={styles.title}>DEFINÍ TU IDENTIDAD VISUAL</h1>
           <p className={styles.subtitle}>
-            Elegí los colores y portadas que representarán tu presencia dentro de la comunidad de VOY.
+            Elegí tu foto, color de acento y portada que representarán tu presencia en VOY.
           </p>
 
           <div className={styles.divider} />
 
+          {/* FOTO DE PERFIL */}
+          <div className={styles.sectionField}>
+            <Typography variant="label" className={styles.sectionLabel} style={{ textAlign: 'center', display: 'block', marginBottom: '0.6rem' }}>FOTO DE PERFIL (AVATAR)</Typography>
+            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <button
+                type="button"
+                onClick={() => avatarInputRef.current?.click()}
+                style={{
+                  background: 'rgba(0, 255, 159, 0.12)',
+                  border: '1px solid rgba(0, 255, 159, 0.35)',
+                  color: '#00FF9F',
+                  padding: '0.6rem 1.4rem',
+                  borderRadius: '8px',
+                  fontSize: '0.78rem',
+                  fontWeight: 900,
+                  letterSpacing: '0.06em',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  width: '100%',
+                  maxWidth: '280px',
+                  boxShadow: '0 4px 16px rgba(0, 255, 159, 0.15)',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+              >
+                📷 {uploadingAvatar ? "SUBIENDO FOTO..." : "SUBIR FOTO DE PERFIL"}
+              </button>
+              <input
+                ref={avatarInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleAvatarFile}
+              />
+            </div>
+          </div>
+
           {/* COLOR DE AVATAR */}
           <div className={styles.sectionField}>
-            <Typography variant="label" className={styles.sectionLabel}>COLOR DE AVATAR</Typography>
-            <div className={styles.swatchesGrid} role="radiogroup" aria-label="Color de avatar">
-              {AVATAR_COLORS.map((swatch) => (
+            <Typography variant="label" className={styles.sectionLabel}>COLOR / ACENTO DEL PERFIL</Typography>
+            <div style={{ fontSize: '0.7rem', color: '#888', marginBottom: '0.35rem', fontWeight: 700 }}>COLORES FIJOS</div>
+            <div className={styles.swatchesGrid} role="radiogroup" aria-label="Colores fijos">
+              {(AVATAR_COLORS || []).filter(c => c.category === 'fijo').map((swatch) => (
                 <button
                   key={swatch.value}
+                  type="button"
                   role="radio"
                   aria-checked={data.avatarColor === swatch.value}
                   onClick={() => onChange("avatarColor", swatch.value)}
                   className={`${styles.swatchBtn} ${
                     data.avatarColor === swatch.value ? styles.swatchBtnActive : ""
                   }`}
-                  style={{ backgroundColor: swatch.value }}
+                  style={{ background: swatch.value }}
+                  title={swatch.name}
+                />
+              ))}
+            </div>
+
+            <div style={{ fontSize: '0.7rem', color: '#888', margin: '0.75rem 0 0.35rem', fontWeight: 700 }}>GRADIENTES MIXTOS Y ARCOÍRIS</div>
+            <div className={styles.swatchesGrid} role="radiogroup" aria-label="Gradientes y arcoíris">
+              {(AVATAR_COLORS || []).filter(c => c.category !== 'fijo').map((swatch) => (
+                <button
+                  key={swatch.value}
+                  type="button"
+                  role="radio"
+                  aria-checked={data.avatarColor === swatch.value}
+                  onClick={() => onChange("avatarColor", swatch.value)}
+                  className={`${styles.swatchBtn} ${
+                    data.avatarColor === swatch.value ? styles.swatchBtnActive : ""
+                  }`}
+                  style={{ background: swatch.value }}
                   title={swatch.name}
                 />
               ))}
@@ -326,16 +420,49 @@ function StepEstilo({ data, onChange, onConfirm, onBack, submitting }) {
 
           {/* PORTADA */}
           <div className={styles.sectionField}>
-            <Typography variant="label" className={styles.sectionLabel}>PORTADA DEL PERFIL (BANNER)</Typography>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+              <Typography variant="label" className={styles.sectionLabel} style={{ margin: 0 }}>PORTADA DEL PERFIL (BANNER)</Typography>
+              <button
+                type="button"
+                onClick={() => bannerInputRef.current?.click()}
+                style={{
+                  background: 'rgba(0, 255, 159, 0.1)',
+                  border: '1px solid rgba(0, 255, 159, 0.3)',
+                  color: '#00FF9F',
+                  padding: '0.3rem 0.8rem',
+                  borderRadius: '4px',
+                  fontSize: '0.75rem',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '6px'
+                }}
+              >
+                📷 SUBIR FOTO DE PORTADA
+              </button>
+              <input
+                ref={bannerInputRef}
+                type="file"
+                accept="image/*"
+                style={{ display: "none" }}
+                onChange={handleBannerFile}
+              />
+            </div>
+
             <div className={styles.gradientsGrid} role="radiogroup" aria-label="Portada del perfil">
               {Object.keys(GRADIENTS).map((key) => (
                 <button
                   key={key}
+                  type="button"
                   role="radio"
-                  aria-checked={data.gradientKey === key}
-                  onClick={() => onChange("gradientKey", key)}
+                  aria-checked={data.gradientKey === key && !data.bannerImagen}
+                  onClick={() => {
+                    onChange("gradientKey", key);
+                    onChange("bannerImagen", "");
+                  }}
                   className={`${styles.gradientBtn} ${
-                    data.gradientKey === key ? styles.gradientBtnActive : ""
+                    data.gradientKey === key && !data.bannerImagen ? styles.gradientBtnActive : ""
                   }`}
                   style={{ background: GRADIENTS[key] }}
                   title={`Portada ${key.toUpperCase()}`}
@@ -343,6 +470,16 @@ function StepEstilo({ data, onChange, onConfirm, onBack, submitting }) {
                   <span className={styles.gradientIndicator} />
                 </button>
               ))}
+            </div>
+
+            <div className={styles.inputWrapper} style={{ marginTop: '0.5rem' }}>
+              <input
+                type="url"
+                className={styles.inputInner}
+                placeholder="O pegá la URL de una foto para el banner..."
+                value={data.bannerImagen || ""}
+                onChange={(e) => onChange("bannerImagen", e.target.value)}
+              />
             </div>
           </div>
 
@@ -358,12 +495,14 @@ function StepEstilo({ data, onChange, onConfirm, onBack, submitting }) {
                 {submitting ? "GUARDANDO..." : "CONFIRMAR Y FINALIZAR →"}
               </Button>
             </div>
+            <button className={styles.btnSkip} onClick={onSkip}>
+              Saltar este paso
+            </button>
           </div>
         </div>
       </section>
 
       <LivePreview data={data} />
-
     </div>
   );
 }
@@ -377,15 +516,14 @@ export default function OnboardingPage() {
   const [saving,   setSaving]   = useState(false);
   const [showWelcomeOverlay, setShowWelcomeOverlay] = useState(false);
 
-  const userHandle = user?.nombre ? user.nombre.toLowerCase().replace(/\s+/g, "") : "usuario";
-
   const [form, setForm] = useState({
-    bio:         "",
-    instagram:   "",
-    generos:     [],
-    vibes:       [],
-    avatarColor: AVATAR_COLORS[0].value,
-    gradientKey: "g1",
+    bio:          "",
+    instagram:    "",
+    generos:      [],
+    vibes:        [],
+    avatarColor:  "#00FF9F",
+    gradientKey:  "g1",
+    bannerImagen: "",
   });
 
   function handleChange(field, value) {
@@ -414,7 +552,11 @@ export default function OnboardingPage() {
     setSaving(true);
     try {
       await saveProfileData(form);
-      const result = await updateMyProfile({ avatarColor: form.avatarColor, bannerGradiente: form.gradientKey });
+      const result = await updateMyProfile({
+        avatarColor: form.avatarColor,
+        bannerGradiente: form.gradientKey,
+        bannerImagen: form.bannerImagen,
+      });
       updateUser(result.user || result);
       localStorage.setItem("onboardingDone", "true");
       setShowWelcomeOverlay(true);
@@ -426,19 +568,27 @@ export default function OnboardingPage() {
     }
   }
 
-  // Saltar desde cualquier paso → guarda lo que haya y finaliza
+  // Saltar desde cualquier paso → guarda lo que haya y abre aviso de bienvenida
   async function handleSkip() {
     setSaving(true);
     try {
       await saveProfileData(form);
       localStorage.setItem("onboardingDone", "true");
+      setShowWelcomeOverlay(true);
     } catch (err) {
       console.error("[Onboarding] Error al saltar:", err);
+      setShowWelcomeOverlay(true);
     } finally {
       setSaving(false);
-      navigate("/");
     }
   }
+
+  const avatarSrc = user?.avatarUrl || user?.fotoPerfil || user?.avatar;
+  const avatarColor = form.avatarColor || 'transparent';
+  const hasAvatarColor = avatarColor !== 'transparent' && avatarColor !== 'none';
+  const avatarStyle = hasAvatarColor
+    ? { background: avatarColor, padding: '3px' }
+    : { background: 'transparent', padding: 0 };
 
   return (
     <div className={styles.page}>
@@ -463,7 +613,7 @@ export default function OnboardingPage() {
             data={form}
             onChange={handleChange}
             onNext={() => setStep(1)}
-            onSkip={handleSkip}
+            onSkip={() => setStep(1)}
           />
         ) : step === 1 ? (
           <StepMusica
@@ -471,7 +621,7 @@ export default function OnboardingPage() {
             onChange={handleChange}
             onNext={() => setStep(2)}
             onBack={() => setStep(0)}
-            onSkip={handleSkip}
+            onSkip={() => setStep(2)}
           />
         ) : (
           <StepEstilo
@@ -479,6 +629,7 @@ export default function OnboardingPage() {
             onChange={handleChange}
             onConfirm={handleConfirm}
             onBack={() => setStep(1)}
+            onSkip={handleSkip}
             submitting={saving}
           />
         )}
@@ -491,10 +642,14 @@ export default function OnboardingPage() {
             <div className={styles.topGradientBar} />
             <div className={styles.overlayGrain} />
             
-            <div className={styles.lightningBox} style={{ backgroundColor: form.avatarColor, borderColor: form.avatarColor }}>
-              <div className={styles.lightningIcon} aria-hidden="true" style={{ animation: 'none', color: 'var(--ds-color-bg-surface)', textShadow: 'none', fontSize: '2.5rem', fontWeight: 900 }}>
-                {user?.nombre ? user.nombre.charAt(0).toUpperCase() : "U"}
-              </div>
+            <div className={styles.lightningBox} style={avatarStyle}>
+              {avatarSrc ? (
+                <img src={avatarSrc} alt={user?.nombre || "Avatar"} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 'inherit' }} />
+              ) : (
+                <div className={styles.lightningIcon} aria-hidden="true" style={{ animation: 'none', color: 'var(--ds-color-bg-surface)', textShadow: 'none', fontSize: '2.5rem', fontWeight: 900 }}>
+                  {user?.nombre ? user.nombre.charAt(0).toUpperCase() : "U"}
+                </div>
+              )}
             </div>
 
             <p className={styles.welcomeEyebrow} style={{ letterSpacing: '0.15em' }}>¡BIENVENIDO/A!</p>

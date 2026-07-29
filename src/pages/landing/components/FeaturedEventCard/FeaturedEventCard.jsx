@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Music } from "lucide-react";
 import styles from "../../LandingPage.module.css";
 import { CalendarIcon, ClockIcon, MapPinIcon } from "../../../../components/icons";
 import { shareEvent } from "../../../../utils/helpers";
@@ -81,10 +82,7 @@ export default function FeaturedEventCard({ event, isLoading }) {
         {artists.length > 0 && (
           <div className={styles.fecLineup}>
             <span className={styles.fecLineupLabel}>
-              {/* Ícono musical SVG — igual al mockup */}
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                <path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
-              </svg>
+              <Music size={12} />
               LINE-UP
             </span>
             <ul className={styles.fecLineupList}>
@@ -105,8 +103,6 @@ export default function FeaturedEventCard({ event, isLoading }) {
             </ul>
           </div>
         )}
-
-
 
         {/* Separador + fila de acciones */}
         <div className={styles.fecActions}>

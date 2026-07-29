@@ -585,6 +585,7 @@
   width: 100%;
   transition: background 0.3s var(--ds-motion-ease-out);
   border-bottom: 1px solid var(--ds-color-editorial-border);
+  border-radius: 0;
 }
 
 .miniContent {
@@ -601,16 +602,27 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 4px solid var(--ds-color-brand-canvas);
-  outline: 1px solid var(--ds-color-editorial-border-mid);
-  transition: background-color 0.3s var(--ds-motion-ease-out);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+  transition: background 0.3s var(--ds-motion-ease-out);
+  background-color: var(--ds-color-bg-canvas);
+  position: relative;
+}
+
+.miniAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
 }
 
 .miniAvatarText {
   font-family: var(--ds-font-family-display);
   font-size: 2rem;
   font-weight: var(--ds-font-weight-black);
-  color: var(--ds-color-bg-canvas);
+  color: var(--ds-color-text-primary);
 }
 
 .miniDetails {
@@ -635,14 +647,40 @@
   color: var(--ds-color-neutral-900);
 }
 
-.miniBadge {
+.miniBadgeFan {
   font-family: var(--ds-font-family-base);
   font-size: 0.55rem;
   font-weight: var(--ds-font-weight-bold);
-  border: 1px solid var(--ds-color-brand-lime);
-  color: var(--ds-color-brand-lime);
-  padding: 0px 4px;
-  border-radius: 1px;
+  border: 1px solid #00FF9F;
+  color: #00FF9F;
+  background: rgba(0, 255, 159, 0.08);
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.miniBadgeProducer {
+  font-family: var(--ds-font-family-base);
+  font-size: 0.55rem;
+  font-weight: var(--ds-font-weight-bold);
+  border: 1px solid #38bdf8;
+  color: #38bdf8;
+  background: rgba(30, 58, 138, 0.45);
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.miniBadgeArtist {
+  font-family: var(--ds-font-family-base);
+  font-size: 0.55rem;
+  font-weight: var(--ds-font-weight-bold);
+  border: 1px solid #ff7bee;
+  color: #ff7bee;
+  background: rgba(255, 123, 238, 0.12);
+  padding: 1px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
 }
 
 .instagramPreviewBtn {

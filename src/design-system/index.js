@@ -8,6 +8,6 @@ export { default as Divider } from "./primitives/Divider/Divider";
 export { default as SectionLabel } from "./primitives/SectionLabel/SectionLabel";
 export { default as Stack } from "./layout/Stack/Stack";
 export { default as Container } from "./layout/Container/Container";
-export { default as SearchBar } from "./composites/SearchBar/SearchBar";
 export { default as EventCard } from "./composites/EventCard/EventCard";
-export { default as Navbar } from "./composites/Navbar/Navbar";
+export { default as BookingSearchBar } from "./composites/BookingSearchBar/BookingSearchBar";
+export { default as EditorialHeader } from "./composites/EditorialHeader/EditorialHeader";

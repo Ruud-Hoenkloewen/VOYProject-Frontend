@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { formatPrice } from '../../utils/helpers';
+import { Check } from 'lucide-react';
+import { formatPrice } from '../../../../utils/helpers';
 import styles from './CheckoutLayout.module.css';
 
 // ── Iconos inline ────────────────────────────────────────────────────────────
@@ -80,22 +81,16 @@ export default function CheckoutLayout({ currentStep, eventData, cantidad = 1, c
           <button
             className={styles.backBtn}
             onClick={() => navigate(-1)}
-            aria-label="Volver"
+            aria-label="Volver atrás"
+            title="Volver atrás"
           >
-            <VoyLogo />
+            <ArrowLeftSmall />
           </button>
           <div className={styles.headerEventInfo}>
             <span className={styles.headerEyebrow}>COMPRANDO ENTRADAS PARA</span>
             <span className={styles.headerEventName}>{eventData?.title ?? '...'}</span>
           </div>
         </div>
-        <button
-          className={styles.backTextBtn}
-          onClick={() => navigate(-1)}
-        >
-          <ArrowLeftSmall />
-          VOLVER ATRÁS
-        </button>
       </header>
 
       {/* ── STEPPER ────────────────────────────────────────────────────────── */}
@@ -115,7 +110,7 @@ export default function CheckoutLayout({ currentStep, eventData, cantidad = 1, c
                     ${isActive    ? styles.stepBoxActive    : ''}
                     ${isCompleted ? styles.stepBoxCompleted : ''}
                   `}>
-                    {isCompleted ? '✓' : step.number}
+                    {isCompleted ? <Check size={13} /> : step.number}
                   </div>
                   <span className={`
                     ${styles.stepLabel}

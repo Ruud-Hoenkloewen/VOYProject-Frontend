@@ -22,6 +22,7 @@ export default function ProfileEditPage() {
   const { user, updateUser } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
+  const bannerInputRef = useRef(null);
 
   const [form, setForm] = useState({
     nombre:           "",
@@ -33,8 +34,9 @@ export default function ProfileEditPage() {
     redesSociales:    { instagram: "", twitter: "", spotify: "" },
     generosMusicales: [],
     vibes:            [],
-    avatarColor:      AVATAR_COLORS?.[0]?.value || "#a3e635",
+    avatarColor:      AVATAR_COLORS?.[0]?.value || "#00FF9F",
     gradientKey:      "g1",
+    bannerImagen:     "",
   });
 
   const [loading,  setLoading]  = useState(true);
@@ -56,19 +58,40 @@ export default function ProfileEditPage() {
     reader.readAsDataURL(file);
   };
 
+  const handleBannerFileChange = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const base64Data = event.target.result;
+      handleChange("bannerImagen", base64Data);
+    };
+    reader.readAsDataURL(file);
+  };
+
   // ── Cargar perfil ──────────────────────────────────────────────
   useEffect(() => {
     getMyProfile()
-      .then((profile) => {
+      .then(async (profile) => {
         let initialUsername = profile.username || "";
         if (!initialUsername && profile.nombre) {
-          initialUsername = profile.nombre.toLowerCase()
+          const base = profile.nombre.toLowerCase()
             .trim()
             .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
             .replace(/[^a-z0-9._]/g, "");
+          try {
+            const check = await checkUsername(base);
+            if (check.available) {
+              initialUsername = base;
+            } else {
+              initialUsername = `${base}${Math.floor(100 + Math.random() * 900)}`;
+            }
+          } catch {
+            initialUsername = base;
+          }
         }
         
-        originalUsername.current = profile.username || "";
+        originalUsername.current = profile.username || initialUsername;
         
         if (initialUsername) {
           if (initialUsername === originalUsername.current) {
@@ -99,8 +122,9 @@ export default function ProfileEditPage() {
           },
           generosMusicales: profile.generosMusicales     || [],
           vibes:            profile.vibeEnShows          || [],
-          avatarColor:      profile.avatarColor          || (AVATAR_COLORS?.[0]?.value || "#a3e635"),
+          avatarColor:      profile.avatarColor          || (AVATAR_COLORS?.[0]?.value || "#00FF9F"),
           gradientKey:      profile.bannerGradiente      || "g1",
+          bannerImagen:     profile.bannerImagen         || "",
         });
       })
       .catch((err) => console.error("[ProfileEdit] Error:", err))
@@ -177,6 +201,7 @@ export default function ProfileEditPage() {
         vibeEnShows:      form.vibes,
         avatarColor:      form.avatarColor,
         bannerGradiente:  form.gradientKey,
+        bannerImagen:     form.bannerImagen,
       };
 
       const updated = await updateMyProfile(payload);
@@ -198,13 +223,16 @@ export default function ProfileEditPage() {
     return (
       <div style={{
         position: 'fixed',
-        inset: 0,
+        top: 0,
+        left: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 99999,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: 'var(--ds-color-bg-canvas)',
         backgroundImage: 'none',
-        zIndex: 9999,
       }}>
         <span style={{
           color: '#4b5563',
@@ -219,7 +247,16 @@ export default function ProfileEditPage() {
     );
   }
 
-  const bannerBg = GRADIENTS[form.gradientKey] || GRADIENTS.g1;
+  const bannerBg = form.bannerImagen 
+    ? `url("${form.bannerImagen}") center/cover no-repeat` 
+    : (GRADIENTS[form.gradientKey] || form.gradientKey || GRADIENTS.g1);
+
+  const avatarColor = form.avatarColor || 'transparent';
+  const hasAvatarColor = avatarColor !== 'transparent' && avatarColor !== 'none';
+  const avatarStyle = hasAvatarColor
+    ? { background: avatarColor, padding: '3px' }
+    : { background: 'transparent', padding: 0 };
+
   const initial  = (form.nombre || form.username || "U").charAt(0).toUpperCase();
 
   return (
@@ -244,7 +281,23 @@ export default function ProfileEditPage() {
           </div>
         </nav>
 
-        <div className={styles.banner} style={{ background: bannerBg }} />
+        <div 
+          className={styles.banner} 
+          style={{ background: bannerBg }}
+          onClick={() => bannerInputRef.current?.click()}
+        >
+          <div className={styles.bannerOverlay}>
+            <EditIcon size={22} />
+            <span>CAMBIAR BANNER</span>
+          </div>
+        </div>
+        <input
+          ref={bannerInputRef}
+          type="file"
+          accept="image/*"
+          className={styles.hiddenFileInput}
+          onChange={handleBannerFileChange}
+        />
       </div>
 
       {/* ── BODY DE EDICIÓN ── */}
@@ -254,9 +307,8 @@ export default function ProfileEditPage() {
         <div className={styles.profileHeader}>
           <div 
             className={styles.avatarSquare} 
-            style={{ backgroundColor: form.avatarColor }}
+            style={avatarStyle}
             onClick={() => fileInputRef.current?.click()}
-            title="Hacé clic para cambiar tu foto de perfil"
           >
             {form.avatarUrl ? (
               <img src={form.avatarUrl} alt={form.nombre} className={styles.avatarImage} />
@@ -354,10 +406,35 @@ export default function ProfileEditPage() {
 
           {/* RIGHT: APARIENCIA & FOTO */}
           <div className={styles.topGridRight}>
-            <span className={styles.appearanceTitle}>APARIENCIA</span>
+            <span className={styles.appearanceTitle}>APARIENCIA Y PERSONALIZACIÓN</span>
 
             <div className={styles.appearanceSection}>
-              <span className={styles.appearanceLabel}>FOTO DE PERFIL (URL)</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <span className={styles.appearanceLabel}>FOTO DE PERFIL</span>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    background: 'rgba(0, 255, 159, 0.1)',
+                    border: '1px solid rgba(0, 255, 159, 0.3)',
+                    color: '#00FF9F',
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '4px',
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  📷 SUBIR FOTO
+                </button>
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleFileChange}
+                />
+              </div>
               <div className={styles.inputWrapper}>
                 <input
                   type="url"
@@ -370,13 +447,28 @@ export default function ProfileEditPage() {
             </div>
 
             <div className={styles.appearanceSection}>
-              <span className={styles.appearanceLabel}>COLOR DE AVATAR</span>
+              <span className={styles.appearanceLabel}>COLOR / ACENTO DEL PERFIL</span>
+              <div style={{ fontSize: '0.7rem', color: '#888', marginBottom: '0.35rem', fontWeight: 700 }}>COLORES FIJOS</div>
               <div className={styles.swatchGrid}>
-                {(AVATAR_COLORS || []).map((c) => (
+                {(AVATAR_COLORS || []).filter(c => c.category === 'fijo').map((c) => (
                   <button
                     key={c.value}
                     className={`${styles.swatch} ${form.avatarColor === c.value ? styles.swatchActive : ""}`}
-                    style={{ backgroundColor: c.value }}
+                    style={{ background: c.value }}
+                    onClick={() => handleChange("avatarColor", c.value)}
+                    title={c.name}
+                    type="button"
+                  />
+                ))}
+              </div>
+
+              <div style={{ fontSize: '0.7rem', color: '#888', margin: '0.75rem 0 0.35rem', fontWeight: 700 }}>GRADIENTES MIXTOS Y ARCOÍRIS</div>
+              <div className={styles.swatchGrid}>
+                {(AVATAR_COLORS || []).filter(c => c.category !== 'fijo').map((c) => (
+                  <button
+                    key={c.value}
+                    className={`${styles.swatch} ${form.avatarColor === c.value ? styles.swatchActive : ""}`}
+                    style={{ background: c.value }}
                     onClick={() => handleChange("avatarColor", c.value)}
                     title={c.name}
                     type="button"
@@ -386,17 +478,56 @@ export default function ProfileEditPage() {
             </div>
 
             <div className={styles.appearanceSection}>
-              <span className={styles.appearanceLabel}>PORTADA</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                <span className={styles.appearanceLabel}>BANER DE PORTADA</span>
+                <button
+                  type="button"
+                  onClick={() => bannerInputRef.current?.click()}
+                  style={{
+                    background: 'rgba(0, 255, 159, 0.1)',
+                    border: '1px solid rgba(0, 255, 159, 0.3)',
+                    color: '#00FF9F',
+                    padding: '0.2rem 0.6rem',
+                    borderRadius: '4px',
+                    fontSize: '0.7rem',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  📷 CARGAR FOTO BANNER
+                </button>
+                <input
+                  ref={bannerInputRef}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: "none" }}
+                  onChange={handleBannerFileChange}
+                />
+              </div>
+
               <div className={styles.gradientGrid}>
                 {Object.keys(GRADIENTS || {}).map((key) => (
                   <button
                     key={key}
-                    className={`${styles.gradBtn} ${form.gradientKey === key ? styles.gradBtnActive : ""}`}
+                    className={`${styles.gradBtn} ${form.gradientKey === key && !form.bannerImagen ? styles.gradBtnActive : ""}`}
                     style={{ background: GRADIENTS[key] }}
-                    onClick={() => handleChange("gradientKey", key)}
+                    onClick={() => {
+                      handleChange("gradientKey", key);
+                      handleChange("bannerImagen", "");
+                    }}
                     type="button"
                   />
                 ))}
+              </div>
+
+              <div className={styles.inputWrapper} style={{ marginTop: '0.5rem' }}>
+                <input
+                  type="url"
+                  className={styles.inputInner}
+                  placeholder="O pegá la URL de una foto para el banner..."
+                  value={form.bannerImagen}
+                  onChange={(e) => handleChange("bannerImagen", e.target.value)}
+                />
               </div>
             </div>
           </div>

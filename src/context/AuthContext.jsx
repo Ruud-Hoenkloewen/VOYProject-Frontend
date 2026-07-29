@@ -9,25 +9,8 @@ const normalizeRole = (r) => {
   const lower = r.toLowerCase();
   if (lower === "usuario" || lower === "client") return "client";
   if (lower === "productor" || lower === "producer") return "producer";
-  if (lower === "admin") return "admin";
+  if (lower === "artista" || lower === "artist") return "artist";
   return lower;
-};
-
-const checkIsAdmin = (userData) => {
-  if (!userData) return false;
-  const username = userData.username;
-  const nombre = userData.nombre;
-  
-  if (username) {
-    return username.toLowerCase().trim() === "admin.voy";
-  }
-  
-  if (nombre) {
-    const cleanNombre = nombre.toLowerCase().trim();
-    return cleanNombre === "admin.voy" || cleanNombre === "admin voy";
-  }
-  
-  return userData.rol === 'admin' || userData.role === 'admin';
 };
 
 const AuthContext = createContext(null);
@@ -124,9 +107,7 @@ export function AuthProvider({ children }) {
     if (!newUserData) return;
     localStorage.setItem(USER_KEY, JSON.stringify(newUserData));
     setUser(newUserData);
-    if (checkIsAdmin(newUserData)) {
-      setRole("admin");
-    } else if (newUserData.role || newUserData.rol) {
+    if (newUserData.role || newUserData.rol) {
       setRole(normalizeRole(newUserData.role || newUserData.rol));
     }
   }, []);

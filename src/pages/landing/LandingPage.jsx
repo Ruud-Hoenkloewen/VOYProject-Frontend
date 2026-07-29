@@ -7,6 +7,8 @@ import EditorialHeader from "../../design-system/composites/EditorialHeader/Edit
 import FeaturedCarousel from "./components/FeaturedCarousel/FeaturedCarousel";
 import HeroWidgetLoggedIn from "./components/HeroWidgets/HeroWidgetLoggedIn";
 import HeroWidgetLoggedOut from "./components/HeroWidgets/HeroWidgetLoggedOut";
+import DraggableTicker from "../../components/DraggableTicker/DraggableTicker";
+import DraggableEventsTicker from "./components/DraggableEventsTicker/DraggableEventsTicker";
 import { 
   MusicIcon, TicketIcon, PeopleIcon, MapPinIcon, 
   ZapIcon, FlameIcon, DiscIcon, HeadphonesIcon, 
@@ -146,18 +148,8 @@ export default function LandingPage() {
       {/* ── SHOWS DESTACADOS — CARRUSEL ───────────────────── */}
       <FeaturedCarousel />
 
-      {/* ── MARQUEE TICKER ───────────────────────────────────── */}
-      <div className={styles.marqueeWrapper} aria-hidden="true">
-        <div className={styles.marqueeTrack}>
-          {["SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT"].map((item, i) => (
-            <span key={i} className={styles.marqueeItem}><span className={styles.diamond}>♦</span> {item}</span>
-          ))}
-          {/* Duplicado para el loop infinito */}
-          {["SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT", "SAN MIGUEL DE TUCUMÁN", "VOY PROJECT"].map((item, i) => (
-            <span key={`dup-${i}`} className={styles.marqueeItem} aria-hidden="true"><span className={styles.diamond}>♦</span> {item}</span>
-          ))}
-        </div>
-      </div>
+      {/* ── MARQUEE TICKER (INTERACTIVO/DRAGGABLE) ───────────────────── */}
+      <DraggableTicker />
 
       {/* ── EVENTOS DESTACADOS — ticker horizontal ───────────── */}
       <section className={styles.eventsPreview}>
@@ -167,51 +159,8 @@ export default function LandingPage() {
           <div className={styles.sectionDivider} />
         </div>
 
-        {/* Ticker: overflow oculto + track animado */}
-        <div className={styles.eventsTicker}>
-          <div className={styles.eventsTrack}>
-            {/* Set principal */}
-            {(isLoading ? [1, 2, 3, 4] : previewEvents).map((evt, i) =>
-              isLoading ? (
-                <div key={i} className={styles.eventsTickerItem}>
-                  <EventCard isLoading={true} />
-                </div>
-              ) : (
-                <div key={evt.id} className={styles.eventsTickerItem}>
-                  <EventCard
-                    id={evt.id}
-                    title={evt.title}
-                    date={evt.date}
-                    time={evt.time}
-                    venue={evt.venue}
-                    price={evt.price}
-                    genres={evt.genres}
-                    status={evt.status}
-                    statusTone={evt.statusTone}
-                    imageUrl={evt.imageUrl}
-                  />
-                </div>
-              )
-            )}
-            {/* Duplicado para el loop infinito — aria-hidden */}
-            {(!isLoading && previewEvents.length > 0) && previewEvents.map((evt) => (
-              <div key={`dup-${evt.id}`} className={styles.eventsTickerItem} aria-hidden="true">
-                <EventCard
-                  id={evt.id}
-                  title={evt.title}
-                  date={evt.date}
-                  time={evt.time}
-                  venue={evt.venue}
-                  price={evt.price}
-                  genres={evt.genres}
-                  status={evt.status}
-                  statusTone={evt.statusTone}
-                  imageUrl={evt.imageUrl}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
+        {/* Ticker: interactivo y arrastrable con mouse y touch (celular) */}
+        <DraggableEventsTicker isLoading={isLoading} previewEvents={previewEvents} />
 
         <div className={styles.eventsCtaWrapper} data-animate>
           <Link to="/events" className={styles.ctaPrimary}>VER TODOS LOS EVENTOS</Link>

@@ -1,6 +1,7 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
+import { Zap, Ticket, Receipt, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { formatPrice } from '../../utils/helpers';
 import styles from './PurchaseSuccessPage.module.css';
 
@@ -108,15 +109,12 @@ export default function PurchaseSuccessPage() {
           zIndex: 9999 
         }} 
       />
-      
-      {showToast && (
+           {showToast && (
         <div className={styles.toast} role="alert">
-          <span className={styles.toastIcon}>⚡</span>
+          <span className={styles.toastIcon}><Zap size={16} color="#00FF9F" /></span>
           <span>Próximamente disponible en el siguiente Sprint.</span>
         </div>
       )}
-
-
 
       {/* Header con Tick Verde de Éxito */}
       <div className={`${styles.successHeader} ${styles.animateFadeInUp}`} style={{ animationDelay: '0.1s' }}>
@@ -161,7 +159,7 @@ export default function PurchaseSuccessPage() {
         
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionIcon}>🎟️</span>
+            <span className={styles.sectionIcon}><Ticket size={18} color="#00FF9F" /></span>
             <span>ENTRADA DIGITAL</span>
           </div>
           <div className={styles.ticket}>
@@ -209,7 +207,7 @@ export default function PurchaseSuccessPage() {
                   value={qrVerificationUrl}
                   bgColor="#ffffff"
                   fgColor="#08090d"
-                  size={115}
+                  size={95}
                   level="M"
                 />
               </div>
@@ -220,7 +218,7 @@ export default function PurchaseSuccessPage() {
 
         <div className={styles.sectionContainer}>
           <div className={styles.sectionHeader}>
-            <span className={styles.sectionIcon}>📄</span>
+            <span className={styles.sectionIcon}><Receipt size={18} color="#00FF9F" /></span>
             <span>COMPROBANTE DE COMPRA</span>
           </div>
           <div className={styles.receipt}>
@@ -264,7 +262,10 @@ export default function PurchaseSuccessPage() {
               <div className={styles.receiptRowTotal}><span className={styles.rl}>TOTAL</span><span className={styles.rrTotal}>{formatPrice(total)}</span></div>
             </div>
 
-            <div className={styles.receiptFooter}>🛡️ DOCUMENTO VÁLIDO COMO COMPROBANTE DE COMPRA • VOY PROJECT</div>
+            <div className={styles.receiptFooter}>
+              <ShieldCheck size={14} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6, color: '#00FF9F' }} />
+              DOCUMENTO VÁLIDO COMO COMPROBANTE DE COMPRA • VOY PROJECT
+            </div>
           </div>
         </div>
       </div>
@@ -356,14 +357,6 @@ export default function PurchaseSuccessPage() {
       </div>
 
       <div className={styles.actions}>
-        <button
-          onClick={handleDownloadPDF}
-          className={styles.pdfBtn}
-          aria-label="Ver Más Eventos"
-        >
-          VER MÁS EVENTOS
-        </button>
-        
         <button
           onClick={handleBackToHome}
           className={styles.homeBtn}

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./HowItWorksModal.module.css";
-import { TicketIcon, HeartIcon, ZapIcon } from "../icons";
+import { TicketIcon, HeartIcon, ZapIcon, DollarIcon } from "../icons";
 
-export default function HowItWorksModal({ onClose }) {
+export default function HowItWorksModal({ onClose, isProducer = false }) {
   const navigate = useNavigate();
 
   // Escuchar tecla Escape para cerrar modal y bloquear scroll de fondo
@@ -20,7 +20,7 @@ export default function HowItWorksModal({ onClose }) {
     };
   }, [onClose]);
 
-  const steps = [
+  const fanSteps = [
     {
       step: "01",
       icon: <ZapIcon size={24} />,
@@ -41,6 +41,29 @@ export default function HowItWorksModal({ onClose }) {
     }
   ];
 
+  const producerSteps = [
+    {
+      step: "01",
+      icon: <ZapIcon size={24} color="#00E5FF" />,
+      title: "PUBLICÁ EN MINUTOS",
+      desc: "Cargá la gráfica, fecha, lugar y defini el valor de las entradas. Tu show quedará publicado al instante."
+    },
+    {
+      step: "02",
+      icon: <TicketIcon size={24} color="#A855F7" />,
+      title: "GESTIONÁ EL STOCK",
+      desc: "Pausá o reanudá la venta de entradas cuando quieras y monitoreá la ocupación de la sala en tiempo real."
+    },
+    {
+      step: "03",
+      icon: <DollarIcon size={24} color="#00FF9F" />,
+      title: "MÉTRICAS E INGRESOS",
+      desc: "Consultá las entradas vendidas, la recaudación total y la analítica completa directamente en tu panel."
+    }
+  ];
+
+  const steps = isProducer ? producerSteps : fanSteps;
+
   return (
     <div className={styles.overlay} onClick={onClose} aria-hidden="true">
       <div 
@@ -53,16 +76,22 @@ export default function HowItWorksModal({ onClose }) {
         <button 
           className={styles.closeBtn} 
           onClick={onClose} 
-          aria-label="Cerrar ventana cómo funciona"
+          aria-label="Cerrar ayuda"
         >
           ✕
         </button>
 
         <div className={styles.header}>
-          <span className={styles.eyebrow}>♦ GUÍA VOY PROJECT ♦</span>
-          <h2 id="how-it-works-title" className={styles.title}>¿CÓMO FUNCIONA?</h2>
+          <span className={styles.eyebrow}>
+            {isProducer ? "♦ GUÍA PARA PRODUCTORES DIGITALES ♦" : "♦ GUÍA VOY PROJECT ♦"}
+          </span>
+          <h2 id="how-it-works-title" className={styles.title}>
+            {isProducer ? "¿CÓMO GESTIONAR TUS SHOWS?" : "¿CÓMO FUNCIONA?"}
+          </h2>
           <p className={styles.subtitle}>
-            Una plataforma pensada por y para la escena de música independiente.
+            {isProducer 
+              ? "Herramientas integradas para publicar eventos, controlar la taquilla y seguir tus ingresos."
+              : "Una plataforma pensada por y para la escena de música independiente."}
           </p>
         </div>
 
@@ -79,33 +108,29 @@ export default function HowItWorksModal({ onClose }) {
           ))}
         </div>
 
-        {/* ── APARTADO DE SOPORTE & ASISTENCIA POR CORREO ── */}
+        {/* ── APARTADO DE SOPORTE & ASISTENCIA ── */}
         <div className={styles.supportBox}>
           <div className={styles.supportInfo}>
-            <span className={styles.supportBadge}>💬 SOPORTE Y TICKETS</span>
-            <h4 className={styles.supportTitle}>¿Necesitás ayuda con tu entrada o tenés dudas?</h4>
+            <span className={styles.supportBadge}>
+              {isProducer ? "💬 SOPORTE PRODUCTORES" : "💬 SOPORTE Y TICKETS"}
+            </span>
+            <h4 className={styles.supportTitle}>
+              {isProducer 
+                ? "¿Tenés una duda con la liquidación o la carga de un evento?" 
+                : "¿Necesitás ayuda con tu entrada o tenés dudas?"}
+            </h4>
             <p className={styles.supportDesc}>
-              Escribinos directamente a nuestro equipo de atención y te responderemos a la brevedad.
+              {isProducer
+                ? "Contactá directamente a nuestro canal prioritario de atención a productores de VOY."
+                : "Escribinos directamente a nuestro equipo de atención y te responderemos a la brevedad."}
             </p>
           </div>
           <a 
-            href="mailto:soporte@voyproject.com?subject=Consulta%20o%20Ayuda%20VOY%20Project"
+            href={isProducer ? "mailto:productores@voyproject.com?subject=Ayuda%20Productor%20VOY" : "mailto:soporte@voyproject.com?subject=Consulta%20o%20Ayuda%20VOY%20Project"}
             className={styles.supportEmailBtn}
           >
-            ✉ soporte@voyproject.com
+            ✉ {isProducer ? "productores@voyproject.com" : "soporte@voyproject.com"}
           </a>
-        </div>
-
-        <div className={styles.footer}>
-          <button 
-            className={styles.ctaBtn}
-            onClick={() => {
-              onClose();
-              navigate("/events");
-            }}
-          >
-            EXPLORAR CARTELERA →
-          </button>
         </div>
       </div>
     </div>

@@ -2,9 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { fetchEvents } from '../../services/eventService';
-import { getProfileByUsername, getMyProfile } from '../../services/userService';
+import { getProfileByUsername, getMyProfile, GRADIENTS } from '../../services/userService';
 import { EventCard } from '../../design-system';
-import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon, ZapIcon } from '../../components/icons';
+import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon, ZapIcon, MusicIcon } from '../../components/icons';
 import FollowButton from '../../components/FollowButton/FollowButton';
 import LogoVoy from '../../components/LogoVoy/LogoVoy';
 import styles from './ProfilePage.module.css';
@@ -176,12 +176,20 @@ export default function ProfilePage() {
   const safeName = profile.nombre || profile.username || 'Usuario';
   const initial = safeName.charAt(0).toUpperCase();
   const displayUsername = profile.username ? `@${profile.username}` : `@${safeName.toLowerCase().replace(/\s/g, '')}`;
-  const avatarColor = profile.avatarColor || 'var(--ds-color-accent-primary)';
+  const avatarColor = profile.avatarColor || 'transparent';
+  const hasAvatarColor = avatarColor !== 'transparent' && avatarColor !== 'none';
+  const avatarStyle = hasAvatarColor
+    ? { background: avatarColor, padding: '3px' }
+    : { background: 'transparent', padding: 0 };
+  const bannerBg = profile.bannerImagen
+    ? `url("${profile.bannerImagen}") center/cover no-repeat`
+    : (GRADIENTS[profile.bannerGradiente] || profile.bannerGradiente || profile.bannerColor || GRADIENTS.g1);
   
   const followersCount = profile.seguidores?.length || 0;
   const followingCount = profile.siguiendo?.length || 0;
 
   const isProducer = profile.role === 'producer' || profile.rol === 'producer' || profile.isVerifiedProducer;
+  const isArtist = profile.role === 'artist' || profile.rol === 'artist';
   const producerEvents = allEvents.filter(e => {
     const creatorId = e.creador?._id || e.creador;
     return creatorId === profile._id;
@@ -201,9 +209,11 @@ export default function ProfilePage() {
     }
   };
 
-  const roleDisplay = (profile.username && profile.username.toLowerCase().trim() === "admin.voy")
-    ? 'ADMIN'
-    : (profile.role === 'producer' || profile.rol === 'producer' ? 'PRODUCTORA' : profile.role === 'artist' || profile.rol === 'artist' ? 'ARTISTA' : 'FAN');
+  const roleDisplay = (profile.role === 'producer' || profile.rol === 'producer')
+    ? 'PRODUCTORA'
+    : (profile.role === 'artist' || profile.rol === 'artist')
+    ? 'ARTISTA'
+    : 'FAN';
 
   return (
     <div className={styles.pageRoot}>
@@ -239,94 +249,113 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className={styles.banner} />
+        <div className={styles.banner} style={{ background: bannerBg }} />
       </div>
 
       <div className={styles.profileContent}>
         <div className={styles.profileHeader}>
           <div className={styles.userInfoCol}>
-            <div className={styles.avatarSquare} style={{ backgroundColor: avatarColor }}>
-              {(profile.avatarUrl || profile.fotoPerfil || profile.avatar) ? (
-                <img 
-                  src={profile.avatarUrl || profile.fotoPerfil || profile.avatar} 
-                  alt={safeName} 
-                  className={styles.avatarImage} 
-                />
-              ) : (
-                initial
-              )}
-            </div>
-            
-            <div className={styles.nameBlock}>
-              <h1 className={styles.displayName}>{profile.nombreArtistico || profile.nombreProductora || profile.nombre || 'Usuario'}</h1>
-              <span className={styles.username}>{displayUsername}</span>
+            {/* Upper Row: Avatar + Name / Location / Stats to the side */}
+            <div className={styles.avatarAndHeaderRow}>
+              <div className={styles.avatarSquare} style={avatarStyle}>
+                {(profile.avatarUrl || profile.fotoPerfil || profile.avatar) ? (
+                  <img 
+                    src={profile.avatarUrl || profile.fotoPerfil || profile.avatar} 
+                    alt={safeName} 
+                    className={styles.avatarImage} 
+                  />
+                ) : (
+                  initial
+                )}
+              </div>
+              
+              <div className={styles.headerDetailsCol}>
+                <div className={styles.nameBlock}>
+                  <h1 className={styles.displayName}>{profile.nombreArtistico || profile.nombreProductora || profile.nombre || 'Usuario'}</h1>
+                  <span className={styles.username}>{displayUsername}</span>
+                  <div className={isProducer ? styles.badgeProducer : isArtist ? styles.badgeArtist : styles.badgeFan}>
+                    {isProducer ? (
+                      <ZapIcon size={14} />
+                    ) : isArtist ? (
+                      <MusicIcon size={14} />
+                    ) : (
+                      <TicketIcon size={14} />
+                    )}
+                    <span>{roleDisplay}</span>
+                  </div>
+                </div>
+
+                <div className={styles.metaInlineRow}>
+                  {profile.ubicacion && (
+                    <>
+                      <div className={styles.locationBlock}>
+                        <MapPinIcon size={15} /> {profile.ubicacion}
+                      </div>
+                      <span className={styles.metaDivider}>|</span>
+                    </>
+                  )}
+
+                  <span className={styles.statItemClickable}>
+                    <strong className={styles.statNumber}>{followersCount}</strong> seguidores
+                  </span>
+
+                  <span className={styles.metaDivider}>|</span>
+
+                  <span className={styles.statItemClickable}>
+                    <strong className={styles.statNumber}>{followingCount}</strong> siguiendo
+                  </span>
+
+                  <div className={styles.socialIconsGroup}>
+                    {profile.redesSociales?.instagram && (
+                      <a href={profile.redesSociales.instagram.startsWith('http') ? profile.redesSociales.instagram : `https://instagram.com/${profile.redesSociales.instagram.replace('@','')}`} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Instagram">
+                        <InstagramSVG />
+                      </a>
+                    )}
+                    {profile.redesSociales?.spotify && (
+                      <a href={profile.redesSociales.spotify} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Spotify">
+                        <SpotifySVG />
+                      </a>
+                    )}
+                    {profile.redesSociales?.youtube && (
+                      <a href={profile.redesSociales.youtube} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Youtube">
+                        <YoutubeSVG />
+                      </a>
+                    )}
+                    {profile.redesSociales?.web && (
+                      <a href={profile.redesSociales.web} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Web">
+                        <LinkSVG />
+                      </a>
+                    )}
+                  </div>
+                </div>
+                
+                {!isMyProfile && (
+                  <div className={styles.followWrapper}>
+                    <FollowButton
+                      userId={profile._id}
+                      isFollowing={isFollowing}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
 
-            {profile.ubicacion && (
-              <div className={styles.locationBlock}>
-                <MapPinIcon size={16} /> {profile.ubicacion}
-              </div>
-            )}
-            
+            {/* Lower Section: Bio & Profile Tag/Badges */}
             {profile.bio && (
               <p className={styles.bioText}>
                 {profile.bio}
               </p>
             )}
 
-            <div className={styles.badgesRow}>
-              <div className={styles.badgeFan}>
-                <TicketIcon size={14} /> {roleDisplay}
+            {(profile.role === 'artist' || profile.rol === 'artist') && profile.generosMusicales?.length > 0 && (
+              <div className={styles.badgesRow}>
+                {profile.generosMusicales.map((g) => (
+                  <div key={g} className={styles.pogoBadge}>
+                    {g}
+                  </div>
+                ))}
               </div>
-              {(profile.role === 'artist' || profile.rol === 'artist') && profile.generosMusicales?.map((g) => (
-                <div key={g} className={styles.pogoBadge}>
-                  {g}
-                </div>
-              ))}
-            </div>
-
-            <div className={styles.userStatsRow}>
-              <div className={styles.statsTextGroup}>
-                <span className={styles.statItemClickable}>
-                  <strong className={styles.statNumber}>{followersCount}</strong> seguidores
-                </span>
-                <span className={styles.statItemClickable}>
-                  <strong className={styles.statNumber}>{followingCount}</strong> siguiendo
-                </span>
-              </div>
-
-              <div className={styles.socialIconsGroup}>
-                {profile.redesSociales?.instagram && (
-                  <a href={profile.redesSociales.instagram.startsWith('http') ? profile.redesSociales.instagram : `https://instagram.com/${profile.redesSociales.instagram.replace('@','')}`} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Instagram">
-                    <InstagramSVG />
-                  </a>
-                )}
-                {profile.redesSociales?.spotify && (
-                  <a href={profile.redesSociales.spotify} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Spotify">
-                    <SpotifySVG />
-                  </a>
-                )}
-                {profile.redesSociales?.youtube && (
-                  <a href={profile.redesSociales.youtube} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Youtube">
-                    <YoutubeSVG />
-                  </a>
-                )}
-                {profile.redesSociales?.web && (
-                  <a href={profile.redesSociales.web} target="_blank" rel="noreferrer" className={styles.socialBtn} aria-label="Web">
-                    <LinkSVG />
-                  </a>
-                )}
-              </div>
-            </div>
-            
-            <div className={styles.followWrapper}>
-              {!isMyProfile && (
-                <FollowButton
-                  userId={profile._id}
-                  isFollowing={isFollowing}
-                />
-              )}
-            </div>
+            )}
 
           </div>
 

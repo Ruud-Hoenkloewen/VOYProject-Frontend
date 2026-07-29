@@ -10,6 +10,9 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
   const { user, isAuthenticated, logout, role } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const isProducer = role === 'producer' || user?.role === 'producer';
+  const isProducerDashboard = location.pathname.includes('/producer');
+  const isEventForm = location.pathname.includes('/events/create') || location.pathname.includes('/events/edit');
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -210,30 +213,32 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         <div className={styles.drawerOverlay} onClick={closeMenu} aria-hidden="true" />
       )}
 
-      {/* Botón flotante inferior derecho con animación ¿Necesitás ayuda? */}
-      <div 
-        className={styles.floatingHelpWrapper}
-        onMouseEnter={() => setBadgeVisible(false)}
-      >
-        <div className={`${styles.floatingHelpBadge} ${!badgeVisible ? styles.floatingHelpBadgeHidden : ""}`}>
-          <span className={styles.floatingHelpDot} />
-          <span>¿Necesitás ayuda?</span>
-        </div>
-        <button
-          type="button"
-          className={styles.floatingHelpBtn}
-          onClick={() => {
-            setBadgeVisible(false);
-            setShowHowModal(true);
-          }}
-          aria-label="¿Cómo funciona VOY Project?"
+      {/* Botón flotante inferior derecho con animación ¿Necesitás ayuda? (Solo visible en el panel para productores y fuera de los formularios) */}
+      {(!isEventForm && (!isProducer || isProducerDashboard)) && (
+        <div 
+          className={styles.floatingHelpWrapper}
+          onMouseEnter={() => setBadgeVisible(false)}
         >
-          ?
-        </button>
-      </div>
+          <div className={`${styles.floatingHelpBadge} ${!badgeVisible ? styles.floatingHelpBadgeHidden : ""}`}>
+            <span className={styles.floatingHelpDot} />
+            <span>¿Necesitás ayuda?</span>
+          </div>
+          <button
+            type="button"
+            className={styles.floatingHelpBtn}
+            onClick={() => {
+              setBadgeVisible(false);
+              setShowHowModal(true);
+            }}
+            aria-label="¿Cómo funciona VOY Project?"
+          >
+            ?
+          </button>
+        </div>
+      )}
 
       {showHowModal && (
-        <HowItWorksModal onClose={() => setShowHowModal(false)} />
+        <HowItWorksModal isProducer={isProducerDashboard} onClose={() => setShowHowModal(false)} />
       )}
     </>
   );
