@@ -3,6 +3,8 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext';
 import { fetchEvents } from '../../services/eventService';
 import { getProfileByUsername, getMyProfile } from '../../services/userService';
+import { fetchArtistProfile } from '../../services/artistService';
+import ArtistProfileView from './components/ArtistProfileView';
 import { EventCard } from '../../design-system';
 import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon, ZapIcon } from '../../components/icons';
 import FollowButton from '../../components/FollowButton/FollowButton';
@@ -117,21 +119,36 @@ export default function ProfilePage() {
       setIsLoadingProfile(true);
       setProfileError(null);
       try {
-        // Cargamos perfil y eventos en paralelo para reducir tiempo de espera
-        const profilePromise = isMyProfile
-          ? getMyProfile().catch(() =>
-              username && username !== 'me'
-                ? getProfileByUsername(username)
-                : Promise.reject(new Error('No se pudo cargar el perfil'))
-            )
-          : getProfileByUsername(username);
+        let data = null;
+        try {
+          data = isMyProfile
+            ? await getMyProfile().catch(() => (username && username !== 'me' ? getProfileByUsername(username) : null))
+            : await getProfileByUsername(username).catch(() => null);
+        } catch (e) {
+          data = null;
+        }
 
-        const [data, events] = await Promise.all([
-          profilePromise,
-          fetchEvents().catch(() => []),
-        ]);
+        // Si no se encontró o si es un perfil de artista, consultar servicio de artista para enriquecer temas/eventos
+        const isArtistTarget = data && (
+          data.role === 'artist' ||
+          data.rol === 'artist' ||
+          (data.tags && data.tags.includes('artista'))
+        );
 
-        setProfile(data);
+        if (!data || isArtistTarget) {
+          const artistData = await fetchArtistProfile(username).catch(() => null);
+          if (artistData) {
+            data = { ...data, ...artistData };
+          }
+        }
+
+        const events = await fetchEvents().catch(() => []);
+
+        if (data) {
+          setProfile(data);
+        } else {
+          setProfileError('No se pudo cargar el perfil o no existe.');
+        }
         setAllEvents(events);
       } catch (err) {
         console.error('Error cargando perfil:', err);
@@ -171,6 +188,16 @@ export default function ProfilePage() {
         <Link to="/" className={styles.errorLink}>Volver al inicio</Link>
       </div>
     );
+  }
+
+  const isArtist = profile && (
+    profile.role === 'artist' ||
+    profile.rol === 'artist' ||
+    (Array.isArray(profile.tags) && profile.tags.includes('artista'))
+  );
+
+  if (isArtist) {
+    return <ArtistProfileView artist={profile} isMyProfile={isMyProfile} />;
   }
 
   const safeName = profile.nombre || profile.username || 'Usuario';
