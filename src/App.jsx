@@ -17,6 +17,7 @@ function ScrollToTop() {
 const LandingPage          = lazy(() => import("./pages/landing/LandingPage"));
 const EventsPage           = lazy(() => import("./pages/events/EventsPage"));
 const EventDetailPage      = lazy(() => import("./pages/events/EventDetailPage"));
+const CommunityPage        = lazy(() => import("./pages/community/CommunityPage"));
 const CheckoutPage         = lazy(() => import("./pages/checkout/CheckoutPage"));
 const CheckoutFormPage     = lazy(() => import("./pages/checkout/CheckoutFormPage"));
 const CheckoutPaymentPage  = lazy(() => import("./pages/checkout/CheckoutPaymentPage"));
@@ -119,6 +120,12 @@ export default function App() {
               <Route path="/events/:id" element={
                 <ErrorBoundary label="Detalle de Evento" inline>
                   <EventDetailPage />
+                </ErrorBoundary>
+              } />
+              {/* ── Comunidad ──────────────────────────────────────── */}
+              <Route path="/community" element={
+                <ErrorBoundary label="Comunidad" inline>
+                  <CommunityPage />
                 </ErrorBoundary>
               } />
 
