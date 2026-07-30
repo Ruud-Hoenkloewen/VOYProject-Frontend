@@ -162,7 +162,7 @@ export default function EventDetailPage() {
           {/* LA MOVIDA */}
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
-              <span className={styles.iconNeon}><WarningIcon /></span>
+              <span className={styles.iconMagenta}><WarningIcon /></span>
               <h2 className={styles.sectionTitle}>LA MOVIDA</h2>
             </div>
             <p className={styles.movidaDescription}>
@@ -176,7 +176,7 @@ export default function EventDetailPage() {
           {/* UBICACIÓN Y MAPA INTERACTIVO */}
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
-              <span className={styles.iconNeon}><MapPinIcon /></span>
+              <span className={styles.iconMagenta}><MapPinIcon /></span>
               <h2 className={styles.sectionTitle}>UBICACIÓN Y MAPA</h2>
             </div>
             <EventMapPreview venue={eventData.venue} height={260} showDirectionsBtn={true} />
@@ -185,7 +185,7 @@ export default function EventDetailPage() {
           {/* ORDEN DEL SHOW — Timeline Reworked */}
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
-              <span className={styles.iconNeon}><MusicIcon /></span>
+              <span className={styles.iconMagenta}><MusicIcon /></span>
               <h2 className={styles.sectionTitle}>ORDEN DEL SHOW</h2>
             </div>
             <Timeline 
@@ -200,7 +200,7 @@ export default function EventDetailPage() {
             <div className={styles.section}>
               <div className={styles.artistsHeader}>
                 <div className={styles.sectionHeader}>
-                  <span className={styles.iconNeon}><UsersIcon /></span>
+                  <span className={styles.iconMagenta}><UsersIcon /></span>
                   <h2 className={styles.sectionTitle}>ARTISTAS</h2>
                 </div>
               </div>
@@ -215,7 +215,7 @@ export default function EventDetailPage() {
           {/* INFO DEL EVENTO — Reworked (Solo 4 ítems esenciales) */}
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
-              <span className={styles.iconNeon}><ZapIcon /></span>
+              <span className={styles.iconMagenta}><ZapIcon /></span>
               <h2 className={styles.sectionTitle}>INFO DEL EVENTO</h2>
             </div>
 

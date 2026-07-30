@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { addEventComment, deleteEventComment } from '../../../../services/eventService';
-import { TrashIcon, UsersIcon } from '../../../../components/icons';
+import { TrashIcon, ChatBubbleIcon } from '../../../../components/icons';
 import styles from './EventCommentsSection.module.css';
 
 function formatDate(dateStr) {
@@ -67,8 +67,8 @@ export default function EventCommentsSection({ eventId, initialComments = [], ev
     <div className={styles.commentsSection}>
       <div className={styles.headerRow}>
         <h2 className={styles.title}>
-          <UsersIcon className={styles.titleIcon} size={20} />
-          COMENTARIOS DE LA MOVIDA
+          <ChatBubbleIcon className={styles.titleIcon} size={20} />
+          COMENTARIOS
         </h2>
         <span className={styles.countBadge}>{comments.length} COMENTARIOS</span>
       </div>

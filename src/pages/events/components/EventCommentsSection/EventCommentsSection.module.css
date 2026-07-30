@@ -25,13 +25,13 @@
 }
 
 .titleIcon {
-  color: var(--ds-color-brand-lime, #00FF9F);
+  color: var(--ds-color-magenta-400, #FF2D78);
 }
 
 .countBadge {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #00FF9F;
+  color: var(--ds-color-magenta-400, #FF2D78);
   letter-spacing: 0.04em;
 }
 
