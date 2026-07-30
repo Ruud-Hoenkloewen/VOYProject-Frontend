@@ -153,7 +153,7 @@ export default function CheckoutFormPage() {
         </div>
 
         <p className={styles.stepSubtitle}>
-          Usaremos estos datos para enviar tu entrada
+          Usaremos tus datos para confirmar tu identidad
         </p>
 
         {/* Formulario */}

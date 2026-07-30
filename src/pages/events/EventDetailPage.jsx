@@ -166,9 +166,11 @@ export default function EventDetailPage() {
               <h2 className={styles.sectionTitle}>LA MOVIDA</h2>
             </div>
             <p className={styles.movidaDescription}>
-              {eventData.rawPrice === 0
-                ? "Entrada libre y gratuita. De esas que quedan en el recuerdo y terminan en algún patio con mate."
-                : "Entrada en mano en la puerta. Llegá temprano que los venues son chicos y se llena rápido."
+              {eventData.description
+                ? eventData.description
+                : eventData.rawPrice === 0
+                  ? "Entrada libre y gratuita. De esas que quedan en el recuerdo y terminan en algún patio con mate."
+                  : "Entrada en mano en la puerta. Llegá temprano que los venues son chicos y se llena rápido."
               }
             </p>
           </div>
