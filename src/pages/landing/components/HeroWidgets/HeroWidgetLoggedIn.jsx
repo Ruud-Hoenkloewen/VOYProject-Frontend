@@ -266,11 +266,11 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
               )}
             </div>
 
-            {/* Section 3: Comunidad */}
+            {/* Section 3: Mis Conexiones */}
             <div className={styles.hwSection}>
               <div className={styles.hwSectionHeader}>
-                <h3 className={styles.hwSectionTitle}>COMUNIDAD</h3>
-                <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}`} className={styles.hwSectionLink}>VER TODOS</Link>
+                <h3 className={styles.hwSectionTitle}>MIS CONEXIONES</h3>
+                <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}`} className={styles.hwSectionLink}>MI PERFIL</Link>
               </div>
               {(() => {
                 const siguiendoList = user?.siguiendo || [];
