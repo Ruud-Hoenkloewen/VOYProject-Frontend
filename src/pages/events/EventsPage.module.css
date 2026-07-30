@@ -25,27 +25,31 @@
   align-items: center;
   text-align: center;
   gap: 0.75rem;
-  margin-bottom: 2.5rem;
+  margin-bottom: 2rem;
+  width: 100%;
 }
 
 .heroTitle {
-  font-size: clamp(1.8rem, 4.3vw, 3.8rem);
+  font-size: clamp(1.6rem, 4.5vw, 3.8rem);
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -0.01em;
-  line-height: 1.1;
+  line-height: 1.15;
   color: var(--ds-color-text-primary);
   margin: 0;
-  white-space: nowrap;
+  white-space: normal;
+  max-width: 100%;
+  word-break: break-word;
 }
 
 .heroSubtitle {
   font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.3em;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
   color: var(--ds-color-text-editorial-muted);
   margin: 0;
+  max-width: 100%;
 }
 
 .heroSearch {
@@ -147,11 +151,18 @@
 /* ── RESPONSIVE ────────────────────────────────────────── */
 @media (max-width: 768px) {
   .pageContainer {
-    padding-top: calc(56px + 2rem);
+    padding-top: calc(56px + 1.5rem);
+    padding-bottom: 2.5rem;
   }
 
   .heroTitle {
-    font-size: clamp(2rem, 10vw, 3.5rem);
+    font-size: clamp(1.5rem, 7vw, 2.5rem);
+    line-height: 1.2;
+  }
+
+  .heroSubtitle {
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
   }
 
   .heroSearch {
@@ -161,17 +172,17 @@
 
 @media (max-width: 480px) {
   .pageContainer {
-    padding-top: calc(56px + 1.5rem);
-    padding-bottom: 3rem;
+    padding-top: calc(56px + 1rem);
+    padding-bottom: 2rem;
   }
 
   .heroTitle {
-    font-size: clamp(1.8rem, 12vw, 3rem);
+    font-size: clamp(1.35rem, 8vw, 2.2rem);
   }
 
   .heroSubtitle {
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
   }
 
   .eventsGrid {
@@ -182,18 +193,4 @@
   .filtersRow {
     gap: 1.25rem;
   }
-
-  .filterGroupLarge {
-    flex: 1 1 100%;
-  }
-
-  .filterGroupSmall {
-    flex: 1 1 100%;
-  }
-
-  .genreBtn {
-    font-size: 0.65rem;
-    padding: 0.22rem 0.65rem;
-  }
 }
-

@@ -20,7 +20,7 @@
   letter-spacing: 0.03em;
 }
 
-/* ── CONSOLA UNIFICADA (Z-INDEX ELEVADO PARA DESPLEGABLES) ── */
+/* ── CONSOLA UNIFICADA (GLASS PANEL) ── */
 .unifiedConsole {
   position: relative;
   z-index: 50;
@@ -34,6 +34,7 @@
   flex-direction: column;
   gap: 0.85rem;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 
 .unifiedConsole:focus-within {
@@ -65,7 +66,8 @@
   align-items: center;
   gap: 0.75rem;
   flex: 1;
-  min-width: 280px;
+  min-width: 260px;
+  flex-wrap: wrap;
 }
 
 .filterTag {
@@ -156,19 +158,54 @@
   margin-top: 0.25rem;
 }
 
+/* ── RESPONSIVE MOBILE ── */
 @media (max-width: 768px) {
   .unifiedConsole {
-    padding: 0.85rem;
+    padding: 0.85rem 1rem;
+    gap: 0.75rem;
   }
 
   .filterRow {
     flex-direction: column;
     align-items: stretch;
-    gap: 0.85rem;
+    gap: 0.75rem;
+  }
+
+  .chipsSection {
+    min-width: 100%;
+    gap: 0.5rem;
   }
 
   .metaControlSection {
     justify-content: space-between;
     width: 100%;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    padding-top: 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .unifiedConsole {
+    padding: 0.75rem 0.85rem;
+    border-radius: 12px;
+  }
+
+  .chipsSection {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .filterTag {
+    font-size: 0.62rem;
+  }
+
+  .counterBadge {
+    font-size: 0.65rem;
+    padding: 0.35rem 0.6rem;
+  }
+
+  .sortSelect {
+    font-size: 0.68rem;
+    padding: 0.35rem 0.65rem;
   }
 }
