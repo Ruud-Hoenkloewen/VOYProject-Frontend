@@ -20,8 +20,10 @@
   letter-spacing: 0.03em;
 }
 
-/* ── CONSOLA UNIFICADA (GLASS PANEL) ── */
+/* ── CONSOLA UNIFICADA (Z-INDEX ELEVADO PARA DESPLEGABLES) ── */
 .unifiedConsole {
+  position: relative;
+  z-index: 50;
   background: rgba(18, 19, 26, 0.92);
   backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -148,6 +150,8 @@
 }
 
 .resultsContainer {
+  position: relative;
+  z-index: 1;
   width: 100%;
   margin-top: 0.25rem;
 }

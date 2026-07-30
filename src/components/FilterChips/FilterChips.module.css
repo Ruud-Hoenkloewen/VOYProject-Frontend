@@ -1,5 +1,6 @@
 .container {
   position: relative;
+  z-index: 60;
   width: 100%;
 }
 
@@ -50,13 +51,14 @@
 
 .dropdownWrapper {
   position: relative;
+  z-index: 60;
 }
 
 .moreButton {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  background: rgba(18, 19, 26, 0.8);
+  background: rgba(18, 19, 26, 0.95);
   color: #9CA3AF;
   border: 1px solid rgba(255, 255, 255, 0.14);
   padding: 0.45rem 0.95rem;
@@ -94,19 +96,18 @@
   transform: rotate(180deg);
 }
 
-/* ── MENÚ POPOVER ── */
+/* ── MENÚ POPOVER CON Z-INDEX SUPERIOR Y FONDO OPACO ── */
 .dropdownMenu {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  z-index: 100;
+  z-index: 9999;
   min-width: 220px;
-  background: rgba(15, 16, 22, 0.96);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 255, 159, 0.3);
+  background: #12131A;
+  border: 1px solid rgba(0, 255, 159, 0.4);
   border-radius: 14px;
   padding: 0.75rem;
-  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.7), 0 0 20px rgba(0, 255, 159, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 255, 159, 0.25);
   animation: fadeIn 0.2s ease-out;
 }
 
