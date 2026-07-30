@@ -4,6 +4,7 @@ import EditorialHeader from "../../design-system/composites/EditorialHeader/Edit
 import Container from "../../design-system/layout/Container/Container";
 import { fetchEventById, createEvent, updateEvent } from "../../services/eventService";
 import { MapPinIcon, TrashIcon, PlusIcon, CalendarIcon, TicketIcon, DiscIcon, EyeIcon, PeopleIcon, DollarIcon } from "../../components/icons";
+import EventMapPreview from "../../components/EventMapPreview/EventMapPreview";
 import styles from "./EventFormPage.module.css";
 
 const DEFAULT_GENRES = ["Punk", "Rock", "Metal", "Hardcore", "Post-Hardcore", "Grunge", "Post-Punk", "Noise Rock", "Shoegaze", "Indie"];
@@ -389,28 +390,10 @@ export default function EventFormPage() {
                   {errors.lugar && <span className={styles.errorMsg}>{errors.lugar}</span>}
                 </div>
 
-                {/* Simulated Geocoding Map */}
+                {/* Vista Previa del Mapa Interactivo */}
                 <div className={styles.field}>
-                  <label className={styles.label}>Vista Previa del Mapa</label>
-                  <div className={styles.mapWrapper}>
-                    <div className={styles.radarGrid} />
-                    {isGeocoding ? (
-                      <div style={{ color: "var(--ds-color-cyan-400)", fontSize: "11px", fontWeight: "900", fontFamily: "var(--ds-font-family-mono)", zIndex: 3 }}>
-                        GEOCODIFICANDO DIRECCIÓN...
-                      </div>
-                    ) : mapAddress ? (
-                      <>
-                        <div className={styles.radarCircle} />
-                        <div className={styles.radarCircle} style={{ animationDelay: "1s" }} />
-                        <div className={styles.mapPin}>
-                          <MapPinIcon size={32} color="var(--ds-color-state-danger)" />
-                        </div>
-                        <span className={styles.mapLabel}>{mapAddress}</span>
-                      </>
-                    ) : (
-                      <span style={{ color: "#444", fontSize: "12px" }}>Escribí un lugar para centrar el mapa</span>
-                    )}
-                  </div>
+                  <label className={styles.label}>Vista Previa del Mapa Interactivo</label>
+                  <EventMapPreview venue={form.lugar} height={220} showDirectionsBtn={false} />
                 </div>
               </div>
 

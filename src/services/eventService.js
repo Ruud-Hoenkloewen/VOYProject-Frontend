@@ -70,6 +70,19 @@ const mapEvent = (evt) => {
     capacity:     evt.capacidadTotal ?? null,
     stock:        evt.stock ?? null,
     creador:      evt.creador || null,
+    comentarios:  (evt.comentarios || []).map(c => ({
+      id: c._id,
+      texto: c.texto,
+      createdAt: c.createdAt,
+      usuario: c.usuario ? {
+        id: c.usuario._id,
+        nombre: c.usuario.nombre || 'Usuario',
+        username: c.usuario.username || '',
+        avatar: c.usuario.avatar || c.usuario.avatarUrl || c.usuario.fotoPerfil || '',
+        avatarColor: c.usuario.avatarColor || '#00FF9F',
+        role: c.usuario.role || c.usuario.rol || 'client'
+      } : null
+    })),
   };
 };
 
@@ -159,6 +172,32 @@ export const deleteEvent = async (id) => {
     return data;
   } catch (error) {
     console.error(`Error deleting event ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
+  * addEventComment — agrega un comentario a un evento.
+  */
+export const addEventComment = async (eventId, texto) => {
+  try {
+    const { data } = await api.post(`/events/${eventId}/comments`, { texto });
+    return data;
+  } catch (error) {
+    console.error(`Error adding comment to event ${eventId}:`, error);
+    throw error;
+  }
+};
+
+/**
+  * deleteEventComment — elimina un comentario de un evento.
+  */
+export const deleteEventComment = async (eventId, commentId) => {
+  try {
+    const { data } = await api.delete(`/events/${eventId}/comments/${commentId}`);
+    return data;
+  } catch (error) {
+    console.error(`Error deleting comment ${commentId}:`, error);
     throw error;
   }
 };

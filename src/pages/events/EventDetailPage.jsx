@@ -18,6 +18,8 @@ import { CONCERT_PHOTOS, BAND_DESCRIPTIONS } from "../../utils/mockData";
 import Timeline from "./components/Timeline/Timeline";
 import ArtistGrid from "./components/ArtistGrid/ArtistGrid";
 import TicketCard from "./components/TicketCard/TicketCard";
+import EventMapPreview from "../../components/EventMapPreview/EventMapPreview";
+import EventCommentsSection from "./components/EventCommentsSection/EventCommentsSection";
 
 const SET_DURATION   = 55;
 const PUERTAS_OFFSET = 30;
@@ -244,6 +246,22 @@ export default function EventDetailPage() {
               ))}
             </div>
           </div>
+
+          {/* UBICACIÓN Y MAPA INTERACTIVO */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.iconNeon}><MapPinIcon /></span>
+              <h2 className={styles.sectionTitle}>UBICACIÓN Y MAPA</h2>
+            </div>
+            <EventMapPreview venue={eventData.venue} height={260} showDirectionsBtn={true} />
+          </div>
+
+          {/* COMENTARIOS DE LA MOVIDA */}
+          <EventCommentsSection 
+            eventId={id} 
+            initialComments={eventData.comentarios || []} 
+            eventCreatorId={eventData.creador?._id || eventData.creador}
+          />
 
         </div>
 

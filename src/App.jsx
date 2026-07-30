@@ -29,7 +29,6 @@ const ProfileEditPage      = lazy(() => import("./pages/profile/ProfileEditPage"
 const ProducerDashboard    = lazy(() => import("./pages/dashboard/ProducerDashboard"));
 const ArtistDashboard      = lazy(() => import("./pages/dashboard/ArtistDashboard"));
 const EventFormPage        = lazy(() => import("./pages/dashboard/EventFormPage"));
-const CommunityPage        = lazy(() => import("./pages/community/CommunityPage"));
 
 // Guard de rutas protegidas
 function ProtectedRoute({ children, allowedRoles }) {
@@ -171,15 +170,6 @@ export default function App() {
                 <ErrorBoundary label="Perfil de Usuario" inline>
                   <ProfilePage />
                 </ErrorBoundary>
-              } />
-
-              {/* ── Comunidad ──────────────────────────────────────── */}
-              <Route path="/community" element={
-                <ProtectedRoute>
-                  <ErrorBoundary label="Comunidad" inline>
-                    <CommunityPage />
-                  </ErrorBoundary>
-                </ProtectedRoute>
               } />
 
               {/* ── Dashboards ─────────────────────────────────────── */}
