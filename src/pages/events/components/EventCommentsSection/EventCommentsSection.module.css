@@ -1,9 +1,8 @@
 .commentsSection {
-  background: rgba(18, 20, 30, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 16px;
-  padding: 24px;
-  margin-top: 36px;
+  background: transparent;
+  border: none;
+  padding: 10px 0 30px;
+  margin-top: 30px;
 }
 
 .headerRow {
@@ -11,12 +10,12 @@
   align-items: center;
   justify-content: space-between;
   margin-bottom: 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 12px;
 }
 
 .title {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 800;
   color: #ffffff;
   display: flex;
@@ -32,29 +31,25 @@
 .countBadge {
   font-size: 0.78rem;
   font-weight: 700;
-  background: rgba(0, 255, 159, 0.15);
   color: #00FF9F;
-  border: 1px solid rgba(0, 255, 159, 0.3);
-  padding: 3px 10px;
-  border-radius: 12px;
+  letter-spacing: 0.04em;
 }
 
 /* Comment Form Box */
 .formBox {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 24px;
+  background: transparent;
+  border: none;
+  padding: 0;
+  margin-bottom: 28px;
 }
 
 .textarea {
   width: 100%;
-  min-height: 80px;
-  background: rgba(0, 0, 0, 0.3);
+  min-height: 72px;
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
-  padding: 12px;
+  padding: 12px 14px;
   color: #ffffff;
   font-size: 0.9rem;
   font-family: inherit;
@@ -65,6 +60,7 @@
 
 .textarea:focus {
   border-color: #00FF9F;
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .formFooter {
@@ -92,11 +88,11 @@
 .submitBtn {
   background: var(--ds-color-brand-lime, #00FF9F);
   color: #000000;
-  font-size: 0.82rem;
+  font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: 0.04em;
-  padding: 8px 18px;
-  border-radius: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -105,7 +101,6 @@
 .submitBtn:hover:not(:disabled) {
   background: #00e58f;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 255, 159, 0.3);
 }
 
 .submitBtn:disabled {
@@ -117,33 +112,32 @@
 .commentsList {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
 }
 
 .commentCard {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 12px;
-  padding: 16px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  padding: 16px 0;
   display: flex;
   gap: 14px;
-  transition: background-color 0.2s ease;
 }
 
-.commentCard:hover {
-  background: rgba(255, 255, 255, 0.04);
+.commentCard:last-child {
+  border-bottom: none;
 }
 
 .avatarSquare {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 800;
   color: #ffffff;
-  font-size: 1.1rem;
+  font-size: 1rem;
   overflow: hidden;
   flex-shrink: 0;
   background-color: #1a1d29;
@@ -165,7 +159,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
   flex-wrap: wrap;
   gap: 8px;
 }
@@ -186,12 +180,12 @@
 
 .authorName {
   font-weight: 700;
-  font-size: 0.95rem;
+  font-size: 0.92rem;
   color: #ffffff;
 }
 
 .authorUsername {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   color: #64748b;
 }
 
@@ -247,16 +241,15 @@
 
 .commentText {
   font-size: 0.9rem;
-  color: #cbd5e1;
+  color: #d1d5db;
   line-height: 1.5;
   white-space: pre-wrap;
   word-break: break-word;
 }
 
 .emptyComments {
-  text-align: center;
-  padding: 24px;
+  padding: 16px 0;
   color: #64748b;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   font-style: italic;
 }
