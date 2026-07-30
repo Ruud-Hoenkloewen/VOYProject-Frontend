@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
 import { Zap, Ticket, Receipt, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { formatPrice } from '../../utils/helpers';
+import { getOrderById } from '../../services/orderService';
 import styles from './PurchaseSuccessPage.module.css';
 
 export default function PurchaseSuccessPage() {
@@ -15,19 +16,41 @@ export default function PurchaseSuccessPage() {
   const isRejected = collectionStatus === 'rejected';
   const isPending = collectionStatus === 'pending';
 
-  const eventData     = location.state?.eventData ?? null;
-  const cantidad      = location.state?.cantidad ?? 1;
-  const compradorData = location.state?.compradorData ?? null;
-  const paymentMethod = location.state?.paymentMethod ?? 'Tarjeta de crédito / débito';
+  const externalRef = searchParams.get('external_reference');
+  const paramOrderId = searchParams.get('orderId');
+  const rawOrderId = location.state?.orderId || externalRef || paramOrderId;
 
-  const rawOrderId = location.state?.orderId || searchParams.get('orderId');
-  const [orderId] = useState(() => {
+  const [fetchedOrder, setFetchedOrder] = useState(null);
+
+  useEffect(() => {
+    const targetId = externalRef || (rawOrderId && rawOrderId.length === 24 ? rawOrderId : null);
+    if (targetId && !location.state?.eventData) {
+      getOrderById(targetId)
+        .then((data) => setFetchedOrder(data))
+        .catch((err) => console.error("Error cargando la orden devuelta:", err));
+    }
+  }, [externalRef, rawOrderId, location.state]);
+
+  const eventData = location.state?.eventData || (fetchedOrder?.eventId ? {
+    title: fetchedOrder.eventId.nombre,
+    date: fetchedOrder.eventId.fecha ? new Date(fetchedOrder.eventId.fecha).toLocaleDateString('es-AR') : 'Fecha por confirmar',
+    time: fetchedOrder.eventId.hora ? `${fetchedOrder.eventId.hora} HS` : '20:00 HS',
+    venue: fetchedOrder.eventId.lugar || 'Lugar a confirmar',
+    rawPrice: fetchedOrder.eventId.precio || 0,
+    genres: fetchedOrder.eventId.generos || [],
+  } : null);
+
+  const cantidad = location.state?.cantidad || fetchedOrder?.cantidad || 1;
+  const compradorData = location.state?.compradorData || fetchedOrder?.datosComprador || null;
+  const paymentMethod = location.state?.paymentMethod || (fetchedOrder?.metodoPago === 'mercadopago' ? 'MercadoPago' : fetchedOrder?.metodoPago) || 'Tarjeta de crédito / débito';
+
+  const orderId = fetchedOrder?.numeroOrden || (() => {
     if (!rawOrderId) return `VOY-${Math.floor(10000 + Math.random() * 90000)}`;
     if (typeof rawOrderId === 'string' && rawOrderId.length === 24 && /^[0-9a-fA-F]+$/.test(rawOrderId)) {
       return `VOY-${rawOrderId.slice(-5).toUpperCase()}`;
     }
     return rawOrderId;
-  });
+  })();
 
   const qrVerificationUrl = typeof window !== 'undefined'
     ? `${window.location.origin}/compra/confirmacion?orderId=${orderId}`
@@ -92,10 +115,10 @@ export default function PurchaseSuccessPage() {
     return () => cancelAnimationFrame(animationFrame);
   }, [isRejected]);
 
-  const precioUnitario = eventData?.rawPrice ?? 7999;
-  const subtotal       = precioUnitario * cantidad;
+  const precioUnitario = eventData?.rawPrice ?? (fetchedOrder?.subtotal && cantidad > 0 ? (fetchedOrder.subtotal / cantidad) : 0);
+  const subtotal       = fetchedOrder?.subtotal ?? (precioUnitario * cantidad);
   const cargoServicio  = Math.round(subtotal * 0.10);
-  const total          = subtotal + cargoServicio;
+  const total          = fetchedOrder?.total ? (fetchedOrder.total + cargoServicio) : (subtotal + cargoServicio);
 
   return (
     <div className={styles.pageRoot}>

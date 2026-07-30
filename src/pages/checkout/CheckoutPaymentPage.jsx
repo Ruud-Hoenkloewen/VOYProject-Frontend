@@ -61,7 +61,7 @@ export default function CheckoutPaymentPage() {
     setIsSubmitting(true);
     setErrorMsg('');
 
-    const precioUnitario = Number(eventData?.precio) || 0;
+    const precioUnitario = Number(eventData?.rawPrice ?? eventData?.precio) || 0;
     const calcSubtotal = precioUnitario * cantidad;
     const calcTotal = calcSubtotal;
 

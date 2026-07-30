@@ -44,3 +44,18 @@ export const createPaymentPreference = async (paymentData) => {
     throw error;
   }
 };
+
+/**
+ * getOrderById — obtiene una orden por su ID
+ * GET /api/orders/:id
+ */
+export const getOrderById = async (id) => {
+  try {
+    const { data } = await api.get(`/orders/${id}`);
+    return data;
+  } catch (error) {
+    console.error("Error fetching order by id:", error);
+    throw error;
+  }
+};
+
