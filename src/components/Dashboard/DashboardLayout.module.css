@@ -1,0 +1,73 @@
+.pageRoot {
+  min-height: 100vh;
+  background-color: var(--ds-color-bg-canvas, #0a0a0c);
+  color: var(--ds-color-text-primary, #ffffff);
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContent {
+  max-width: 1200px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 110px 24px 80px 24px;
+  flex: 1;
+}
+
+.headerSection {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--ds-color-border-subtle, rgba(255, 255, 255, 0.08));
+}
+
+.titleBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.eyebrow {
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  color: var(--ds-color-accent-primary, #C6F92B);
+  text-transform: uppercase;
+}
+
+.title {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-weight: 900;
+  margin: 0;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: var(--ds-color-text-subtle, #a0a0a0);
+  margin: 0;
+}
+
+.actionsGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.metricsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.bodySection {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}

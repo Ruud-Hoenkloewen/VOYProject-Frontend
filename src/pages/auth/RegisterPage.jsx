@@ -89,6 +89,9 @@ export default function RegisterPage() {
         // Update user profile automatically
         const payload = {
           username: uniqueUsername,
+          role: selectedRole,
+          rol: selectedRole,
+          tags: selectedRole === "artist" ? ["artista"] : ["productor"],
           bio: selectedRole === "producer" ? "Organizador de eventos underground y ciclos culturales." : "Artista emergente de la escena local.",
           ubicacion: "San Miguel de Tucumán, Argentina",
           avatarColor: selectedRole === "producer" ? "#00E5FF" : "#FF00E5", 
@@ -98,7 +101,7 @@ export default function RegisterPage() {
         };
         
         const updated = await updateMyProfile(payload);
-        await login({ ...updated, role: selectedRole }, data.token);
+        await login({ ...updated, role: selectedRole, tags: payload.tags }, data.token);
 
         localStorage.setItem("onboardingDone", "true");
         navigate(`/dashboard/${selectedRole}`);

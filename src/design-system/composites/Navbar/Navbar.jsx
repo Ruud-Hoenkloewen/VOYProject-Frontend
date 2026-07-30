@@ -35,6 +35,14 @@ export default function Navbar() {
         >
           Explorar Eventos
         </NavLink>
+        <NavLink
+          to="/community"
+          className={({ isActive }) =>
+            `${styles.eventsLink} ${isActive ? styles.eventsLinkActive : ""}`
+          }
+        >
+          Comunidad
+        </NavLink>
         {isAuthenticated ? (
           <>
             {role === "producer" && (

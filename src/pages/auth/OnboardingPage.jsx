@@ -158,7 +158,29 @@ function StepPerfil({ data, onChange, onNext, onSkip }) {
 
           <div className={styles.divider} />
 
-          <div className={styles.fieldGroup}>
+          <div className={styles.fieldGroup} style={{ marginTop: '16px' }}>
+            <Typography variant="label" className={styles.label}>¿QUÉ VENÍS A HACER EN LA ESCENA?</Typography>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginTop: '8px' }}>
+              <button
+                type="button"
+                className={`${styles.chip} ${data.sceneRole !== 'artist' ? styles.chipActiveVibe : ''}`}
+                onClick={() => { onChange("sceneRole", "client"); onChange("isArtist", false); }}
+                style={{ padding: '10px', textAlign: 'center', cursor: 'pointer', justifyContent: 'center' }}
+              >
+                🎫 FAN DE LA MOVIDA
+              </button>
+              <button
+                type="button"
+                className={`${styles.chip} ${data.sceneRole === 'artist' ? styles.chipActiveGenre : ''}`}
+                onClick={() => { onChange("sceneRole", "artist"); onChange("isArtist", true); }}
+                style={{ padding: '10px', textAlign: 'center', cursor: 'pointer', justifyContent: 'center' }}
+              >
+                🎸 SOY ARTISTA
+              </button>
+            </div>
+          </div>
+
+          <div className={styles.fieldGroup} style={{ marginTop: '16px' }}>
             <Typography variant="label" className={styles.label}>BIO</Typography>
             <textarea
               className={styles.textarea}
@@ -380,6 +402,8 @@ export default function OnboardingPage() {
   const userHandle = user?.nombre ? user.nombre.toLowerCase().replace(/\s+/g, "") : "usuario";
 
   const [form, setForm] = useState({
+    sceneRole:   user?.role === "artist" || user?.rol === "artist" ? "artist" : "client",
+    isArtist:    user?.role === "artist" || user?.rol === "artist" || false,
     bio:         "",
     instagram:   "",
     generos:     [],
@@ -401,9 +425,17 @@ export default function OnboardingPage() {
         generosMusicales: data.generos,
         vibeEnShows: data.vibes,
       };
+
+      if (data.sceneRole === 'artist' || data.isArtist) {
+        payload.role = 'artist';
+        payload.rol = 'artist';
+        payload.tags = Array.from(new Set([...(user?.tags || []), 'artista']));
+      }
+
       await api.put("/users/me", payload);
       const updatedUser = { ...user, ...payload };
       localStorage.setItem("voy_user", JSON.stringify(updatedUser));
+      updateUser(updatedUser);
     } catch (err) {
       console.error("[Onboarding] Error al guardar perfil:", err);
     }

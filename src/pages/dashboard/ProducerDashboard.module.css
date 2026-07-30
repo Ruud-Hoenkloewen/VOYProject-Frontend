@@ -1,304 +1,170 @@
-/* ProducerDashboard.module.css */
-
-.root {
-  background-color: var(--ds-color-bg-canvas);
-  color: var(--ds-color-text-primary);
-  min-height: 100vh;
-  padding-top: 90px;
-  padding-bottom: 60px;
-  font-family: var(--ds-font-family-sans, sans-serif);
-}
-
-.headerRow {
-  border-bottom: 1px solid var(--ds-color-border-editorial);
-  padding-bottom: 24px;
-  margin-bottom: 32px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.titleArea {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.eyebrow {
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--ds-color-cyan-400);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.title {
-  font-size: clamp(24px, 4vw, 36px);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  margin: 0;
-  text-transform: uppercase;
-}
-
 .createBtn {
-  background: var(--ds-color-cyan-400);
-  color: var(--ds-color-bg-canvas);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 10px;
+  background-color: var(--ds-color-accent-primary, #C6F92B);
+  color: #000;
+  font-size: 0.85rem;
+  font-weight: 800;
   text-decoration: none;
-  padding: 12px 24px;
-  font-weight: 900;
-  font-size: 12px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
-  transition: transform 0.2s, box-shadow 0.2s;
-  border: none;
-  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
 }
 
 .createBtn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 22px rgba(0, 229, 255, 0.5);
+  opacity: 0.95;
 }
 
-/* Metrics */
-.metricsGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-  margin-bottom: 40px;
-}
-
-.metricCard {
-  background: var(--ds-color-bg-surface-muted);
-  border: 1px solid var(--ds-color-border-editorial);
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-}
-
-.metricLabel {
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--ds-color-text-muted);
-  letter-spacing: 0.1em;
-}
-
-.metricValue {
-  font-size: 32px;
-  font-weight: 900;
-  margin-top: 8px;
-}
-
-/* Event List */
-.sectionTitle {
-  font-size: 18px;
-  font-weight: 800;
-  text-transform: uppercase;
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 20px;
-  letter-spacing: 0.05em;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
 }
 
 .eventsGrid {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
-@media (min-width: 768px) {
-  .eventsGrid {
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-  }
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
 }
 
 .eventCard {
-  background: var(--ds-color-bg-surface-muted);
-  border: 1px solid var(--ds-color-border-editorial);
-  border-radius: 8px;
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: border-color 0.2s, transform 0.2s;
-  position: relative;
+  transition: border-color 0.2s ease;
 }
 
 .eventCard:hover {
-  border-color: var(--ds-color-border-editorial-mid);
+  border-color: rgba(255, 255, 255, 0.18);
 }
 
 .cardBanner {
-  height: 160px;
-  position: relative;
+  height: 140px;
+  width: 100%;
   background-size: cover;
   background-position: center;
-  background-color: var(--ds-color-bg-surface);
+  position: relative;
 }
 
 .cardBannerOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(12, 12, 12, 1) 0%, rgba(12, 12, 12, 0.4) 60%, transparent 100%);
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(20, 20, 22, 0.9) 100%);
 }
 
 .statusBadge {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  font-size: 10px;
+  top: 12px;
+  right: 12px;
+  font-size: 0.65rem;
   font-weight: 900;
-  padding: 4px 8px;
-  letter-spacing: 0.05em;
+  padding: 4px 10px;
+  border-radius: 20px;
   text-transform: uppercase;
-}
-
-.statusActive {
-  background: var(--ds-color-accent-primary);
-  color: var(--ds-color-bg-canvas);
-}
-
-.statusPaused {
-  background: var(--ds-color-yellow-300);
-  color: var(--ds-color-bg-canvas);
-}
-
-.statusCancelled {
-  background: var(--ds-color-state-danger);
-  color: var(--ds-color-text-primary);
+  letter-spacing: 0.05em;
+  background-color: rgba(0, 255, 159, 0.2);
+  color: #00FF9F;
+  border: 1px solid rgba(0, 255, 159, 0.4);
 }
 
 .cardContent {
-  padding: 20px;
-  flex: 1;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-top: -30px;
-  position: relative;
-  z-index: 1;
+  flex: 1;
 }
 
 .eventTitle {
-  font-size: 20px;
+  font-size: 1.15rem;
   font-weight: 800;
-  color: var(--ds-color-text-primary);
   margin: 0;
-  line-height: 1.2;
 }
 
-.eventDetails {
-  font-size: 13px;
-  color: var(--ds-color-text-secondary);
+.metaRow {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  font-size: 0.825rem;
+  color: var(--ds-color-text-subtle, #a0a0a0);
 }
 
-.detailItem {
-  display: flex;
-  align-items: center;
-  gap: 6px;
+.salesBar {
+  margin-top: 8px;
 }
 
-.progressContainer {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 4px;
-}
-
-.progressText {
+.salesText {
   display: flex;
   justify-content: space-between;
-  font-size: 11px;
-  color: var(--ds-color-text-muted);
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 6px;
 }
 
-.progressBarBg {
-  width: 100%;
+.progressTrack {
   height: 6px;
-  background: var(--ds-color-border-editorial);
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
   overflow: hidden;
 }
 
-.progressBarFill {
+.progressFill {
   height: 100%;
-  background: var(--ds-color-cyan-400);
+  background-color: var(--ds-color-accent-primary, #C6F92B);
+  border-radius: 4px;
 }
 
 .cardActions {
+  padding: 12px 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   gap: 8px;
-  padding: 16px 20px 20px;
-  border-top: 1px solid var(--ds-color-border-editorial);
-  background: var(--ds-color-bg-surface);
 }
 
 .actionBtn {
-  flex: 1;
-  background: transparent;
-  color: var(--ds-color-text-primary);
-  border: 1px solid var(--ds-color-border-editorial-mid);
-  padding: 8px;
-  font-size: 11px;
+  font-size: 0.75rem;
   font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  transition: all 0.2s;
-  text-align: center;
+  padding: 6px 12px;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.06);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 .actionBtn:hover {
-  border-color: var(--ds-color-text-muted);
-  background: rgba(255,255,255,0.02);
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .actionBtnDanger {
-  color: var(--ds-color-state-danger);
+  color: #FF2D78;
+  border-color: rgba(255, 45, 120, 0.2);
 }
 
 .actionBtnDanger:hover {
-  border-color: var(--ds-color-state-danger);
-  background: rgba(255,68,68,0.05);
+  background-color: rgba(255, 45, 120, 0.15);
 }
 
-/* Toast Alerts */
-.toastContainer {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  z-index: 50;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.toast {
-  padding: 16px 24px;
-  background: var(--ds-color-bg-surface-muted);
-  color: var(--ds-color-text-primary);
-  border: 1px solid var(--ds-color-accent-primary);
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.6);
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.toastError {
-  border-color: var(--ds-color-state-danger);
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  color: var(--ds-color-text-subtle, #8e8e93);
 }

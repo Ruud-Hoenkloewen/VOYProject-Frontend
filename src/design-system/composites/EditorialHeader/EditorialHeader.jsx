@@ -69,6 +69,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
   const navLinks = [
     { to: "/", label: "INICIO", end: true },
     { to: "/events", label: "EXPLORAR EVENTOS" },
+    { to: "/community", label: "COMUNIDAD" },
   ];
 
   if (isAuthenticated) {
