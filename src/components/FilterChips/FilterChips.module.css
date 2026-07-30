@@ -1,0 +1,62 @@
+.wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding: 0.25rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 255, 159, 0.4) transparent;
+}
+
+.wrapper::-webkit-scrollbar {
+  height: 4px;
+}
+
+.wrapper::-webkit-scrollbar-thumb {
+  background: rgba(0, 255, 159, 0.4);
+  border-radius: 4px;
+}
+
+.chipsContainer {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: max-content;
+  min-width: 100%;
+}
+
+.chip {
+  background: rgba(255, 255, 255, 0.06);
+  color: #D1D5DB;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  font-family: var(--ds-font-family-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.chip:hover {
+  background: rgba(0, 255, 159, 0.12);
+  color: #00FF9F;
+  border-color: rgba(0, 255, 159, 0.4);
+  transform: translateY(-1px);
+}
+
+.activeChip {
+  background: #00FF9F;
+  color: #0A0B10;
+  border-color: #00FF9F;
+  box-shadow: 0 0 16px rgba(0, 255, 159, 0.4);
+  font-weight: 800;
+}
+
+.activeChip:hover {
+  background: #00E08B;
+  color: #0A0B10;
+  border-color: #00E08B;
+}

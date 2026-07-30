@@ -1,7 +1,7 @@
 .emptyState {
-  border: 1px dashed var(--ds-color-border-editorial-mid);
-  background: var(--ds-color-bg-editorial-surface);
-  border-radius: var(--ds-radius-md);
+  border: 1px dashed var(--ds-color-border-editorial-mid, rgba(255, 255, 255, 0.15));
+  background: var(--ds-color-bg-editorial-surface, rgba(18, 19, 26, 0.7));
+  border-radius: var(--ds-radius-md, 12px);
   padding: 3rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -17,12 +17,13 @@
   text-align: left;
   justify-content: flex-start;
   gap: 1rem;
-  border-radius: var(--ds-radius-sm);
+  border-radius: var(--ds-radius-sm, 8px);
 }
 
 .emptyIcon {
-  color: var(--ds-color-text-editorial-muted);
+  color: var(--ds-color-text-editorial-muted, #9ca3af);
   display: flex;
+  font-size: 2rem;
 }
 
 .emptyContent {
@@ -33,20 +34,20 @@
 
 .emptyTitle {
   margin: 0;
-  font-size: 0.9rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  color: var(--ds-color-text-primary);
+  color: var(--ds-color-text-primary, #ffffff);
 }
 
 .emptyState.compact .emptyTitle {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
 }
 
 .emptyDesc {
   margin: 0;
-  font-size: 0.8rem;
-  color: var(--ds-color-text-editorial-subtle);
-  max-width: 300px;
+  font-size: 0.85rem;
+  color: var(--ds-color-text-editorial-subtle, #9ca3af);
+  max-width: 380px;
 }
 
 .emptyState.compact .emptyDesc {
@@ -60,16 +61,32 @@
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--ds-color-accent-primary);
+  color: var(--ds-color-accent-primary, #00FF9F);
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
-.emptyState.compact .emptyAction {
-  margin-top: 0;
-  margin-left: auto;
+.emptyAction:hover {
+  color: #ffffff;
 }
 
-.emptyAction:hover {
-  color: var(--ds-color-text-primary);
+.emptyActionButton {
+  background: rgba(0, 255, 159, 0.12);
+  color: #00FF9F;
+  border: 1px solid rgba(0, 255, 159, 0.4);
+  padding: 0.6rem 1.25rem;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.emptyActionButton:hover {
+  background: #00FF9F;
+  color: #0A0B10;
+  box-shadow: 0 0 16px rgba(0, 255, 159, 0.4);
 }
