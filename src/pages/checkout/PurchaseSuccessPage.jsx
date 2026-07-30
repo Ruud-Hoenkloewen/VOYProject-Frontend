@@ -183,7 +183,7 @@ export default function PurchaseSuccessPage() {
       </div>
 
       {/* Instrucciones Dinámicas según Payment Method */}
-      <div className={styles.animateFadeInUp} style={{ animationDelay: '0.3s' }}>
+      <div className={styles.animateFadeInUp} style={{ animationDelay: '0.3s', width: '100%', maxWidth: '1400px' }}>
         <DynamicInstructions
           paymentMethod={order?.paymentMethod || 'online'}
           eventTime={order?.eventTime || '20:00 HS'}
