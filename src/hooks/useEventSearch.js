@@ -47,8 +47,14 @@ export function useEventSearch(initialFilters = {}, delay = 300) {
         });
 
         if (isMounted) {
-          setEvents(backendEvents);
-          setIsUsingMock(false);
+          if (backendEvents && backendEvents.length > 0) {
+            setEvents(backendEvents);
+            setIsUsingMock(false);
+          } else {
+            // Si el backend responde vacío o sin eventos, usamos MOCK_EVENTS de contingencia
+            setEvents(MOCK_EVENTS);
+            setIsUsingMock(true);
+          }
         }
       } catch (err) {
         console.warn("Backend no disponible o error en petición. Usando datos Mock de respaldo:", err.message);
@@ -114,7 +120,6 @@ export function useEventSearch(initialFilters = {}, delay = 300) {
     return sorted;
   }, [events, debouncedSearch, selectedGenre, venue, date, sortOrder]);
 
-  // Handlers para manipular los filtros
   const toggleGenre = (genre) => {
     setSelectedGenre((prev) => (prev === genre ? 'TODOS' : genre));
   };

@@ -3,19 +3,10 @@
   align-items: center;
   gap: 0.75rem;
   width: 100%;
-  background: rgba(18, 19, 26, 0.85);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 12px;
-  padding: 0.75rem 1.25rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.25rem;
   box-sizing: border-box;
-}
-
-.container:focus-within {
-  border-color: #00FF9F;
-  box-shadow: 0 0 20px rgba(0, 255, 159, 0.25);
 }
 
 .iconWrapper {
@@ -24,6 +15,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  font-size: 1.1rem;
 }
 
 .input {
@@ -31,14 +23,14 @@
   border: none;
   color: #ffffff;
   font-family: var(--ds-font-family-base, system-ui, -apple-system, sans-serif);
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 600;
   width: 100%;
   outline: none;
 }
 
 .input::placeholder {
-  color: #8E8E93;
+  color: #6B7280;
   font-weight: 400;
 }
 
@@ -48,8 +40,8 @@
   color: #9CA3AF;
   font-size: 0.75rem;
   line-height: 1;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
   display: flex;
   align-items: center;

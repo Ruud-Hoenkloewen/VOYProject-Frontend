@@ -9,8 +9,7 @@ import styles from './EventsExplorer.module.css';
 
 /**
  * COMPONENTE: EventsExplorer
- * Vista principal desacoplada que integra el Buscador en tiempo real,
- * Chips de géneros musicales, Ordenamiento por fecha/precio, Grilla de resultados y EmptyState.
+ * Consola Unificada de Búsqueda y Filtros con diseño de panel integrado glassmorphic.
  */
 export default function EventsExplorer() {
   const {
@@ -28,61 +27,76 @@ export default function EventsExplorer() {
 
   return (
     <section className={styles.explorerSection}>
-      {/* ── ALERTA DE FALLBACK (MOCK DATA) ── */}
+      {/* ── BANNER INFORMATIVO MOCK ── */}
       {isUsingMock && (
         <div className={styles.mockBanner}>
-          <span>⚡ Modo Contingencia Activo: Servidor fuera de línea. Mostrando eventos locales.</span>
+          <span>⚡ Modo Contingencia: Mostrando catálogo local de eventos simulados.</span>
         </div>
       )}
 
-      {/* ── BARRA DE BÚSQUEDA ── */}
-      <div className={styles.searchContainer}>
-        <SearchBar
-          value={filters.searchText}
-          onChange={setSearchText}
-          onClear={() => setSearchText('')}
-          placeholder="Buscar evento por nombre, banda o venue..."
-        />
-      </div>
-
-      {/* ── BARRA DE CHIPS DE GÉNEROS + CONTROLES ── */}
-      <div className={styles.controlsRow}>
-        <div className={styles.chipsWrapper}>
-          <FilterChips
-            selectedGenre={filters.selectedGenre}
-            onSelectGenre={setSelectedGenre}
+      {/* ── CONSOLA UNIFICADA DE BÚSQUEDA Y FILTROS ── */}
+      <div className={styles.unifiedConsole}>
+        {/* BUSCADOR SUPERIOR */}
+        <div className={styles.searchRow}>
+          <SearchBar
+            value={filters.searchText}
+            onChange={setSearchText}
+            onClear={() => setSearchText('')}
+            placeholder="Buscar show, banda o lugar..."
           />
         </div>
 
-        <div className={styles.sortWrapper}>
-          <label htmlFor="sort-select" className={styles.sortLabel}>ORDENAR:</label>
-          <select
-            id="sort-select"
-            className={styles.sortSelect}
-            value={filters.sortOrder}
-            onChange={(e) => setSortOrder(e.target.value)}
-          >
-            <option value="fecha_asc">📅 Próximos (Fecha ↑)</option>
-            <option value="fecha_desc">📅 Lejanos (Fecha ↓)</option>
-            <option value="precio_asc">💵 Menor precio</option>
-            <option value="precio_desc">💵 Mayor precio</option>
-            <option value="popular">🔥 Más populares</option>
-          </select>
+        <div className={styles.divider} />
 
-          {isFiltered && (
-            <button
-              type="button"
-              className={styles.resetButton}
-              onClick={resetFilters}
-              title="Restablecer todos los filtros"
-            >
-              ✕ Limpiar
-            </button>
-          )}
+        {/* FILTROS Y ORDENAMIENTO INFERIOR */}
+        <div className={styles.filterRow}>
+          <div className={styles.chipsSection}>
+            <span className={styles.filterTag}>ESTILO:</span>
+            <FilterChips
+              selectedGenre={filters.selectedGenre}
+              onSelectGenre={setSelectedGenre}
+            />
+          </div>
+
+          <div className={styles.metaControlSection}>
+            {/* CONTADOR DE RESULTADOS */}
+            <span className={styles.counterBadge}>
+              {isLoading ? 'CARGANDO...' : `${filteredEvents.length} SHOWS`}
+            </span>
+
+            {/* CONTROL DE ORDEN */}
+            <div className={styles.sortContainer}>
+              <select
+                id="sort-select"
+                className={styles.sortSelect}
+                value={filters.sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                aria-label="Ordenar eventos"
+              >
+                <option value="fecha_asc">📅 Próximos</option>
+                <option value="fecha_desc">📅 Lejanos</option>
+                <option value="precio_asc">💵 Menor $</option>
+                <option value="precio_desc">💵 Mayor $</option>
+                <option value="popular">🔥 Populares</option>
+              </select>
+            </div>
+
+            {/* BOTÓN RESTABLECER */}
+            {isFiltered && (
+              <button
+                type="button"
+                className={styles.resetButton}
+                onClick={resetFilters}
+                title="Limpiar filtros"
+              >
+                ✕
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* ── RESULTADOS / GRID / EMPTY STATE ── */}
+      {/* ── RESULTADOS Y GRILLA DE EVENTOS ── */}
       <div className={styles.resultsContainer}>
         {!isLoading && filteredEvents.length === 0 ? (
           <EmptyState
