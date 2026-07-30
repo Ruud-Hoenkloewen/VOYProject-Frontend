@@ -36,8 +36,8 @@
 
 .directionsBtn {
   font-size: 0.78rem;
-  font-weight: 700;
-  color: #ffffff;
+  font-weight: 800;
+  color: #000000;
   background: var(--ds-color-magenta-400, #FF2D78);
   text-decoration: none;
   padding: 6px 14px;

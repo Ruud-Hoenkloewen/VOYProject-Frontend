@@ -626,7 +626,7 @@
 .buyButton {
   width: 100%;
   background-color: var(--ds-color-magenta-400);
-  color: #ffffff;
+  color: #000000;
   border: none;
   padding: 15px;
   font-size: 0.95rem;
