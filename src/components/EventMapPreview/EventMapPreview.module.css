@@ -30,15 +30,15 @@
 }
 
 .addressIcon {
-  color: var(--ds-color-brand-lime, #00FF9F);
+  color: var(--ds-color-magenta-400, #FF2D78);
   flex-shrink: 0;
 }
 
 .directionsBtn {
   font-size: 0.78rem;
   font-weight: 700;
-  color: #000000;
-  background: var(--ds-color-brand-lime, #00FF9F);
+  color: #ffffff;
+  background: var(--ds-color-magenta-400, #FF2D78);
   text-decoration: none;
   padding: 6px 14px;
   border-radius: 8px;
@@ -51,9 +51,9 @@
 }
 
 .directionsBtn:hover {
-  background: #00e58f;
+  background: #e02566;
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(0, 255, 159, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 45, 120, 0.3);
 }
 
 .iframeWrapper {

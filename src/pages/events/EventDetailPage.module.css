@@ -577,7 +577,7 @@
   margin-bottom: 8px;
 }
 .ticketPriceValue {
-  color: var(--ds-color-accent-primary);
+  color: var(--ds-color-magenta-400);
   font-size: 2.8rem;
   font-weight: 900;
   line-height: 1;
@@ -600,7 +600,7 @@
   letter-spacing: 1px;
 }
 .ticketValue { font-size: 0.92rem; font-weight: 600; color: var(--ds-color-text-secondary); }
-.textNeon { color: var(--ds-color-accent-primary) !important; }
+.textNeon { color: var(--ds-color-magenta-400) !important; }
 
 .ticketValueBadge {
   font-size: 0.72rem;
@@ -625,8 +625,8 @@
 
 .buyButton {
   width: 100%;
-  background-color: var(--ds-color-accent-primary);
-  color: var(--ds-color-neutral-0);
+  background-color: var(--ds-color-magenta-400);
+  color: #ffffff;
   border: none;
   padding: 15px;
   font-size: 0.95rem;
@@ -702,7 +702,7 @@
 }
 
 .stickyBuyPrice {
-  color: var(--ds-color-accent-primary);
+  color: var(--ds-color-magenta-400);
   font-weight: 900;
   font-size: 1.3rem;
 }
