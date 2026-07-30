@@ -1,0 +1,103 @@
+.receipt {
+  background-color: var(--ds-color-bg-surface, #141418);
+  border: 1px solid var(--ds-color-border-subtle, rgba(255, 255, 255, 0.12));
+  border-radius: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 16px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.company {
+  font-size: 0.9rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+}
+
+.sub {
+  font-size: 0.75rem;
+  color: var(--ds-color-text-subtle, #8e8e93);
+  margin-top: 2px;
+}
+
+.orderNumBlock {
+  text-align: right;
+}
+
+.orderNumLabel {
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--ds-color-text-subtle, #8e8e93);
+  text-transform: uppercase;
+}
+
+.orderId {
+  font-size: 0.9rem;
+  font-weight: 900;
+  font-family: monospace;
+  color: var(--ds-color-accent-primary, #C6F92B);
+  display: block;
+}
+
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+}
+
+.label {
+  color: var(--ds-color-text-subtle, #a0a0a0);
+  font-weight: 600;
+}
+
+.val {
+  color: #ffffff;
+  font-weight: 700;
+  text-align: right;
+}
+
+.totals {
+  padding-top: 14px;
+  border-top: 1px dashed rgba(255, 255, 255, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 1.1rem;
+  font-weight: 900;
+  margin-top: 4px;
+  color: #ffffff;
+}
+
+.totalVal {
+  color: var(--ds-color-accent-primary, #C6F92B);
+}
+
+.footer {
+  font-size: 0.72rem;
+  color: var(--ds-color-text-subtle, #666);
+  text-align: center;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
