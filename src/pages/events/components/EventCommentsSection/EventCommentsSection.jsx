@@ -79,7 +79,7 @@ export default function EventCommentsSection({ eventId, initialComments = [], ev
           <form onSubmit={handleSubmit}>
             <textarea
               className={styles.textarea}
-              placeholder="¿Vas a ir? ¿Con quién salís? Dejá tu mensaje acá..."
+              placeholder="Escribe un comentario..."
               value={text}
               onChange={(e) => setText(e.target.value)}
               rows={3}

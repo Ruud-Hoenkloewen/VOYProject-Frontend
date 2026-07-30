@@ -162,7 +162,7 @@ export default function EventDetailPage() {
           {/* LA MOVIDA */}
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
-              <span className={styles.iconMagenta}><WarningIcon /></span>
+              <span className={styles.iconNeon}><WarningIcon /></span>
               <h2 className={styles.sectionTitle}>LA MOVIDA</h2>
             </div>
             <p className={styles.movidaDescription}>
@@ -173,10 +173,19 @@ export default function EventDetailPage() {
             </p>
           </div>
 
+          {/* UBICACIÓN Y MAPA INTERACTIVO */}
+          <div className={styles.section}>
+            <div className={styles.sectionHeader}>
+              <span className={styles.iconNeon}><MapPinIcon /></span>
+              <h2 className={styles.sectionTitle}>UBICACIÓN Y MAPA</h2>
+            </div>
+            <EventMapPreview venue={eventData.venue} height={260} showDirectionsBtn={true} />
+          </div>
+
           {/* ORDEN DEL SHOW — Timeline Reworked */}
           <div className={styles.section}>
             <div className={styles.sectionHeader}>
-              <span className={styles.iconMagenta}><MusicIcon /></span>
+              <span className={styles.iconNeon}><MusicIcon /></span>
               <h2 className={styles.sectionTitle}>ORDEN DEL SHOW</h2>
             </div>
             <Timeline 
@@ -191,7 +200,7 @@ export default function EventDetailPage() {
             <div className={styles.section}>
               <div className={styles.artistsHeader}>
                 <div className={styles.sectionHeader}>
-                  <span className={styles.iconMagenta}><UsersIcon /></span>
+                  <span className={styles.iconNeon}><UsersIcon /></span>
                   <h2 className={styles.sectionTitle}>ARTISTAS</h2>
                 </div>
               </div>
@@ -245,15 +254,6 @@ export default function EventDetailPage() {
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* UBICACIÓN Y MAPA INTERACTIVO */}
-          <div className={styles.section}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.iconNeon}><MapPinIcon /></span>
-              <h2 className={styles.sectionTitle}>UBICACIÓN Y MAPA</h2>
-            </div>
-            <EventMapPreview venue={eventData.venue} height={260} showDirectionsBtn={true} />
           </div>
 
           {/* COMENTARIOS DE LA MOVIDA */}
