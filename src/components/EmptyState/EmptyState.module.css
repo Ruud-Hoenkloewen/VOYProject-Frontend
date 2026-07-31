@@ -90,3 +90,20 @@
   color: #0A0B10;
   box-shadow: 0 0 16px rgba(0, 255, 159, 0.4);
 }
+
+:global([data-theme="light"]) .emptyState {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+:global([data-theme="light"]) .emptyTitle {
+  color: #0f172a;
+}
+
+:global([data-theme="light"]) .emptyDesc {
+  color: #64748b;
+}
+
+:global([data-theme="light"]) .emptyIcon {
+  color: #64748b;
+}

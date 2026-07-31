@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { fetchEvents } from '../../services/eventService';
 import { getProfileByUsername, getMyProfile, GRADIENTS } from '../../services/userService';
 import { EventCard } from '../../design-system';
-import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon, ZapIcon, MusicIcon } from '../../components/icons';
+import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon, ZapIcon, MusicIcon, NewspaperIcon } from '../../components/icons';
 import FollowButton from '../../components/FollowButton/FollowButton';
 import LogoVoy from '../../components/LogoVoy/LogoVoy';
 import styles from './ProfilePage.module.css';
@@ -87,7 +87,7 @@ export default function ProfilePage() {
   const tabParam = searchParams.get('tab');
   const { username } = useParams();
   
-  const [activeTab, setActiveTab] = useState('MI MOVIDA');
+  const [activeTab, setActiveTab] = useState('INFO');
   const [allEvents, setAllEvents] = useState([]);
   const [favoriteEvents, setFavoriteEvents] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -95,7 +95,13 @@ export default function ProfilePage() {
   useEffect(() => {
     if (tabParam) {
       const upperTab = tabParam.toUpperCase();
-      if (['MI MOVIDA', 'GUSTOS', 'HISTORIAL', 'CARTELERA', 'INFO'].includes(upperTab)) {
+      if (['MI MOVIDA', 'GUSTOS'].includes(upperTab)) {
+        setActiveTab('INFO');
+      } else if (['HISTORIAL', 'HISTORIAL DE COMPRA'].includes(upperTab)) {
+        setActiveTab('HISTORIAL DE COMPRA');
+      } else if (['EVENTOS GUARDADOS', 'GUARDADOS'].includes(upperTab)) {
+        setActiveTab('EVENTOS GUARDADOS');
+      } else if (['INFO', 'CARTELERA'].includes(upperTab)) {
         setActiveTab(upperTab);
       }
     }
@@ -105,19 +111,18 @@ export default function ProfilePage() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState(null);
 
-  const isMyProfile = isAuthenticated && user && (
+  const isMyProfile = Boolean(isAuthenticated && user && (
     username === 'me' || 
     username === user.username || 
     username === user._id || 
     username === user.id
-  );
+  ));
 
   useEffect(() => {
     const loadAll = async () => {
       setIsLoadingProfile(true);
       setProfileError(null);
       try {
-        // Cargamos perfil y eventos en paralelo para reducir tiempo de espera
         const profilePromise = isMyProfile
           ? getMyProfile().catch(() =>
               username && username !== 'me'
@@ -153,7 +158,7 @@ export default function ProfilePage() {
   }, [profile, allEvents]);
 
   useEffect(() => {
-    if (isMyProfile && activeTab === 'HISTORIAL' && orders.length === 0) {
+    if (isMyProfile && activeTab === 'HISTORIAL DE COMPRA' && orders.length === 0) {
       import('../../services/orderService').then(({ getMyOrders }) => {
         getMyOrders().then(setOrders).catch(console.error);
       });
@@ -195,7 +200,21 @@ export default function ProfilePage() {
     return creatorId === profile._id;
   });
 
-  const validTabs = isProducer ? ['CARTELERA', 'INFO'] : ['MI MOVIDA', 'GUSTOS', 'HISTORIAL'];
+  // Categorías de pestañas:
+  // 1. INFO (combina movida y gustos)
+  // 2. EVENTOS GUARDADOS (o CARTELERA para productoras)
+  // 3. HISTORIAL DE COMPRA (ÚNICAMENTE visible si es el propio perfil isMyProfile)
+  let validTabs = [];
+  if (isProducer) {
+    validTabs = isMyProfile 
+      ? ['INFO', 'CARTELERA', 'HISTORIAL DE COMPRA'] 
+      : ['INFO', 'CARTELERA'];
+  } else {
+    validTabs = isMyProfile 
+      ? ['INFO', 'EVENTOS GUARDADOS', 'HISTORIAL DE COMPRA'] 
+      : ['INFO', 'EVENTOS GUARDADOS'];
+  }
+
   const currentTab = validTabs.includes(activeTab) ? activeTab : validTabs[0];
 
   const isFollowing = profile.seguidores?.some(
@@ -255,7 +274,6 @@ export default function ProfilePage() {
       <div className={styles.profileContent}>
         <div className={styles.profileHeader}>
           <div className={styles.userInfoCol}>
-            {/* Upper Row: Avatar + Name / Location / Stats to the side */}
             <div className={styles.avatarAndHeaderRow}>
               <div className={styles.avatarSquare} style={avatarStyle}>
                 {(profile.avatarUrl || profile.fotoPerfil || profile.avatar) ? (
@@ -340,10 +358,10 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Lower Section: Bio & Profile Tag/Badges */}
-            {profile.bio && (
-              <p className={styles.bioText}>
-                {profile.bio}
+            {/* Lower Section: Lema (Frase de presentación) */}
+            {profile.lema && (
+              <p className={styles.bioText} style={{ fontStyle: 'italic', opacity: 0.9 }}>
+                "{profile.lema}"
               </p>
             )}
 
@@ -377,64 +395,33 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Tabs */}
+        {/* ── BARRA DE PESTAÑAS DIVIDIDAS CON | ── */}
         <div className={styles.tabsContainer}>
-          {validTabs.map(tab => (
-            <button
-              key={tab}
-              className={`${styles.tab} ${currentTab === tab ? styles.tabActive : ''}`}
-              onClick={() => setActiveTab(tab)}
-            >
-              {tab}
-            </button>
+          {validTabs.map((tab, idx) => (
+            <div key={tab} className={styles.tabItemWrapper}>
+              {idx > 0 && <span className={styles.tabDivider}>|</span>}
+              <button
+                className={`${styles.tab} ${currentTab === tab ? styles.tabActive : ''}`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </button>
+            </div>
           ))}
         </div>
 
-        {currentTab === 'CARTELERA' && (
-          <div className={styles.sectionBlock}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>
-                <StarIcon size={18} className={styles.sectionIcon} />
-                NUESTROS EVENTOS
-              </h2>
-            </div>
-            
-            {producerEvents.length === 0 ? (
-                <div className={styles.emptyState}>
-                  <TicketIcon size={32} className={styles.emptyIcon} />
-                  <span className={styles.emptyText}>Esta productora aún no ha publicado eventos.</span>
-                </div>
-            ) : (
-                <div className={styles.eventsGrid}>
-                  {producerEvents.map(evt => (
-                    <EventCard key={evt.id} {...evt} />
-                  ))}
-                </div>
-            )}
-          </div>
-        )}
-
+        {/* ── PESTAÑA: INFO (Combina Movida, Bio y Gustos) ── */}
         {currentTab === 'INFO' && (
           <div className={styles.sectionBlock}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>
-                <StarIcon size={18} className={styles.sectionIcon} />
-                SOBRE NOSOTROS
-              </h2>
-            </div>
             {profile.bio ? (
-              <p className={styles.bioText}>
+              <p className={styles.bioText} style={{ marginBottom: '1.5rem' }}>
                 {profile.bio}
               </p>
-            ) : (
-              <div className={styles.emptyState}>
-                <span className={styles.emptyText}>Esta productora aún no ha agregado una descripción.</span>
-              </div>
-            )}
+            ) : null}
 
             {profile.vibeEnShows && profile.vibeEnShows.length > 0 && (
               <div className={styles.badgesGroupBlock}>
-                <h3 className={styles.subHeadingLabel}>VIBES</h3>
+                <h3 className={styles.subHeadingLabel}>VIBES EN SHOWS</h3>
                 <div className={styles.badgesFlex}>
                   {profile.vibeEnShows.map(vibe => (
                     <div key={vibe} className={styles.pogoBadge}>
@@ -446,29 +433,56 @@ export default function ProfilePage() {
             )}
             
             {profile.generosMusicales && profile.generosMusicales.length > 0 && (
-               <div className={styles.badgesGroupBlock}>
-                  <h3 className={styles.subHeadingLabel}>GÉNEROS MUSICALES</h3>
-                  <div className={styles.badgesFlex}>
+              <div className={styles.badgesGroupBlock}>
+                <h3 className={styles.subHeadingLabel}>GÉNEROS MUSICALES</h3>
+                <div className={styles.badgesFlex}>
                   {profile.generosMusicales.map(g => (
                     <div key={g} className={styles.pogoBadge}>
                       {g}
                     </div>
                   ))}
-                  </div>
-               </div>
+                </div>
+              </div>
+            )}
+
+            {profile.artistasFavoritos && (
+              <div className={styles.badgesGroupBlock}>
+                <h3 className={styles.subHeadingLabel}>ARTISTAS FAVORITOS</h3>
+                <p className={styles.bioText} style={{ color: 'var(--ds-color-text-primary)', fontWeight: 700 }}>
+                  {profile.artistasFavoritos}
+                </p>
+              </div>
+            )}
+
+            {!profile.bio && (!profile.vibeEnShows || profile.vibeEnShows.length === 0) && (!profile.generosMusicales || profile.generosMusicales.length === 0) && (
+              <div className={styles.emptyState}>
+                <span className={styles.emptyText}>Este perfil aún no ha agregado su información o gustos.</span>
+              </div>
             )}
           </div>
         )}
 
-        {currentTab === 'MI MOVIDA' && (
+        {/* ── PESTAÑA: CARTELERA (Para Productoras) ── */}
+        {currentTab === 'CARTELERA' && (
           <div className={styles.sectionBlock}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>
-                <HeartIcon size={18} className={styles.sectionIcon} />
-                EVENTOS GUARDADOS
-              </h2>
-            </div>
+            {producerEvents.length === 0 ? (
+              <div className={styles.emptyState}>
+                <TicketIcon size={32} className={styles.emptyIcon} />
+                <span className={styles.emptyText}>Esta productora aún no ha publicado eventos.</span>
+              </div>
+            ) : (
+              <div className={styles.eventsGrid}>
+                {producerEvents.map(evt => (
+                  <EventCard key={evt.id} {...evt} />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
+        {/* ── PESTAÑA: EVENTOS GUARDADOS ── */}
+        {currentTab === 'EVENTOS GUARDADOS' && (
+          <div className={styles.sectionBlock}>
             {favoriteEvents.length === 0 ? (
               <div className={styles.emptyState}>
                 <div className={styles.emptyIconWrapper}>
@@ -493,67 +507,9 @@ export default function ProfilePage() {
           </div>
         )}
 
-        {currentTab === 'GUSTOS' && (
+        {/* ── PESTAÑA: HISTORIAL DE COMPRA (ÚNICAMENTE VISIBLE PARA EL PROPIO PERFIL) ── */}
+        {currentTab === 'HISTORIAL DE COMPRA' && isMyProfile && (
           <div className={styles.sectionBlock}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>
-                <ZapIcon size={18} className={styles.sectionIcon} />
-                GUSTOS Y VIBES
-              </h2>
-            </div>
-            {profile.vibeEnShows && profile.vibeEnShows.length > 0 ? (
-              <div className={styles.badgesFlex}>
-                {profile.vibeEnShows.map(vibe => (
-                  <div key={vibe} className={styles.pogoBadge}>
-                    {vibe}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className={styles.emptyState}>
-                <div className={styles.emptyIconWrapper}>
-                  <ZapIcon size={36} className={styles.emptyIcon} />
-                </div>
-                <span className={styles.emptyTitle}>Tus gustos no están configurados</span>
-                <span className={styles.emptyText}>Personalizá tus géneros y vibes favoritas para recibir mejores recomendaciones.</span>
-                {isMyProfile && (
-                  <Link to="/profile/edit" className={styles.emptyLinkButton}>
-                    EDITAR PERFIL →
-                  </Link>
-                )}
-              </div>
-            )}
-             {profile.generosMusicales && profile.generosMusicales.length > 0 && (
-               <div className={styles.badgesGroupBlock}>
-                  <h3 className={styles.subHeadingLabel}>GÉNEROS</h3>
-                  <div className={styles.badgesFlex}>
-                  {profile.generosMusicales.map(g => (
-                    <div key={g} className={styles.pogoBadge}>
-                      {g}
-                    </div>
-                  ))}
-                  </div>
-               </div>
-            )}
-            {profile.artistasFavoritos && (
-               <div className={styles.badgesGroupBlock}>
-                  <h3 className={styles.subHeadingLabel}>ARTISTAS FAVORITOS</h3>
-                  <p className={styles.bioText} style={{ color: 'var(--ds-color-text-primary)', fontWeight: 700 }}>
-                    {profile.artistasFavoritos}
-                  </p>
-               </div>
-            )}
-          </div>
-        )}
-
-        {currentTab === 'HISTORIAL' && (
-          <div className={styles.sectionBlock}>
-            <div className={styles.sectionHeader}>
-              <h2 className={styles.sectionTitle}>
-                <TicketIcon size={18} className={styles.sectionIcon} />
-                HISTORIAL DE COMPRAS
-              </h2>
-            </div>
             <div className={styles.historyList}>
               {orders.length === 0 ? (
                 <div className={styles.emptyState}>

@@ -27,6 +27,7 @@ export default function ProfileEditPage() {
   const [form, setForm] = useState({
     nombre:           "",
     username:         "",
+    lema:             "",
     bio:              "",
     ubicacion:        "",
     avatarUrl:        "",
@@ -111,6 +112,7 @@ export default function ProfileEditPage() {
         setForm({
           nombre:           profile.nombre                || "",
           username:         initialUsername,
+          lema:             profile.lema                  || "",
           bio:              profile.bio                   || "",
           ubicacion:        profile.ubicacion             || "",
           avatarUrl:        profile.avatarUrl || profile.fotoPerfil || profile.avatar || "",
@@ -189,6 +191,7 @@ export default function ProfileEditPage() {
       const payload = {
         nombre:           form.nombre,
         username:         form.username,
+        lema:             form.lema,
         bio:              form.bio,
         ubicacion:        form.ubicacion,
         avatar:           form.avatarUrl,
@@ -363,17 +366,31 @@ export default function ProfileEditPage() {
         )}
 
         <div className={styles.topGrid}>
-          {/* LEFT: BIO & ARTISTAS */}
+          {/* LEFT: LEMA, BIO & ARTISTAS */}
           <div className={styles.topGridLeft}>
             <div className={styles.fieldGroup}>
-              <label className={styles.label}>BIO</label>
+              <label className={styles.label}>LEMA / FRASE DE PRESENTACIÓN</label>
+              <div className={styles.inputWrapper}>
+                <input
+                  type="text"
+                  className={styles.inputInner}
+                  placeholder="Si no hay pogo no es recital..."
+                  maxLength={100}
+                  value={form.lema}
+                  onChange={(e) => handleChange("lema", e.target.value)}
+                />
+              </div>
+            </div>
+
+            <div className={`${styles.fieldGroup} ${styles.fieldGroupMarginTop}`}>
+              <label className={styles.label}>BIO (SOBRE MÍ)</label>
               <textarea
                 className={styles.textarea}
-                maxLength={160}
+                maxLength={300}
                 value={form.bio}
                 onChange={(e) => handleChange("bio", e.target.value)}
                 rows={3}
-                placeholder="Contanos tu movida..."
+                placeholder="Contanos tu historia o descripción detallada..."
               />
             </div>
 
@@ -383,7 +400,7 @@ export default function ProfileEditPage() {
                 <input
                   type="text"
                   className={styles.inputInner}
-                  placeholder="Ej: La Mugre, Código Rojo, Palco Roto..."
+                  placeholder="La Mugre, Código Rojo, Palco Roto..."
                   value={form.artistasFavoritos}
                   onChange={(e) => handleChange("artistasFavoritos", e.target.value)}
                 />
@@ -396,7 +413,7 @@ export default function ProfileEditPage() {
                 <input
                   type="text"
                   className={styles.inputInner}
-                  placeholder="Ej: Wos en la Plaza de Toros, La Renga..."
+                  placeholder="Wos en la Plaza de Toros, La Renga..."
                   value={form.recitalMemorable || ""}
                   onChange={(e) => handleChange("recitalMemorable", e.target.value)}
                 />

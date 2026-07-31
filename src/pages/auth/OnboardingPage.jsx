@@ -471,16 +471,6 @@ function StepEstilo({ data, onChange, onConfirm, onBack, onSkip, submitting }) {
                 </button>
               ))}
             </div>
-
-            <div className={styles.inputWrapper} style={{ marginTop: '0.5rem' }}>
-              <input
-                type="url"
-                className={styles.inputInner}
-                placeholder="O pegá la URL de una foto para el banner..."
-                value={data.bannerImagen || ""}
-                onChange={(e) => onChange("bannerImagen", e.target.value)}
-              />
-            </div>
           </div>
 
           <div className={styles.actionRow}>
