@@ -207,6 +207,7 @@ export default function LoginPage() {
               ¿No tenés cuenta?{" "}
               <Link to="/register" className={styles.altLinkBtn}>
                 Registrate
+              </Link>
             </p>
           </div>
         </section>
