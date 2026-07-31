@@ -96,6 +96,111 @@
 .artistsCount {
   font-size: var(--ds-font-size-sm);
   color: var(--ds-color-text-secondary);
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.artistsWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 0;
+}
+
+.artistsWrapper:hover .artistsCount {
+  color: var(--ds-color-cyan-400, #00FF9F);
+}
+
+.artistAvatarsRow {
+  display: flex;
+  align-items: center;
+}
+
+.artistAvatarCircle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: #1a1d29;
+  border: 1.5px solid var(--ds-color-cyan-400, #00FF9F);
+  color: #ffffff;
+  font-size: 0.68rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: -6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  overflow: hidden;
+}
+
+.artistAvatarCircle:first-child {
+  margin-left: 0;
+}
+
+.artistsDropdown {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 0;
+  min-width: 200px;
+  background: #0e1017;
+  border: 1px solid rgba(0, 255, 159, 0.3);
+  border-radius: 10px;
+  padding: 12px 14px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7), 0 0 15px rgba(0, 255, 159, 0.1);
+  z-index: 50;
+  animation: popoverFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.artistsDropdownHeader {
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--ds-color-cyan-400, #00FF9F);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.artistsDropdownList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.artistsDropdownItem {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.artistHeadlinerBadge {
+  font-size: 0.6rem;
+  font-weight: 800;
+  background: rgba(255, 45, 120, 0.2);
+  color: #ff2d78;
+  border: 1px solid rgba(255, 45, 120, 0.4);
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.04em;
+}
+
+@keyframes popoverFadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Skeleton Styles */

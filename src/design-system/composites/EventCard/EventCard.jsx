@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Badge from "../../primitives/Badge/Badge";
 import Button from "../../primitives/Button/Button";
 import Card from "../../primitives/Card/Card";
@@ -42,6 +43,7 @@ export default function EventCard({
   isLoading = false,
 }) {
   const navigate = useNavigate();
+  const [showDropdown, setShowDropdown] = useState(false);
 
   // ESTADO DE CARGA: Retorna la versión Skeleton de la card
   if (isLoading) {
@@ -115,7 +117,49 @@ export default function EventCard({
         
         <div className={styles.actions}>
           {(artists || []).length > 0 && (
-             <span className={styles.artistsCount}>+ {artists.length} Artis{artists.length === 1 ? 'ta' : 'tas'}</span>
+            <div 
+              className={styles.artistsWrapper}
+              onMouseEnter={() => setShowDropdown(true)}
+              onMouseLeave={() => setShowDropdown(false)}
+            >
+              <div className={styles.artistAvatarsRow}>
+                {artists.slice(0, 3).map((art, idx) => {
+                  const name = typeof art === 'string' ? art : (art.nombre || art.name || 'A');
+                  const initial = name.charAt(0).toUpperCase();
+                  return (
+                    <div key={idx} className={styles.artistAvatarCircle} title={name}>
+                      {initial}
+                    </div>
+                  );
+                })}
+              </div>
+              <span className={styles.artistsCount}>
+                + {artists.length} Artis{artists.length === 1 ? 'ta' : 'tas'}
+              </span>
+
+              {showDropdown && (
+                <div className={styles.artistsDropdown}>
+                  <div className={styles.artistsDropdownHeader}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+                    ARTISTAS DEL EVENTO
+                  </div>
+                  <ul className={styles.artistsDropdownList}>
+                    {artists.map((art, idx) => {
+                      const name = typeof art === 'string' ? art : (art.nombre || art.name || '');
+                      const isHeadliner = typeof art === 'object' && art.headliner;
+                      return (
+                        <li key={idx} className={styles.artistsDropdownItem}>
+                          <span>{name}</span>
+                          {isHeadliner && (
+                            <span className={styles.artistHeadlinerBadge}>HEADLINER</span>
+                          )}
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              )}
+            </div>
           )}
           <div style={{ marginLeft: 'auto' }}>
             <Button variant="ghost" size="sm" onClick={() => id && navigate(`/events/${id}`)}>
