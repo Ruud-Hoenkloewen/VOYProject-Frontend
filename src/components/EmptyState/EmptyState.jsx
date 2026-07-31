@@ -1,12 +1,17 @@
 import { Link } from "react-router-dom";
 import styles from "./EmptyState.module.css";
 
+/**
+ * Componente: EmptyState
+ * Ilustración o mensaje cuando no hay resultados de eventos con botón de acción opcional.
+ */
 export default function EmptyState({ 
   icon, 
-  title, 
-  description, 
+  title = "No encontramos eventos", 
+  description = "No hay coincidencias con los filtros aplicados.", 
   actionLabel, 
   actionTo, 
+  onAction,
   compact = false 
 }) {
   return (
@@ -20,6 +25,11 @@ export default function EmptyState({
         <Link to={actionTo} className={styles.emptyAction}>
           {actionLabel}
         </Link>
+      )}
+      {actionLabel && !actionTo && onAction && (
+        <button type="button" onClick={onAction} className={styles.emptyActionButton}>
+          {actionLabel}
+        </button>
       )}
     </div>
   );

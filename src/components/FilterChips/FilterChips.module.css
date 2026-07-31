@@ -1,0 +1,176 @@
+.container {
+  position: relative;
+  z-index: 60;
+  width: 100%;
+}
+
+.chipsRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  background: rgba(255, 255, 255, 0.05);
+  color: #D1D5DB;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 0.45rem 1rem;
+  border-radius: 9999px;
+  font-family: var(--ds-font-family-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+}
+
+.chip:hover {
+  background: rgba(0, 255, 159, 0.12);
+  color: #00FF9F;
+  border-color: rgba(0, 255, 159, 0.4);
+  transform: translateY(-1px);
+}
+
+.activeChip {
+  background: #00FF9F;
+  color: #0A0B10;
+  border-color: #00FF9F;
+  box-shadow: 0 0 16px rgba(0, 255, 159, 0.4);
+  font-weight: 800;
+}
+
+.activeChip:hover {
+  background: #00E08B;
+  color: #0A0B10;
+  border-color: #00E08B;
+}
+
+.dropdownWrapper {
+  position: relative;
+  z-index: 60;
+}
+
+.moreButton {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(18, 19, 26, 0.95);
+  color: #9CA3AF;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  padding: 0.45rem 0.95rem;
+  border-radius: 9999px;
+  font-family: var(--ds-font-family-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  outline: none;
+  white-space: nowrap;
+}
+
+.moreButton:hover {
+  border-color: #00FF9F;
+  color: #00FF9F;
+  background: rgba(0, 255, 159, 0.08);
+}
+
+.activeMoreButton {
+  background: rgba(0, 255, 159, 0.18);
+  color: #00FF9F;
+  border-color: #00FF9F;
+  box-shadow: 0 0 14px rgba(0, 255, 159, 0.25);
+  font-weight: 800;
+}
+
+.chevron {
+  font-size: 0.8rem;
+  transition: transform 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}
+
+/* ── MENÚ POPOVER CON Z-INDEX SUPERIOR Y FONDO OPACO ── */
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  z-index: 9999;
+  min-width: 200px;
+  background: #12131A;
+  border: 1px solid rgba(0, 255, 159, 0.4);
+  border-radius: 14px;
+  padding: 0.75rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9), 0 0 25px rgba(0, 255, 159, 0.25);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.menuHeader {
+  font-family: var(--ds-font-family-mono, monospace);
+  font-size: 0.62rem;
+  font-weight: 800;
+  color: #00FF9F;
+  letter-spacing: 0.1em;
+  padding-bottom: 0.4rem;
+  margin-bottom: 0.4rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.menuGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.menuItem {
+  background: transparent;
+  color: #D1D5DB;
+  border: none;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-family: var(--ds-font-family-mono, monospace);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  width: 100%;
+}
+
+.menuItem:hover {
+  background: rgba(0, 255, 159, 0.12);
+  color: #00FF9F;
+}
+
+.activeMenuItem {
+  background: rgba(0, 255, 159, 0.2);
+  color: #00FF9F;
+  font-weight: 800;
+}
+
+@media (max-width: 480px) {
+  .chip, .moreButton {
+    font-size: 0.68rem;
+    padding: 0.38rem 0.75rem;
+  }
+}
