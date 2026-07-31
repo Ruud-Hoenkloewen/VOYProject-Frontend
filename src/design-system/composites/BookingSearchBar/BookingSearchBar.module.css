@@ -228,3 +228,68 @@
     margin-top: 0.5rem;
   }
 }
+
+/* ── LIGHT MODE OVERRIDES ─────────────────────────────────────── */
+:global([data-theme="light"]) .root {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+:global([data-theme="light"]) .root:focus-within {
+  border-color: #ea580c;
+  box-shadow: 0 0 24px rgba(234, 88, 12, 0.15);
+}
+
+:global([data-theme="light"]) .standaloneSearchGroup {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+:global([data-theme="light"]) .standaloneSearchGroup:focus-within {
+  border-color: #ea580c;
+  box-shadow: 0 0 24px rgba(234, 88, 12, 0.15);
+}
+
+:global([data-theme="light"]) .input,
+:global([data-theme="light"]) .select {
+  color: #111827;
+}
+
+:global([data-theme="light"]) .input::placeholder {
+  color: #9ca3af;
+}
+
+:global([data-theme="light"]) .standaloneSearchInput {
+  color: #111827;
+}
+
+:global([data-theme="light"]) .standaloneSearchInput::placeholder {
+  color: #9ca3af;
+}
+
+:global([data-theme="light"]) .select option {
+  background: #ffffff;
+  color: #111827;
+}
+
+:global([data-theme="light"]) .microLabel {
+  color: #ea580c;
+}
+
+:global([data-theme="light"]) .searchIcon {
+  color: #ea580c;
+}
+
+:global([data-theme="light"]) .divider {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+:global([data-theme="light"]) .clearSearchBtn {
+  color: #6b7280;
+}
+
+:global([data-theme="light"]) .clearSearchBtn:hover {
+  color: #111827;
+}

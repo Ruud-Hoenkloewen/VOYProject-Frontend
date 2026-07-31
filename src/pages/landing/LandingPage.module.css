@@ -1776,6 +1776,17 @@
   box-shadow: 0 6px 25px rgba(255, 87, 34, 0.4);
 }
 
+/* ── CONTRASTE DE CARDS EN LIGHT MODE ── */
+:global([data-theme="light"]) .featuredEventCard {
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+  background: var(--ds-color-bg-canvas);
+}
+
+:global([data-theme="light"]) .fecLeft {
+  border-right-color: rgba(0, 0, 0, 0.1);
+}
+
 /* ── RESPONSIVE ────────────────────────── */
 @media (max-width: 1024px) {
 
