@@ -55,3 +55,27 @@
   background: rgba(239, 68, 68, 0.25);
   color: #FF6B6B;
 }
+
+
+/* ── LIGHT MODE OVERRIDES ── */
+:global([data-theme="light"]) .iconWrapper {
+  color: #ea580c;
+}
+
+:global([data-theme="light"]) .input {
+  color: #111827;
+}
+
+:global([data-theme="light"]) .input::placeholder {
+  color: #6b7280;
+}
+
+:global([data-theme="light"]) .clearButton {
+  background: rgba(0, 0, 0, 0.08);
+  color: #6b7280;
+}
+
+:global([data-theme="light"]) .clearButton:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+}

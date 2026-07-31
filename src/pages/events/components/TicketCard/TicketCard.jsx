@@ -47,9 +47,6 @@ export default function TicketCard({ eventData, isSoldOut, id, onShowToast }) {
         </button>
       </div>
 
-      <p className={styles.termsText}>
-        Al comprar tu entrada aceptás los <a href="#">términos y condiciones de VOYProject</a>.
-      </p>
     </div>
   );
 }

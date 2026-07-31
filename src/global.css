@@ -205,9 +205,9 @@
   --ds-color-bg-surface: #ffffff;
   --ds-color-bg-surface-muted: #f4f1eb; /* Muted beige */
 
-  --ds-color-text-primary: #1e293b; /* Darker slate 800 for stronger text */
-  --ds-color-text-secondary: #334155;
-  --ds-color-text-muted: #64748b;
+  --ds-color-text-primary: #050811; /* Darker slate 800 for stronger text */
+  --ds-color-text-secondary: #0f172a;
+  --ds-color-text-muted: #1e293b;
 
   --ds-color-border-subtle: rgba(0, 0, 0, 0.12); /* Stronger subtle border */
   --ds-color-border-strong: rgba(0, 0, 0, 0.25);
@@ -232,8 +232,8 @@
   --ds-color-state-highlight: var(--ds-color-magenta-500);
 
   --ds-color-bg-editorial: #f7f4ec; /* Warmer editorial background */
-  --ds-color-text-editorial-muted: #5e6b7d;
-  --ds-color-text-editorial-subtle: #414d5e;
+  --ds-color-text-editorial-muted: #1e293b;
+  --ds-color-text-editorial-subtle: #0f172a;
   --ds-color-border-editorial: #e2e8f0;
   --ds-color-border-editorial-mid: #cbd5e1;
     --ds-color-bg-editorial-surface: #ffffff;
@@ -317,7 +317,7 @@ body {
 
 
 
-/* -- ANIMACIÓN DE FONDO AMBIENTAL ------------------------ */
+/* -- ANIMACIï¿½N DE FONDO AMBIENTAL ------------------------ */
 @keyframes dsBgAmbientDrift {
   0% {
     background-position: 0% 0%, 100% 100%, center, 0% 0%;
@@ -326,3 +326,6 @@ body {
     background-position: 100% 100%, 0% 0%, center, 100% 100%;
   }
 }
+
+
+[data-theme=light] [class*=Description], [data-theme=light] [class*=description] { color: #0f172a !important; font-weight: 500 !important; opacity: 1 !important; }

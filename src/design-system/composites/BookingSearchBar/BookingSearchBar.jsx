@@ -18,7 +18,8 @@ export default function BookingSearchBar({
   toggleCategory,
   sortBy = "fecha",
   setSortBy,
-  resetFilters
+  resetFilters,
+  resultsCount,
 }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get("q") || "";
@@ -144,6 +145,7 @@ export default function BookingSearchBar({
                 onChange={(e) => setSortBy(e.target.value)}
               >
                 <option value="fecha">Próximos eventos</option>
+                <option value="alfabetico">Alfabéticamente (A-Z)</option>
                 <option value="precio_asc">Menor precio primero</option>
                 <option value="precio_desc">Mayor precio primero</option>
                 <option value="popular">Más concurridos</option>
@@ -165,7 +167,7 @@ export default function BookingSearchBar({
         )}
       </div>
 
-      {/* ── BUSCADOR DIRECTO DE EVENTOS O ARTISTAS EN VISTA ── */}
+      {/* ── BUSCADOR DIRECTO Y CONTADOR DINÁMICO DE RESULTADOS ── */}
       <div className={styles.standaloneSearchRow}>
         <div className={styles.standaloneSearchGroup}>
           <span className={styles.searchIcon}><SearchIcon /></span>
@@ -190,6 +192,12 @@ export default function BookingSearchBar({
             </button>
           )}
         </div>
+
+        {resultsCount !== undefined && resultsCount !== null && (
+          <div className={styles.resultsCounterBadge}>
+            mostrando {resultsCount} {resultsCount === 1 ? 'show' : 'shows'}
+          </div>
+        )}
       </div>
     </div>
   );

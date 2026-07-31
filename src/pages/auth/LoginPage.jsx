@@ -207,11 +207,6 @@ export default function LoginPage() {
               ¿No tenés cuenta?{" "}
               <Link to="/register" className={styles.altLinkBtn}>
                 Registrate
-              </Link>
-            </p>
-
-            <p className={styles.footerNote}>
-              Al ingresar aceptás los términos de uso de VOY Project.
             </p>
           </div>
         </section>

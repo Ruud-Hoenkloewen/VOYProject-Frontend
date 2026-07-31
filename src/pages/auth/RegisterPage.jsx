@@ -292,10 +292,6 @@ export default function RegisterPage() {
               </button>
             </form>
           </div>
-
-          <p className={styles.footerNote}>
-            Al registrarte aceptás los términos de uso de VOY Project.
-          </p>
         </section>
       </main>
 

@@ -209,3 +209,52 @@
     padding: 0.35rem 0.65rem;
   }
 }
+
+
+/* ── LIGHT MODE OVERRIDES ── */
+:global([data-theme="light"]) .unifiedConsole {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+}
+
+:global([data-theme="light"]) .unifiedConsole:focus-within {
+  border-color: #ea580c;
+  box-shadow: 0 0 24px rgba(234, 88, 12, 0.18);
+}
+
+:global([data-theme="light"]) .divider {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+:global([data-theme="light"]) .filterTag {
+  color: #ea580c;
+}
+
+:global([data-theme="light"]) .counterBadge {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #374151;
+}
+
+:global([data-theme="light"]) .sortSelect {
+  background: rgba(0, 0, 0, 0.05);
+  color: #111827;
+  border-color: rgba(0, 0, 0, 0.14);
+}
+
+:global([data-theme="light"]) .sortSelect:hover {
+  border-color: #ea580c;
+  color: #ea580c;
+}
+
+:global([data-theme="light"]) .sortSelect option {
+  background: #ffffff;
+  color: #111827;
+}
+
+:global([data-theme="light"]) .mockBanner {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: rgba(217, 119, 6, 0.35);
+  color: #b45309;
+}

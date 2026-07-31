@@ -105,7 +105,9 @@ export function useEventSearch(initialFilters = {}, delay = 300) {
 
     // Ordenamiento
     const sorted = [...result];
-    if (sortOrder === 'fecha_asc') {
+    if (sortOrder === 'alfabetico') {
+      sorted.sort((a, b) => (a.title || a.nombre || '').localeCompare(b.title || b.nombre || '', 'es', { sensitivity: 'base' }));
+    } else if (sortOrder === 'fecha_asc') {
       sorted.sort((a, b) => (a.rawDate || 0) - (b.rawDate || 0));
     } else if (sortOrder === 'fecha_desc') {
       sorted.sort((a, b) => (b.rawDate || 0) - (a.rawDate || 0));

@@ -69,7 +69,9 @@ export function useEventFilters(events = []) {
 
     // Ordenamiento
     const sorted = [...list];
-    if (sortBy === "precio_asc") {
+    if (sortBy === "alfabetico") {
+      sorted.sort((a, b) => (a.title || "").localeCompare(b.title || "", "es", { sensitivity: "base" }));
+    } else if (sortBy === "precio_asc") {
       sorted.sort((a, b) => (a.rawPrice || 0) - (b.rawPrice || 0));
     } else if (sortBy === "precio_desc") {
       sorted.sort((a, b) => (b.rawPrice || 0) - (a.rawPrice || 0));
