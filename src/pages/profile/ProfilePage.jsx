@@ -181,11 +181,10 @@ export default function ProfilePage() {
   const safeName = profile.nombre || profile.username || 'Usuario';
   const initial = safeName.charAt(0).toUpperCase();
   const displayUsername = profile.username ? `@${profile.username}` : `@${safeName.toLowerCase().replace(/\s/g, '')}`;
-  const avatarColor = profile.avatarColor || 'transparent';
-  const hasAvatarColor = avatarColor !== 'transparent' && avatarColor !== 'none';
-  const avatarStyle = hasAvatarColor
-    ? { background: avatarColor, padding: '3px' }
-    : { background: 'transparent', padding: 0 };
+  const avatarColor = (profile.avatarColor && profile.avatarColor !== 'transparent') 
+    ? profile.avatarColor 
+    : (isProducer ? 'var(--ds-color-cyan-400)' : isArtist ? 'var(--ds-color-accent-secondary)' : 'var(--ds-color-accent-primary)');
+  const avatarStyle = { background: avatarColor, color: '#ffffff' };
   const bannerBg = profile.bannerImagen
     ? `url("${profile.bannerImagen}") center/cover no-repeat`
     : (GRADIENTS[profile.bannerGradiente] || profile.bannerGradiente || profile.bannerColor || GRADIENTS.g1);

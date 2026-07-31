@@ -16,10 +16,6 @@ export default function ArtistDashboard() {
       
       <main className={styles.mainContent}>
         <div className={styles.dashboardHeader}>
-          <div className={styles.badgeLabel}>
-            <MusicIcon size={14} />
-            <span>PANEL DE GESTIÓN ARTÍSTICA</span>
-          </div>
           <h1 className={styles.pageTitle}>DASHBOARD DEL ARTISTA</h1>
           <p className={styles.pageSubtitle}>
             ¡Hola, <strong className={styles.highlightName}>{userName}</strong>! Administrá tu perfil, tus géneros y tus fechas.
