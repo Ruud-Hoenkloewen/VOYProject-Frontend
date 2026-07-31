@@ -3,8 +3,13 @@ import { formatPrice } from '../utils/helpers';
 
 const MONTHS = ["ENE", "FEB", "MAR", "ABR", "MAY", "JUN", "JUL", "AGO", "SEP", "OCT", "NOV", "DIC"];
 
+/**
+ * formatDate — convierte una fecha ISO a formato legible.
+ * Ej: "14 AGO 2026"
+ */
 const formatDate = (dateString) => {
-  const date = new Date(dateString);
+  if (!dateString) return 'Fecha a confirmar';
+  const date  = new Date(dateString);
   const day   = date.getUTCDate();
   const month = MONTHS[date.getUTCMonth()];
   const year  = date.getUTCFullYear();
@@ -59,6 +64,7 @@ const mapEvent = (evt) => {
     imageUrl:     imageUrl,
     genres:       evt.generos  || [],
     date:         evt.fecha    ? formatDate(evt.fecha) : 'Fecha a confirmar',
+    rawDate:      evt.fecha    ? new Date(evt.fecha)   : null,
     time:         evt.hora     ? `${evt.hora} HS`      : '',
     venue:        evt.lugar    || 'Lugar a confirmar',
     price:        evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),

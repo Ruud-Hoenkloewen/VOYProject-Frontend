@@ -214,7 +214,7 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {myOrders.slice(0, 3).map((order) => {
                     const ev = order.evento || {};
-                    const isPaid = (order.estado === 'completado' || order.estado === 'paid' || order.estado === 'pagado' || order.status === 'completed');
+                    const isPaid = (order.estadoPago === 'PAGADA' || order.estado === 'completado' || order.estado === 'paid' || order.estado === 'pagado' || order.status === 'completed');
                     const statusLabel = isPaid ? "PAGADO" : "PENDIENTE";
                     const statusBg = isPaid ? "rgba(0, 255, 159, 0.12)" : "rgba(255, 193, 7, 0.12)";
                     const statusColor = isPaid ? "#00FF9F" : "#FFC107";
