@@ -16,7 +16,7 @@ export default function RegisterPage() {
   const { login }   = useAuth();
 
   const [form,       setForm]       = useState({ name: "", email: "", password: "", confirmPassword: "" });
-  const [selectedRole, setSelectedRole] = useState("client");
+  const [selectedRole, setSelectedRole] = useState(null);
   const [step, setStep] = useState(0); // 0: select role, 1: form
   const [errors,     setErrors]     = useState({});
   const [apiError,   setApiError]   = useState("");
@@ -86,8 +86,8 @@ export default function RegisterPage() {
     setApiError("");
 
     try {
-      // 1. Registramos en backend con el rol seleccionado (client, producer, artist)
-      const data = await registerUser(form.name, form.email, form.password, selectedRole);
+      const roleToRegister = selectedRole || "client";
+      const data = await registerUser(form.name, form.email, form.password, roleToRegister);
       
       // Log in immediately after registration
       await login({ _id: data._id, nombre: data.nombre, username: data.username, email: data.email, role: data.role }, data.token);
