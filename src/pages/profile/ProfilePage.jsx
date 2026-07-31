@@ -380,18 +380,21 @@ export default function ProfilePage() {
           <div className={styles.statsBoxes}>
             <div className={styles.statBox}>
               <span className={`${styles.statBoxVal} ${styles.valSaved}`}>
-                {isProducer ? producerEvents.length : (profile.favoritos?.length || 0)}
+                {isProducer ? producerEvents.length : isArtist ? (profile.generosMusicales?.length || 0) : (profile.favoritos?.length || 0)}
               </span>
               <span className={styles.statBoxLabel}>
-                {isProducer ? <>SHOWS<br/>PUBLICADOS</> : <>EVENTOS<br/>GUARDADOS</>}
+                {isProducer ? <>SHOWS<br/>PUBLICADOS</> : isArtist ? <>GÉNEROS<br/>MUSICALES</> : <>EVENTOS<br/>GUARDADOS</>}
               </span>
             </div>
-            {!isProducer && (
-              <div className={styles.statBox}>
-                <span className={`${styles.statBoxVal} ${styles.valGenres}`}>{profile.generosFavoritos?.length || profile.generosMusicales?.length || 1}</span>
-                <span className={styles.statBoxLabel}>GÉNEROS<br/>FAVORITOS</span>
-              </div>
-            )}
+            
+            <div className={styles.statBox}>
+              <span className={`${styles.statBoxVal} ${styles.valGenres}`}>
+                {isProducer ? followersCount : isArtist ? (profile.vibeEnShows?.length || 0) : (profile.generosFavoritos?.length || profile.generosMusicales?.length || 0)}
+              </span>
+              <span className={styles.statBoxLabel}>
+                {isProducer ? <>SEGUIDORES<br/>TOTALES</> : isArtist ? <>VIBES EN<br/>SHOWS</> : <>GÉNEROS<br/>FAVORITOS</>}
+              </span>
+            </div>
           </div>
         </div>
 

@@ -172,7 +172,7 @@ export default function LandingPage() {
       {/* ── FOOTER ───────────────────────────────────────── */}
       <footer className={styles.footer}>
         <div className={styles.footerBar}>
-          PRIVACY POLICY &nbsp;|&nbsp; TÉRMINOS Y CONDICIONES &nbsp;|&nbsp; APOYÁ LA ESCENA EMERGENTE DE TUCUMÁN &nbsp;|&nbsp; © 2026 VOY PROJECT
+          © 2026 Voy Project - UNSTA
         </div>
       </footer>
 
