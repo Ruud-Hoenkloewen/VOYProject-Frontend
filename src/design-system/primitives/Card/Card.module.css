@@ -14,3 +14,17 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 0 0 1px var(--ds-color-border-accent);
   transform: translateY(-2px);
 }
+
+/* ── LIGHT MODE — seamless con el fondo beige ── */
+:global([data-theme="light"]) .card {
+  background: var(--ds-color-bg-canvas);
+  border-color: rgba(0, 0, 0, 0.1);
+  box-shadow: none;
+}
+
+:global([data-theme="light"]) .card:hover,
+:global([data-theme="light"]) .highlighted {
+  border-color: #ea580c;
+  box-shadow: none;
+  transform: translateY(-2px);
+}

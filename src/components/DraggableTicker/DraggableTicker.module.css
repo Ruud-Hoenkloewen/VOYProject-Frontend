@@ -50,10 +50,15 @@
 }
 
 :global([data-theme="light"]) .tickerWrapper {
-  background: linear-gradient(90deg, #e6fdf4 0%, #d1fae5 50%, #e6fdf4 100%);
-  border-color: rgba(0, 200, 120, 0.3);
+  background: linear-gradient(90deg, #fff4e6 0%, #ffe8cc 50%, #fff4e6 100%);
+  border-color: rgba(234, 88, 12, 0.3);
+  box-shadow: 0 4px 20px rgba(234, 88, 12, 0.08);
 }
 
 :global([data-theme="light"]) .tickerItem {
-  color: #059669;
+  color: #ea580c;
+}
+
+:global([data-theme="light"]) .diamond {
+  color: #ea580c;
 }
