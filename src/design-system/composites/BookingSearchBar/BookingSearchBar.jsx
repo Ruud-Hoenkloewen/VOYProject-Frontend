@@ -3,8 +3,8 @@ import { SearchIcon, MapPinIcon, CalendarIcon, BanknoteIcon, ZapIcon } from "../
 import styles from "./BookingSearchBar.module.css";
 
 const ALL_GENRES = [
-  "TODOS", "INDIE", "ROCK", "PUNK", "METAL", "HARDCORE", "GRUNGE", 
-  "ELECTRONICA", "TECHNO", "HOUSE", "POST-PUNK", "FOLK", "JAZZ", "HIP-HOP"
+  "TODOS", "ROCK", "POST-ROCK", "HARDCORE", "GRUNGE", "POST-PUNK", 
+  "METAL", "STONER ROCK", "NOISE ROCK", "HEAVY ROCK", "INDIE ROCK", "ALTERNATICO"
 ];
 
 export default function BookingSearchBar({ 

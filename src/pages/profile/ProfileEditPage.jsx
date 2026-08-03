@@ -7,9 +7,8 @@ import { MapPinIcon, EditIcon } from "../../components/icons";
 import styles from "./ProfileEditPage.module.css";
 
 const GENEROS_MUSICALES = [
-  "PUNK", "METAL", "HARDCORE", "GRUNGE", "ROCK", "INDIE",
-  "TECHNO", "ELECTRÓNICA", "HOUSE", "POST-PUNK", "NOISE",
-  "FOLK", "JAZZ", "HIP-HOP",
+  "PUNK", "METAL", "HARDCORE", "GRUNGE", "ROCK", "POST-ROCK",
+  "POST-PUNK", "NOISE ROCK", "STONER ROCK", "HEAVY ROCK", "INDIE ROCK", "ALTERNATICO"
 ];
 
 const VIBES_OPTIONS = [

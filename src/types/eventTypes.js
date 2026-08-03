@@ -43,17 +43,17 @@
 
 export const GENRES_LIST = [
   "TODOS",
-  "INDIE",
   "ROCK",
-  "PUNK",
+  "POST-ROCK",
   "HARDCORE",
-  "METAL",
   "GRUNGE",
-  "SHOEGAZE",
-  "FOLK",
-  "POP",
-  "ELECTRONICA",
-  "TECHNO"
+  "POST-PUNK",
+  "METAL",
+  "STONER ROCK",
+  "NOISE ROCK",
+  "HEAVY ROCK",
+  "INDIE ROCK",
+  "ALTERNATICO"
 ];
 
 export const MOCK_EVENTS = [
