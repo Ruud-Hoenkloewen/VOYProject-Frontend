@@ -176,22 +176,13 @@ export default function ProfilePage() {
   const safeName = profile.nombre || profile.username || 'Usuario';
   const initial = safeName.charAt(0).toUpperCase();
   const displayUsername = profile.username ? `@${profile.username}` : `@${safeName.toLowerCase().replace(/\s/g, '')}`;
-<<<<<<< Updated upstream
-  const avatarColor = profile.avatarColor || 'transparent';
-  const hasAvatarColor = avatarColor !== 'transparent' && avatarColor !== 'none';
-  const avatarStyle = hasAvatarColor
-    ? { background: avatarColor, padding: '3px' }
-    : { background: 'transparent', padding: 0 };
-=======
-  
   const isProducer = profile.role === 'producer' || profile.rol === 'producer' || profile.isVerifiedProducer;
-  const isArtist = profile.role === 'artist' || profile.rol === 'artist';
+  const isArtist = profile.role === 'artist' || profile.rol === 'artist' || profile.rol === 'artista';
 
-  const avatarColor = (profile.avatarColor && profile.avatarColor !== 'transparent') 
+  const avatarColor = (profile.avatarColor && profile.avatarColor !== 'transparent' && profile.avatarColor !== 'none') 
     ? profile.avatarColor 
-    : (isProducer ? 'var(--ds-color-cyan-400)' : isArtist ? 'var(--ds-color-accent-secondary)' : 'var(--ds-color-accent-primary)');
-  const avatarStyle = { background: avatarColor, color: '#ffffff' };
->>>>>>> Stashed changes
+    : (isProducer ? 'var(--ds-color-cyan-400)' : isArtist ? 'var(--ds-color-magenta-400)' : 'var(--ds-color-accent-primary)');
+  const avatarStyle = { background: avatarColor, color: '#ffffff', padding: '3px' };
   const bannerBg = profile.bannerImagen
     ? `url("${profile.bannerImagen}") center/cover no-repeat`
     : (GRADIENTS[profile.bannerGradiente] || profile.bannerGradiente || profile.bannerColor || GRADIENTS.g1);
