@@ -459,9 +459,9 @@
 :global([data-theme="light"]) .hwTopRow,
 :global([data-theme="light"]) .hwStatsRow,
 :global([data-theme="light"]) .hwSection {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  background: var(--ds-color-bg-canvas, #F5F2EB);
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
 :global([data-theme="light"]) .hwGreetingSub,

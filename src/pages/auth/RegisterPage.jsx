@@ -216,7 +216,7 @@ export default function RegisterPage() {
             </h2>
             <p className={styles.asideDesc}>
               Eventos de punk, rock, metal y grunge en
-              Tucumán y el NOA.
+              todo Tucumán.
             </p>
             <div className={styles.asideDivider} />
             <ul className={styles.asideFeatures}>

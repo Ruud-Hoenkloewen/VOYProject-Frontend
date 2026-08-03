@@ -25,7 +25,7 @@ export default function HowItWorksModal({ onClose, isProducer = false }) {
       step: "01",
       icon: <ZapIcon size={24} />,
       title: "EXPLORÁ LA MOVIDA",
-      desc: "Descubrí la cartelera de eventos emergentes, recitales e información de venues en Tucumán y el NOA."
+      desc: "Descubrí la cartelera de eventos emergentes, recitales e información de venues en todo Tucumán."
     },
     {
       step: "02",

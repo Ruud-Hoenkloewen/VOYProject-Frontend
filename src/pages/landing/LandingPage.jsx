@@ -129,7 +129,7 @@ export default function LandingPage() {
             </h1>
             <p className={`${styles.heroSubtitle} ${styles.animateStagger} ${styles.delay3}`}>LA ESCENA EMERGENTE Y UNDERGROUND</p>
             <p className={`${styles.heroDescription} ${styles.animateStagger} ${styles.delay3}`}>
-              Eventos y recitales de Tucumán y el NOA.<br />
+              Eventos y recitales de todo Tucumán.<br />
               Punk, Rock, Metal, Grunge y más, encontrá tus próximas fechas acá.
             </p>
 
