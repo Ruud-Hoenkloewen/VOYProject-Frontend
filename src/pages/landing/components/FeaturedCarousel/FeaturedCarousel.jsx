@@ -240,7 +240,7 @@ export default function FeaturedCarousel() {
         <div className={styles.featuredDivider} />
         <div className={styles.featuredHeaderCenter}>
           <span className={styles.featuredDiamond}>♦</span>
-          <span className={styles.featuredLabel}>SHOWS DESTACADOS — ESTA SEMANA</span>
+          <span className={styles.featuredLabel}>SHOWS DESTACADOS DE LA SEMANA</span>
           <span className={styles.featuredDiamond}>♦</span>
         </div>
         <div className={styles.featuredDivider} />

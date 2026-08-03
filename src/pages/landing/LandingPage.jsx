@@ -129,8 +129,8 @@ export default function LandingPage() {
             </h1>
             <p className={`${styles.heroSubtitle} ${styles.animateStagger} ${styles.delay3}`}>LA ESCENA EMERGENTE Y UNDERGROUND</p>
             <p className={`${styles.heroDescription} ${styles.animateStagger} ${styles.delay3}`}>
-              La plataforma de eventos musicales del noroeste argentino.<br />
-              Punk, Rock, Metal, Grunge y más — todo en un solo lugar.
+              Eventos y recitales de Tucumán y el NOA.<br />
+              Punk, Rock, Metal, Grunge y más, encontrá tus próximas fechas acá.
             </p>
 
           </div>

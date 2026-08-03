@@ -91,7 +91,7 @@ export default function HowItWorksModal({ onClose, isProducer = false }) {
           <p className={styles.subtitle}>
             {isProducer 
               ? "Herramientas integradas para publicar eventos, controlar la taquilla y seguir tus ingresos."
-              : "Una plataforma pensada por y para la escena de música independiente."}
+              : "Pensado por y para la escena de música independiente."}
           </p>
         </div>
 

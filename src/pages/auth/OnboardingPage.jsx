@@ -160,7 +160,7 @@ function StepPerfil({ data, onChange, onNext, onSkip }) {
     <div className={styles.gridContainer}>
       <section className={styles.controlsSection}>
         <div className={styles.controlsCard}>
-          <Typography variant="caption" className={styles.eyebrow}>PASO 1 — TU PERFIL</Typography>
+          <Typography variant="caption" className={styles.eyebrow}>PASO 1: TU PERFIL</Typography>
           <h1 className={styles.title}>HOLA, {nombre.toUpperCase()}</h1>
           <p className={styles.subtitle}>Contanos un poco de vos.</p>
 
@@ -232,7 +232,7 @@ function StepMusica({ data, onChange, onNext, onBack, onSkip }) {
     <div className={styles.gridContainer}>
       <section className={styles.controlsSection}>
         <div className={styles.controlsCard}>
-          <Typography variant="caption" className={styles.eyebrow}>PASO 2 — TU MÚSICA</Typography>
+          <Typography variant="caption" className={styles.eyebrow}>PASO 2: TU MÚSICA</Typography>
           <h1 className={styles.title}>¿QUÉ MÚSICA TE MUEVE?</h1>
           <p className={styles.subtitle}>Elegí los géneros y vibes que van con vos.</p>
 
@@ -331,7 +331,7 @@ function StepEstilo({ data, onChange, onConfirm, onBack, onSkip, submitting }) {
     <div className={styles.gridContainer}>
       <section className={styles.controlsSection}>
         <div className={styles.controlsCard}>
-          <Typography variant="caption" className={styles.eyebrow}>PASO 3 — TU ESTILO</Typography>
+          <Typography variant="caption" className={styles.eyebrow}>PASO 3: TU ESTILO</Typography>
           <h1 className={styles.title}>DEFINÍ TU IDENTIDAD VISUAL</h1>
           <p className={styles.subtitle}>
             Elegí tu foto, color de acento y portada que representarán tu presencia en VOY.

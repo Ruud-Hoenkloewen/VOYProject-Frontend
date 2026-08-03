@@ -50,7 +50,7 @@ export default function HeroWidgetLoggedOut() {
           className={styles.hwBtnSecondary}
           onClick={() => navigate("/login")}
         >
-          YA TENGO CUENTA — INGRESAR
+          YA TENGO CUENTA | INGRESAR
         </button>
       </div>
     </div>

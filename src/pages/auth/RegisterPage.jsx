@@ -215,8 +215,8 @@ export default function RegisterPage() {
               <span className={styles.asideTitleAccent}>IMPORTA.</span>
             </h2>
             <p className={styles.asideDesc}>
-              Eventos de punk, rock, metal y grunge del
-              noroeste argentino — todo en un solo lugar.
+              Eventos de punk, rock, metal y grunge en
+              Tucumán y el NOA.
             </p>
             <div className={styles.asideDivider} />
             <ul className={styles.asideFeatures}>
@@ -231,7 +231,7 @@ export default function RegisterPage() {
         <section className={styles.formSection}>
           <div className={styles.formCard}>
             <h1 className={styles.formTitle}>Creá tu cuenta</h1>
-            <p className={styles.formSubtitle}>Unite a la escena — es gratis</p>
+            <p className={styles.formSubtitle}>Unite a la escena, es gratis</p>
 
             {/* Error global del backend */}
             {apiError && (
