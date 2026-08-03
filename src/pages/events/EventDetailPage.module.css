@@ -440,15 +440,62 @@
 .bg_grey    { background-color: var(--ds-color-text-editorial-subtle); }
 
 .artistCardContent { padding: 20px; display: flex; flex-direction: column; flex: 1; }
-.artistCardInfo { margin-bottom: 20px; flex: 1; }
-.artistCardName {
-  margin: 0 0 6px 0;
+.artistCardInfo { margin-bottom: 16px; flex: 1; }
+
+.artistHeaderRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.artistAvatarCircle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 2px solid var(--ds-color-magenta-400);
+  flex-shrink: 0;
+  background-color: #12141f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.artistAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.artistAvatarInitials {
+  font-weight: 800;
   font-size: 1.1rem;
+  color: #ffffff;
+}
+
+.artistTitleMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.artistCardName {
+  margin: 0;
+  font-size: 1.05rem;
   font-weight: 900;
   text-transform: uppercase;
   color: var(--ds-color-text-primary);
+  line-height: 1.2;
 }
-.artistCardDesc { margin: 0; font-size: 0.85rem; color: var(--ds-color-text-editorial-subtle); line-height: 1.4; }
+
+.artistHandle {
+  font-size: 0.78rem;
+  color: var(--ds-color-magenta-400);
+  font-weight: 700;
+}
+
+.artistCardDesc { margin: 0; font-size: 0.85rem; color: var(--ds-color-text-editorial-subtle); line-height: 1.45; }
 
 .artistCardFooter {
   display: flex;

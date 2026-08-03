@@ -176,11 +176,22 @@ export default function ProfilePage() {
   const safeName = profile.nombre || profile.username || 'Usuario';
   const initial = safeName.charAt(0).toUpperCase();
   const displayUsername = profile.username ? `@${profile.username}` : `@${safeName.toLowerCase().replace(/\s/g, '')}`;
+<<<<<<< Updated upstream
   const avatarColor = profile.avatarColor || 'transparent';
   const hasAvatarColor = avatarColor !== 'transparent' && avatarColor !== 'none';
   const avatarStyle = hasAvatarColor
     ? { background: avatarColor, padding: '3px' }
     : { background: 'transparent', padding: 0 };
+=======
+  
+  const isProducer = profile.role === 'producer' || profile.rol === 'producer' || profile.isVerifiedProducer;
+  const isArtist = profile.role === 'artist' || profile.rol === 'artist';
+
+  const avatarColor = (profile.avatarColor && profile.avatarColor !== 'transparent') 
+    ? profile.avatarColor 
+    : (isProducer ? 'var(--ds-color-cyan-400)' : isArtist ? 'var(--ds-color-accent-secondary)' : 'var(--ds-color-accent-primary)');
+  const avatarStyle = { background: avatarColor, color: '#ffffff' };
+>>>>>>> Stashed changes
   const bannerBg = profile.bannerImagen
     ? `url("${profile.bannerImagen}") center/cover no-repeat`
     : (GRADIENTS[profile.bannerGradiente] || profile.bannerGradiente || profile.bannerColor || GRADIENTS.g1);
@@ -188,8 +199,6 @@ export default function ProfilePage() {
   const followersCount = profile.seguidores?.length || 0;
   const followingCount = profile.siguiendo?.length || 0;
 
-  const isProducer = profile.role === 'producer' || profile.rol === 'producer' || profile.isVerifiedProducer;
-  const isArtist = profile.role === 'artist' || profile.rol === 'artist';
   const producerEvents = allEvents.filter(e => {
     const creatorId = e.creador?._id || e.creador;
     return creatorId === profile._id;
