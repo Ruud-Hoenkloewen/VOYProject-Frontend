@@ -69,9 +69,24 @@ const mapEvent = (evt) => {
     venue:        evt.lugar    || 'Lugar a confirmar',
     price:        evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),
     rawPrice:     evt.precio   ?? 0,
-    description:  evt.descripcion || '',
-    artists:      (evt.artistas || []).map(a => ({ nombre: a.nombre, headliner: a.headliner || false })),
-    status:       evt.estado   || 'DISPONIBLE',
+    artists: (evt.artistas || []).map(a => ({
+      id: a._id,
+      nombre: a.nombre,
+      headliner: a.headliner || false,
+      usuario: a.usuario ? {
+        id: a.usuario._id || a.usuario.id,
+        nombre: a.usuario.nombre,
+        username: a.usuario.username,
+        avatar: a.usuario.avatar || a.usuario.avatarUrl || a.usuario.fotoPerfil || '',
+        avatarColor: a.usuario.avatarColor || '#00FF9F',
+        bannerImagen: a.usuario.bannerImagen || '',
+        bannerGradiente: a.usuario.bannerGradiente || '',
+        bannerColor: a.usuario.bannerColor || '',
+        bio: a.usuario.bio || '',
+        role: a.usuario.role || a.usuario.rol || 'artist',
+        redesSociales: a.usuario.redesSociales || {}
+      } : null
+    })),
     statusTone:   mapStatusTone(evt.estado || 'DISPONIBLE'),
     capacity:     evt.capacidadTotal ?? null,
     stock:        evt.stock ?? null,
