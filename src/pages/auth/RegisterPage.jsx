@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { User, Building2, Guitar } from "lucide-react";
+import { User, Building2, Guitar, Mail, Info } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { registerUser } from "../../services/authService";
 import { checkUsername, updateMyProfile } from "../../services/userService";
@@ -300,8 +300,6 @@ export default function RegisterPage() {
         <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
           <div className={styles.confirmCard}>
             <div className={styles.confirmHeader}>
-              <span className={styles.confirmBadge}>CONFIRMACIÓN DE DATOS DE CUENTA</span>
-              <h2>¿Tus datos son correctos?</h2>
               <p>Por favor verificá la información antes de crear tu cuenta para asegurar que puedas iniciar sesión sin problemas.</p>
             </div>
 
@@ -325,13 +323,14 @@ export default function RegisterPage() {
               </div>
 
               <div className={styles.confirmDataRow}>
-                <span className={styles.confirmLabel}>CORREO DE ACCESO:</span>
+                <span className={styles.confirmLabel}>CORREO ELECTRÓNICO:</span>
                 <span className={styles.confirmValueMail}>{form.email}</span>
               </div>
             </div>
 
-            <div className={styles.confirmNotice}>
-              💡 <strong>Atención:</strong> El email <code>{form.email}</code> se asociará a tu usuario. Asegurate de que no tenga errores de tipeo.
+            <div className={styles.confirmNotice} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Info size={16} style={{ color: "#00FF9F", flexShrink: 0 }} />
+              <span><strong>Atención:</strong> El email <code>{form.email}</code> se asociará a tu usuario. Asegurate de que no tenga errores de tipeo.</span>
             </div>
 
             <div className={styles.confirmActions}>

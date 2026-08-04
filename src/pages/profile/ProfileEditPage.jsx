@@ -6,6 +6,25 @@ import LogoVoy from "../../components/LogoVoy/LogoVoy";
 import { MapPinIcon, EditIcon } from "../../components/icons";
 import styles from "./ProfileEditPage.module.css";
 
+function SpotifySVG() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="#1DB954" style={{ flexShrink: 0 }}>
+      <path d="M12 0C5.376 0 0 5.376 0 12s5.376 12 12 12 12-5.376 12-12S18.624 0 12 0zm5.521 17.341c-.218.359-.684.473-1.043.254-2.857-1.746-6.455-2.141-10.692-1.171-.409.094-.817-.163-.911-.572-.094-.409.163-.817.572-.911 4.636-1.06 8.608-.609 11.796 1.341.359.219.473.684.254 1.059zm1.472-3.275c-.275.448-.863.592-1.311.317-3.268-2.008-8.251-2.592-12.118-1.418-.506.153-1.041-.137-1.194-.643-.153-.506.137-1.041.643-1.194 4.417-1.34 9.904-.691 13.663 1.62.448.275.592.863.317 1.318zm.145-3.411c-3.921-2.328-10.384-2.543-14.137-1.404-.613.186-1.258-.168-1.444-.781-.186-.613.168-1.258.781-1.444 4.312-1.309 11.449-1.049 15.961 1.63.55.326.732 1.037.406 1.587-.326.55-1.037.732-1.587.406z"/>
+    </svg>
+  );
+}
+
+function extractSpotifyTrackId(input) {
+  if (!input) return "";
+  const str = input.trim();
+  if (/^[a-zA-Z0-9]{22}$/.test(str)) return str;
+  const matchUrl = str.match(/track\/([a-zA-Z0-9]{22})/);
+  if (matchUrl && matchUrl[1]) return matchUrl[1];
+  const matchUri = str.match(/spotify:track:([a-zA-Z0-9]{22})/);
+  if (matchUri && matchUri[1]) return matchUri[1];
+  return "";
+}
+
 const GENEROS_MUSICALES = [
   "PUNK", "METAL", "HARDCORE", "GRUNGE", "ROCK", "POST-ROCK",
   "POST-PUNK", "NOISE ROCK", "STONER ROCK", "HEAVY ROCK", "INDIE ROCK", "ALTERNATICO"
@@ -120,6 +139,7 @@ export default function ProfileEditPage() {
             instagram: profile.redesSociales?.instagram  || "",
             twitter:   profile.redesSociales?.twitter    || "",
             spotify:   profile.redesSociales?.spotify    || "",
+            spotifyTrack: profile.redesSociales?.spotifyTrack || profile.redesSociales?.spotify || "",
           },
           generosMusicales: profile.generosMusicales     || [],
           vibes:            profile.vibeEnShows          || [],
@@ -581,6 +601,48 @@ export default function ProfileEditPage() {
               </div>
             </div>
           </div>
+
+          {/* SPOTIFY REPRODUCTOR 30s (EXCLUSIVO PARA ARTISTAS) */}
+          {(user?.role === 'artist' || user?.rol === 'artist' || user?.rol === 'artista') && (
+            <div className={`${styles.fieldGroup} ${styles.fieldGroupMarginTop}`} style={{ background: 'rgba(30, 215, 96, 0.04)', border: '1px solid rgba(30, 215, 96, 0.25)', padding: '20px', borderRadius: '14px', marginTop: '1.5rem' }}>
+              <label className={styles.label} style={{ color: '#1DB954', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', fontWeight: 800 }}>
+                <SpotifySVG /> SOUNDTRACK PREVIEW
+              </label>
+              <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '4px 0 12px 0', lineHeight: 1.4 }}>
+                Pegá la URL o ID de tu canción en Spotify para que los usuarios escuchen un reproductor de 30 segundos directamente en tu perfil.
+              </p>
+              <div className={styles.inputWrapper}>
+                <input
+                  className={styles.inputInner}
+                  placeholder="Ej: https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT"
+                  value={form.redesSociales.spotifyTrack || ""}
+                  onChange={(e) => handleRedSocial("spotifyTrack", e.target.value)}
+                />
+              </div>
+
+              {extractSpotifyTrackId(form.redesSociales.spotifyTrack) ? (
+                <div style={{ marginTop: '16px' }}>
+                  <div style={{ fontSize: '0.7rem', color: '#1DB954', fontWeight: 800, marginBottom: '8px', letterSpacing: '0.05em' }}>
+                    ▶ VISTA PREVIA DEL REPRODUCTOR (30 SEGUNDOS):
+                  </div>
+                  <iframe
+                    src={`https://open.spotify.com/embed/track/${extractSpotifyTrackId(form.redesSociales.spotifyTrack)}?utm_source=generator&theme=0`}
+                    width="100%"
+                    height="152"
+                    frameBorder="0"
+                    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                    loading="lazy"
+                    style={{ borderRadius: '12px', border: 'none' }}
+                    title="Spotify Track Preview"
+                  />
+                </div>
+              ) : (
+                <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '8px', fontStyle: 'italic' }}>
+                  Podés copiar el enlace de cualquier canción desde Spotify (Compartir {'>'} Copiar enlace de canción).
+                </div>
+              )}
+            </div>
+          )}
 
           <div className={`${styles.fieldGroup} ${styles.fieldGroupMarginTop}`}>
             <label className={styles.label}>GÉNEROS</label>

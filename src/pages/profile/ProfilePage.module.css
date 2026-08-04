@@ -238,12 +238,36 @@
 }
 
 .locationBlock {
-  color: var(--ds-color-editorial-muted);
   display: flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.88rem;
+  color: #cbd5e1;
+}
+
+/* Reproductor de Spotify para Artistas */
+.spotifyPlayerCard {
+  margin-top: 1.25rem;
+  background: rgba(30, 215, 96, 0.04);
+  border: 1px solid rgba(30, 215, 96, 0.2);
+  border-radius: 16px;
+  padding: 16px 20px;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+}
+
+.spotifyPlayerHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.spotifyPlayerLabel {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #1DB954;
+  letter-spacing: 0.06em;
 }
 
 .bioText {
@@ -470,6 +494,14 @@
   cursor: pointer;
   position: relative;
   transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tabIcon {
+  color: var(--ds-color-accent-primary, #00FF9F);
+  transition: color 0.2s ease;
 }
 
 .tab:hover {
