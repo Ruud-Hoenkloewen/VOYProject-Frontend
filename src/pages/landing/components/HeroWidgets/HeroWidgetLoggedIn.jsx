@@ -213,7 +213,7 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {myOrders.slice(0, 3).map((order) => {
-                    const ev = order.evento || {};
+                    const ev = order.eventId || order.evento || {};
                     const isPaid = (order.estadoPago === 'PAGADA' || order.estado === 'completado' || order.estado === 'paid' || order.estado === 'pagado' || order.status === 'completed');
                     const statusLabel = isPaid ? "PAGADO" : "PENDIENTE";
                     const statusBg = isPaid ? "rgba(0, 255, 159, 0.12)" : "rgba(255, 193, 7, 0.12)";
@@ -221,32 +221,38 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
                     const statusBorder = isPaid ? "1px solid rgba(0, 255, 159, 0.3)" : "1px solid rgba(255, 193, 7, 0.3)";
 
                     let imageUrl = ev.imagen || ev.imageUrl || '';
-                    if (imageUrl.startsWith('/public/') || !imageUrl) {
-                      const titleLower = (ev.nombre || '').toLowerCase();
-                      if (titleLower.includes('danny') || titleLower.includes('proyectil') || titleLower.includes('oqlta')) imageUrl = '/flyer-danny-proyectil.png';
-                      else if (titleLower.includes('lacrifagia') || titleLower.includes('hardcore')) imageUrl = '/flyer-lacrifagia.png';
-                      else imageUrl = '/flyer-sabbath-fest.png';
+                    if (imageUrl.startsWith('/public/')) {
+                      imageUrl = imageUrl.replace('/public/', '/');
+                    }
+                    if (!imageUrl) {
+                      const titleLower = (ev.nombre || ev.title || '').toLowerCase();
+                      if (titleLower.includes('danny') || titleLower.includes('proyectil') || titleLower.includes('oqlta') || titleLower.includes('direction')) imageUrl = '/flyer-danny-proyectil.png';
+                      else if (titleLower.includes('lacrifagia') || titleLower.includes('hardcore') || titleLower.includes('vividos') || titleLower.includes('oscuridad')) imageUrl = '/flyer-las-cosas-inexplicables.png';
+                      else if (titleLower.includes('sabbath')) imageUrl = '/flyer-sabbath-fest.png';
+                      else imageUrl = '/flyer-lacrifagia.png';
                     }
 
                     // Format date
-                    const dateObj = new Date(ev.fecha);
+                    const dateObj = new Date(ev.fecha || ev.date);
                     const isDateValid = !isNaN(dateObj.getTime());
                     const dateStr = isDateValid ? dateObj.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }).toUpperCase() : (ev.fecha || "A CONFIRMAR");
+                    const eventName = ev.nombre || ev.title || 'Evento VOY';
+                    const eventVenue = ev.lugar || ev.venue || 'Tucumán';
 
                     return (
                       <div key={order._id} style={{ display: "flex", gap: "10px", alignItems: "center", padding: "8px 10px", background: "rgba(255, 255, 255, 0.02)", border: "1px solid var(--ds-color-border-editorial-mid)", borderRadius: "8px" }}>
                         <div style={{ width: "42px", height: "54px", flexShrink: 0, borderRadius: "5px", overflow: "hidden", background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}>
-                          <img src={imageUrl} alt={ev.nombre} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                          <img src={imageUrl} alt={eventName} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, gap: "2px" }}>
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "6px" }}>
                             <strong style={{ color: "var(--ds-color-text-primary)", fontSize: "0.8rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textTransform: "uppercase" }}>
-                              {ev.nombre}
+                              {eventName}
                             </strong>
                           </div>
 
                           <span style={{ fontSize: "0.7rem", color: "var(--ds-color-text-editorial-subtle)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                            📍 {ev.venue || "Tucumán"}
+                            📍 {eventVenue}
                           </span>
 
                           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "0.68rem", color: "var(--ds-color-text-editorial-muted)" }}>

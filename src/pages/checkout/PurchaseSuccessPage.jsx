@@ -1,9 +1,10 @@
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
 import { QRCodeSVG } from 'qrcode.react';
-import { Zap, Ticket, Receipt, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { Zap, Ticket, Receipt, ShieldCheck, CheckCircle2, Download } from 'lucide-react';
 import { formatPrice } from '../../utils/helpers';
 import { getOrderById } from '../../services/orderService';
+import { downloadTicketPDF } from '../../utils/ticketPdfGenerator';
 import styles from './PurchaseSuccessPage.module.css';
 
 export default function PurchaseSuccessPage() {
@@ -11,6 +12,8 @@ export default function PurchaseSuccessPage() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const canvasRef = useRef(null);
+  const ticketStubRef = useRef(null);
+  const [downloadingPdf, setDownloadingPdf] = useState(false);
 
   const collectionStatus = searchParams.get('collection_status');
   const isRejected = collectionStatus === 'rejected';
@@ -62,9 +65,24 @@ export default function PurchaseSuccessPage() {
     navigate('/');
   }
 
-  function handleDownloadPDF() {
-    setShowToast(true);
-  }
+  const handleDownloadPDF = async () => {
+    try {
+      setDownloadingPdf(true);
+      const svgElement = ticketStubRef.current ? ticketStubRef.current.querySelector('svg') : null;
+      const orderObj = fetchedOrder || {
+        numeroOrden: orderId,
+        datosComprador: compradorData,
+        cantidad,
+        metodoPago: paymentMethod,
+        total,
+      };
+      await downloadTicketPDF(orderObj, eventData, svgElement);
+    } catch (err) {
+      console.error("Error al descargar PDF:", err);
+    } finally {
+      setDownloadingPdf(false);
+    }
+  };
 
   useEffect(() => {
     if (showToast) {
@@ -224,7 +242,7 @@ export default function PurchaseSuccessPage() {
               </div>
               <div className={styles.ticketRef}>REF: {orderId}-01</div>
             </div>
-            <div className={styles.ticketStub}>
+            <div className={styles.ticketStub} ref={ticketStubRef}>
               <div className={styles.qrContainer}>
                 <QRCodeSVG
                   value={qrVerificationUrl}
@@ -305,8 +323,8 @@ export default function PurchaseSuccessPage() {
             <div className={styles.instructionStep}>
               <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
               <div>
-                <div className={styles.stepTitle}>Captura de pantalla de esta página</div>
-                <div className={styles.stepDesc}>Guardá una captura de esta pantalla mostrando tu código QR y los datos de tu reserva anticipada.</div>
+                <div className={styles.stepTitle}>Captura de pantalla o PDF descargado</div>
+                <div className={styles.stepDesc}>Guardá una captura o descargá el PDF oficial con tu código QR e información del show.</div>
               </div>
             </div>
 
@@ -320,7 +338,7 @@ export default function PurchaseSuccessPage() {
               <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
               <div>
                 <div className={styles.stepTitle}>Pago en transferencia o efectivo en puerta</div>
-                <div className={styles.stepDesc}>Presentá la captura en el ingreso para abonar tu entrada anticipada en efectivo o transferencia al ingresar.</div>
+                <div className={styles.stepDesc}>Presentá la captura o PDF en el ingreso para abonar tu entrada anticipada en efectivo o transferencia al ingresar.</div>
               </div>
             </div>
             <div className={styles.instructionStep}>
@@ -343,8 +361,8 @@ export default function PurchaseSuccessPage() {
             <div className={styles.instructionStep}>
               <div className={styles.stepNum} style={{ color: 'var(--ds-color-accent-primary)' }}>♦</div>
               <div>
-                <div className={styles.stepTitle}>Captura de esta pantalla</div>
-                <div className={styles.stepDesc}>Guardá una captura de pantalla de esta página con tu código QR e información completa del show.</div>
+                <div className={styles.stepTitle}>Captura de pantalla o PDF descargado</div>
+                <div className={styles.stepDesc}>Guardá una captura de pantalla o descargá el PDF oficial con tu código QR e información completa del show.</div>
               </div>
             </div>
 
@@ -380,6 +398,14 @@ export default function PurchaseSuccessPage() {
       </div>
 
       <div className={styles.actions}>
+        <button
+          onClick={handleDownloadPDF}
+          disabled={downloadingPdf}
+          className={styles.downloadPdfBtn}
+        >
+          <Download size={18} />
+          {downloadingPdf ? 'GENERANDO PDF...' : 'DESCARGAR PDF ENTRADA'}
+        </button>
         <button
           onClick={handleBackToHome}
           className={styles.homeBtn}

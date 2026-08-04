@@ -7,6 +7,8 @@ import { EventCard } from '../../design-system';
 import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon, ZapIcon, MusicIcon } from '../../components/icons';
 import FollowButton from '../../components/FollowButton/FollowButton';
 import LogoVoy from '../../components/LogoVoy/LogoVoy';
+import OrderReviewModal from '../../components/OrderReviewModal/OrderReviewModal';
+import { downloadTicketPDF } from '../../utils/ticketPdfGenerator';
 import styles from './ProfilePage.module.css';
 
 const InstagramSVG = () => (
@@ -91,6 +93,7 @@ export default function ProfilePage() {
   const [allEvents, setAllEvents] = useState([]);
   const [favoriteEvents, setFavoriteEvents] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [selectedOrderForReview, setSelectedOrderForReview] = useState(null);
 
   useEffect(() => {
     if (tabParam) {
@@ -602,7 +605,7 @@ export default function ProfilePage() {
                       </div>
 
                       <div className={styles.orderFooter}>
-                        <div>
+                        <div className={styles.orderMetaInfo}>
                           <span className={styles.orderQuantity}>
                             {order.cantidad || 1} x Entrada{order.cantidad > 1 ? 's' : ''}
                           </span>
@@ -614,6 +617,40 @@ export default function ProfilePage() {
                           ${order.total || (order.montoTotal ? order.montoTotal : '0')}
                         </strong>
                       </div>
+
+                      <div className={styles.orderActions}>
+                        <button 
+                          className={styles.reviewOrderBtn}
+                          onClick={() => setSelectedOrderForReview({
+                            order,
+                            eventData: {
+                              title: evNombre,
+                              date: formattedEvDate,
+                              time: ev.hora ? `${ev.hora} HS` : '20:00 HS',
+                              venue: evLugar,
+                            }
+                          })}
+                        >
+                          <TicketIcon size={14} /> REVISAR ORDEN / ENTRADA
+                        </button>
+
+                        <button 
+                          className={styles.downloadOrderPdfBtn}
+                          onClick={() => downloadTicketPDF(order, {
+                            title: evNombre,
+                            date: formattedEvDate,
+                            time: ev.hora ? `${ev.hora} HS` : '20:00 HS',
+                            venue: evLugar,
+                          })}
+                        >
+                          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" y1="15" x2="12" y2="3"/>
+                          </svg>
+                          DESCARGAR PDF
+                        </button>
+                      </div>
                     </div>
                   );
                 })
@@ -622,6 +659,14 @@ export default function ProfilePage() {
           </div>
         )}
       </div>
+
+      {/* Modal de Revisión de Orden y Entrada Digital */}
+      <OrderReviewModal
+        isOpen={Boolean(selectedOrderForReview)}
+        onClose={() => setSelectedOrderForReview(null)}
+        order={selectedOrderForReview?.order}
+        eventData={selectedOrderForReview?.eventData}
+      />
     </div>
   );
 }
