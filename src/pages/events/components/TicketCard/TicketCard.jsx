@@ -29,7 +29,7 @@ export default function TicketCard({ eventData, isSoldOut, id, onShowToast }) {
         <div className={styles.ticketRow}>
           <span className={styles.ticketLabel}>ESTADO</span>
           <span className={`${styles.ticketValueBadge} ${isSoldOut ? styles.badgeValSoldout : styles.badgeValAvailable}`}>
-            {eventData.status}
+            {eventData.status || "DISPONIBLE"}
           </span>
         </div>
       </div>

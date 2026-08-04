@@ -28,6 +28,7 @@ const ProfilePage          = lazy(() => import("./pages/profile/ProfilePage"));
 const ProfileEditPage      = lazy(() => import("./pages/profile/ProfileEditPage"));
 const ProducerDashboard    = lazy(() => import("./pages/dashboard/ProducerDashboard"));
 const ArtistDashboard      = lazy(() => import("./pages/dashboard/ArtistDashboard"));
+const ArtistCalendarPage   = lazy(() => import("./pages/dashboard/ArtistCalendarPage"));
 const EventFormPage        = lazy(() => import("./pages/dashboard/EventFormPage"));
 
 // Guard de rutas protegidas
@@ -184,6 +185,13 @@ export default function App() {
                 <ProtectedRoute allowedRoles={["artist"]}>
                   <ErrorBoundary label="Dashboard Artista" inline>
                     <ArtistDashboard />
+                  </ErrorBoundary>
+                </ProtectedRoute>
+              } />
+              <Route path="/dashboard/artist/calendar" element={
+                <ProtectedRoute allowedRoles={["artist"]}>
+                  <ErrorBoundary label="Calendario Artista" inline>
+                    <ArtistCalendarPage />
                   </ErrorBoundary>
                 </ProtectedRoute>
               } />

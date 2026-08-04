@@ -69,6 +69,7 @@ const mapEvent = (evt) => {
     venue:        evt.lugar    || 'Lugar a confirmar',
     price:        evt.precio   !== undefined ? formatPrice(evt.precio) : formatPrice(0),
     rawPrice:     evt.precio   ?? 0,
+    description:  evt.descripcion || '',
     artists: (evt.artistas || []).map(a => ({
       id: a._id,
       nombre: a.nombre,
@@ -87,6 +88,7 @@ const mapEvent = (evt) => {
         redesSociales: a.usuario.redesSociales || {}
       } : null
     })),
+    status:       evt.estado   || 'DISPONIBLE',
     statusTone:   mapStatusTone(evt.estado || 'DISPONIBLE'),
     capacity:     evt.capacidadTotal ?? null,
     stock:        evt.stock ?? null,

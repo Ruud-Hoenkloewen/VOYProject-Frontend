@@ -11,96 +11,197 @@
   max-width: 1100px;
   width: 100%;
   margin: 0 auto;
-  padding: 6rem 2rem 4rem;
+  padding: 5rem 2rem 4rem;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   box-sizing: border-box;
 }
 
-.dashboardHeader {
-  text-align: center;
-  margin-bottom: 3rem;
+/* Banner de Bienvenida del Artista */
+.artistBanner {
+  background: rgba(18, 20, 30, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 28px 32px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+}
+
+.avatarWrap {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #00FF9F;
+  flex-shrink: 0;
+  background-color: #12141f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+.avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatarInitials {
+  font-size: 2.2rem;
+  font-weight: 900;
+  color: #ffffff;
+}
+
+.bannerInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.badgeRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 4px;
+  flex-wrap: wrap;
+}
+
+.badgeArtist {
+  font-size: 0.68rem;
+  font-weight: 800;
+  background: rgba(0, 255, 159, 0.15);
+  color: #00FF9F;
+  border: 1px solid rgba(0, 255, 159, 0.3);
+  padding: 3px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.badgeLocation {
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin: 0;
+  color: #ffffff;
+  line-height: 1.1;
+}
+
+.userHandleText {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ds-color-magenta-400, #FF2D78);
+  margin: 0;
+}
+
+.artistBioText {
+  font-size: 0.88rem;
+  color: #cbd5e1;
+  font-style: italic;
+  margin: 4px 0 0 0;
+  max-width: 650px;
+}
+
+/* Métricas Rápidas */
+.metricsBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px 24px;
+  margin-bottom: 32px;
+}
+
+.metricItem {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.75rem;
+  gap: 2px;
 }
 
-
-
-.pageTitle {
-  font-size: 2.2rem;
+.metricNumber {
+  font-size: 1.6rem;
   font-weight: 900;
-  letter-spacing: 0.04em;
-  margin: 0;
-  text-transform: uppercase;
-  font-family: var(--ds-font-family-base, sans-serif);
+  color: #ffffff;
+  line-height: 1;
 }
 
-.pageSubtitle {
-  font-size: 1rem;
-  color: var(--ds-color-text-editorial-muted, #9ca3af);
-  margin: 0;
-  max-width: 600px;
+.metricLabel {
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: #94a3b8;
+  letter-spacing: 0.08em;
 }
 
-.highlightName {
-  color: var(--ds-color-text-primary, #ffffff);
+.metricDivider {
+  width: 1px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
+/* Grilla de Tarjetas */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 1.75rem;
   width: 100%;
+  margin-bottom: 40px;
 }
 
 @media (max-width: 900px) {
   .grid {
     grid-template-columns: 1fr;
-    max-width: 450px;
+  }
+  .artistBanner {
+    flex-direction: column;
+    text-align: center;
+  }
+  .badgeRow {
+    justify-content: center;
   }
 }
 
 .card {
-  background: var(--ds-color-bg-editorial-surface, rgba(18, 19, 26, 0.92));
-  border: 1px solid var(--ds-color-border-editorial-mid, rgba(255, 255, 255, 0.12));
+  background: rgba(18, 20, 30, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: 2.5rem 1.75rem;
+  padding: 2rem 1.5rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   backdrop-filter: blur(16px);
   box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  position: relative;
-  overflow: hidden;
+  transition: all 0.3s ease;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  border-color: #00FF9F;
+  transform: translateY(-4px);
+  border-color: rgba(0, 255, 159, 0.4);
   box-shadow: 0 20px 48px rgba(0, 255, 159, 0.15);
 }
 
 .iconCircle {
-  width: 64px;
-  height: 64px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1.25rem;
-  transition: transform 0.3s ease;
-}
-
-.card:hover .iconCircle {
-  transform: scale(1.1);
+  margin-bottom: 1.2rem;
 }
 
 .iconPrimary { color: #00FF9F; }
@@ -111,26 +212,26 @@
   font-size: 1.15rem;
   font-weight: 800;
   margin: 0 0 0.6rem;
-  color: var(--ds-color-text-primary, #ffffff);
+  color: #ffffff;
 }
 
 .cardDesc {
-  color: var(--ds-color-text-editorial-muted, #9ca3af);
-  font-size: 0.88rem;
+  color: #94a3b8;
+  font-size: 0.85rem;
   line-height: 1.5;
-  margin: 0 0 1.75rem;
+  margin: 0 0 1.5rem;
   flex-grow: 1;
 }
 
 .cardBtn,
-.cardBtnSecondary,
-.cardBtnDisabled {
+.cardBtnCyan,
+.cardBtnSecondary {
   width: 100%;
   padding: 0.8rem 1.25rem;
   border-radius: 10px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   display: flex;
   align-items: center;
@@ -138,110 +239,334 @@
   gap: 0.5rem;
   cursor: pointer;
   transition: all 0.2s ease;
-  box-sizing: border-box;
 }
 
 .cardBtn {
   background: #00FF9F;
-  color: #0c0d12;
+  color: #000000;
   border: none;
-  box-shadow: 0 4px 16px rgba(0, 255, 159, 0.25);
 }
 
 .cardBtn:hover {
-  background: #2effb0;
-  box-shadow: 0 6px 20px rgba(0, 255, 159, 0.4);
+  background: #00e58f;
+  transform: translateY(-1px);
+}
+
+.cardBtnCyan {
+  background: #38bdf8;
+  color: #000000;
+  border: none;
+}
+
+.cardBtnCyan:hover {
+  background: #0284c7;
+  color: #ffffff;
   transform: translateY(-1px);
 }
 
 .cardBtnSecondary {
   background: rgba(255, 255, 255, 0.06);
-  color: var(--ds-color-text-primary, #ffffff);
+  color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .cardBtnSecondary:hover {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-1px);
 }
 
-.cardBtnDisabled {
-  background: rgba(255, 255, 255, 0.03);
-  color: #6b7280;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  cursor: not-allowed;
+/* Sección de Próximos Recitales */
+.upcomingSection {
+  margin-top: 10px;
 }
 
-/* ── LIGHT MODE OVERRIDES ── */
-:global([data-theme="light"]) .badgeLabel {
-  background: rgba(234, 88, 12, 0.1);
-  border-color: rgba(234, 88, 12, 0.3);
-  color: #ea580c;
+.sectionHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-:global([data-theme="light"]) .pageTitle {
-  color: #0f172a;
-}
-
-:global([data-theme="light"]) .pageSubtitle {
-  color: #64748b;
-}
-
-:global([data-theme="light"]) .highlightName {
-  color: #0f172a;
-}
-
-:global([data-theme="light"]) .card {
-  background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-}
-
-:global([data-theme="light"]) .card:hover {
-  border-color: #ea580c;
-  box-shadow: 0 12px 32px rgba(234, 88, 12, 0.15);
-}
-
-:global([data-theme="light"]) .iconCircle {
-  background: rgba(0, 0, 0, 0.04);
-  border-color: rgba(0, 0, 0, 0.08);
-}
-
-:global([data-theme="light"]) .iconPrimary { color: #ea580c; }
-
-:global([data-theme="light"]) .cardTitle {
-  color: #0f172a;
-}
-
-:global([data-theme="light"]) .cardDesc {
-  color: #64748b;
-}
-
-:global([data-theme="light"]) .cardBtn {
-  background: #ea580c;
+.sectionTitle {
+  font-size: 1.15rem;
+  font-weight: 900;
   color: #ffffff;
-  box-shadow: 0 4px 16px rgba(234, 88, 12, 0.25);
+  letter-spacing: 0.04em;
+  margin: 0;
 }
 
-:global([data-theme="light"]) .cardBtn:hover {
-  background: #c2410c;
-  box-shadow: 0 6px 20px rgba(234, 88, 12, 0.4);
-}
-
-:global([data-theme="light"]) .cardBtnSecondary {
-  background: rgba(0, 0, 0, 0.04);
-  color: #0f172a;
-  border-color: rgba(0, 0, 0, 0.12);
-}
-
-:global([data-theme="light"]) .cardBtnSecondary:hover {
-  background: rgba(0, 0, 0, 0.08);
-  border-color: rgba(0, 0, 0, 0.25);
-}
-
-:global([data-theme="light"]) .cardBtnDisabled {
-  background: rgba(0, 0, 0, 0.02);
+.viewPublicBtn {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #94a3b8;
-  border-color: rgba(0, 0, 0, 0.06);
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.viewPublicBtn:hover {
+  color: #ffffff;
+  border-color: #00FF9F;
+}
+
+.eventsList {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.eventRowCard {
+  background: rgba(18, 20, 30, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  transition: border-color 0.2s ease;
+}
+
+.eventRowCard:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.eventFlyerThumb {
+  width: 70px;
+  height: 70px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #000;
+}
+
+.eventFlyerThumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.eventRowDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.eventRowMeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.eventDateBadge {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: #00FF9F;
+  text-transform: uppercase;
+}
+
+.eventTimeBadge {
+  font-size: 0.72rem;
+  color: #94a3b8;
+}
+
+.eventRowTitle {
+  font-size: 1.05rem;
+  font-weight: 800;
+  color: #ffffff;
+  margin: 0;
+}
+
+.eventRowVenue {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  margin: 0;
+}
+
+.goEventBtn {
+  font-size: 0.78rem;
+  font-weight: 800;
+  color: #00FF9F;
+  text-decoration: none;
+  border: 1px solid rgba(0, 255, 159, 0.3);
+  padding: 6px 14px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.goEventBtn:hover {
+  background: rgba(0, 255, 159, 0.15);
+}
+
+/* Modales */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 20px;
+}
+
+.modalContent {
+  background: #12141f;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 18px;
+  max-width: 580px;
+  width: 100%;
+  padding: 28px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 12px;
+}
+
+.modalHeader h2 {
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: #ffffff;
+  margin: 0;
+}
+
+.closeBtn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.closeBtn:hover {
+  color: #ffffff;
+}
+
+.modalSubtitle {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  margin: 0 0 16px 0;
+}
+
+.modalEventsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 340px;
+  overflow-y: auto;
+}
+
+.modalEventItem {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.modalEventImg {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.modalEventText {
+  flex: 1;
+}
+
+.modalEventText h4 {
+  margin: 2px 0;
+  font-size: 0.95rem;
+  color: #ffffff;
+}
+
+.modalEventText p {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.modalEventDate {
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: #00FF9F;
+}
+
+.modalEventBtn {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #ffffff;
+  background: var(--ds-color-magenta-400, #FF2D78);
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+/* Formulario de Propuesta */
+.proposalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.formLabel {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #cbd5e1;
+}
+
+.formInput,
+.formTextarea {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  padding: 10px;
+  color: #ffffff;
+  font-size: 0.88rem;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.formInput:focus,
+.formTextarea:focus {
+  border-color: #00FF9F;
+}
+
+.submitProposalBtn {
+  background: #00FF9F;
+  color: #000000;
+  font-weight: 800;
+  font-size: 0.85rem;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.successMessage {
+  text-align: center;
+  padding: 24px;
+  color: #00FF9F;
+  font-size: 1rem;
+  font-weight: 700;
 }
