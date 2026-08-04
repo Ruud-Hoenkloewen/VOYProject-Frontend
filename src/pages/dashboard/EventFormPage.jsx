@@ -112,10 +112,23 @@ export default function EventFormPage() {
   // Handle inputs change
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({
-      ...prev,
-      [name]: name === "precio" || name === "capacidadTotal" ? parseInt(value) || 0 : value
-    }));
+
+    if (name === "precio" || name === "capacidadTotal") {
+      let val = value;
+      if (val !== "" && !isNaN(val)) {
+        // Eliminar ceros iniciales sobrantes cuando se escriben dígitos adelante (ej: "0100" -> "100")
+        val = val.replace(/^0+(?=\d)/, '');
+      }
+      setForm(prev => ({
+        ...prev,
+        [name]: val
+      }));
+    } else {
+      setForm(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
 
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: "" }));
@@ -224,6 +237,9 @@ export default function EventFormPage() {
       // Filter out empty artist rows
       const cleanArtists = artists.filter(art => art.nombre.trim() !== "");
 
+      const parsedPrecio = form.precio === "" ? 0 : Number(form.precio);
+      const parsedCapacidad = form.capacidadTotal === "" ? 100 : Number(form.capacidadTotal);
+
       const payload = {
         nombre: form.nombre,
         imagen: form.imagen,
@@ -231,11 +247,11 @@ export default function EventFormPage() {
         fecha: new Date(form.fecha),
         hora: form.hora,
         lugar: form.lugar,
-        precio: form.precio,
+        precio: isNaN(parsedPrecio) ? 0 : parsedPrecio,
         descripcion: form.descripcion,
         artistas: cleanArtists,
-        capacidadTotal: form.capacidadTotal,
-        stock: form.capacidadTotal, // Initial stock equals total capacity
+        capacidadTotal: isNaN(parsedCapacidad) ? 100 : parsedCapacidad,
+        stock: isNaN(parsedCapacidad) ? 100 : parsedCapacidad, // Initial stock equals total capacity
       };
 
       if (isEditMode) {
