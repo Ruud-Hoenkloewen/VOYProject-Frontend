@@ -65,13 +65,15 @@ describe('Módulo de perfil de usuario - Edición y visibilidad pública', { tes
   it('06. Debe guardar los cambios y redirigir al perfil público', () => {
     cy.contains('button', 'GUARDAR').click();
     cy.contains('¡Perfil actualizado con éxito!', { timeout: 15000 }).should('be.visible');
+    cy.url({ timeout: 15000 }).should('not.include', '/profile/edit');
     cy.url({ timeout: 15000 }).should('include', `/profile/${updatedUsername}`);
   });
 
   it('07. Debe verificar los datos de cabecera y lema en el perfil público', () => {
-    cy.contains(updatedNombre, { timeout: 10000 }).scrollIntoView().should('be.visible');
+    cy.visit(`/profile/${updatedUsername}`);
+    cy.contains(updatedNombre, { timeout: 15000 }).scrollIntoView().should('be.visible');
     cy.contains(`@${updatedUsername}`).scrollIntoView().should('be.visible');
-    cy.contains(`"${updatedLema}"`).scrollIntoView().should('be.visible');
+    cy.contains(updatedLema).scrollIntoView().should('be.visible');
     cy.contains(updatedUbicacion).scrollIntoView().should('be.visible');
   });
 

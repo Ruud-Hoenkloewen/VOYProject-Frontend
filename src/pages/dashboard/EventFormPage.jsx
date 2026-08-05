@@ -7,6 +7,8 @@ import { MapPinIcon, TrashIcon, PlusIcon, CalendarIcon, TicketIcon, DiscIcon, Ey
 import EventMapPreview from "../../components/EventMapPreview/EventMapPreview";
 import styles from "./EventFormPage.module.css";
 
+import { fetchRegisteredArtists } from "../../services/userService";
+
 const DEFAULT_GENRES = ["Punk", "Rock", "Metal", "Hardcore", "Post-Hardcore", "Grunge", "Post-Punk", "Noise Rock", "Shoegaze", "Indie"];
 
 export default function EventFormPage() {
@@ -20,8 +22,8 @@ export default function EventFormPage() {
     fecha: "",
     hora: "",
     lugar: "",
-    precio: 0,
-    capacidadTotal: 100,
+    precio: "",
+    capacidadTotal: "",
     descripcion: "",
     imagen: "",
   });
@@ -29,11 +31,18 @@ export default function EventFormPage() {
   const [selectedGenres, setSelectedGenres] = useState([]);
   const [customGenre, setCustomGenre] = useState("");
   const [artists, setArtists] = useState([{ nombre: "", headliner: true }]);
+  const [registeredArtists, setRegisteredArtists] = useState([]);
   const [flyerPreview, setFlyerPreview] = useState("");
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
-  const [toast, setToast] = useState(null); // { message: string, error: boolean }
+  const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    fetchRegisteredArtists()
+      .then(data => setRegisteredArtists(data || []))
+      .catch(err => console.error("Error cargando lista de artistas:", err));
+  }, []);
   
   // Geocoding simulation state
   const [isGeocoding, setIsGeocoding] = useState(false);
@@ -47,7 +56,7 @@ export default function EventFormPage() {
   // Section completion status
   const isInfoComplete = form.nombre.trim() !== "" && form.fecha !== "" && form.hora !== "";
   const isVenueComplete = form.lugar.trim() !== "";
-  const isTicketsComplete = form.precio >= 0 && form.capacidadTotal > 0;
+  const isTicketsComplete = (form.precio !== "" && Number(form.precio) >= 0) && (form.capacidadTotal !== "" && Number(form.capacidadTotal) > 0);
   const isLineupComplete = artists.some(art => art.nombre.trim() !== "");
   const isFlyerComplete = Boolean(flyerPreview);
   const isGenresComplete = selectedGenres.length > 0;
@@ -153,7 +162,20 @@ export default function EventFormPage() {
 
   // Artists handling
   const handleArtistNameChange = (index, value) => {
-    setArtists(prev => prev.map((art, idx) => idx === index ? { ...art, nombre: value } : art));
+    const matched = registeredArtists.find(a => 
+      (a.nombre || '').toLowerCase() === value.toLowerCase().trim() || 
+      (a.username || '').toLowerCase() === value.toLowerCase().trim()
+    );
+
+    setArtists(prev => prev.map((art, idx) => {
+      if (idx !== index) return art;
+      return { 
+        ...art, 
+        nombre: value,
+        usuario: matched ? matched._id : art.usuario,
+        username: matched ? matched.username : art.username
+      };
+    }));
   };
 
   const handleArtistHeadlinerChange = (index, isChecked) => {
@@ -221,8 +243,24 @@ export default function EventFormPage() {
 
     setLoading(true);
     try {
-      // Filter out empty artist rows
-      const cleanArtists = artists.filter(art => art.nombre.trim() !== "");
+      // Filter out empty artist rows and map to registered users
+      const cleanArtists = artists
+        .filter(art => art.nombre.trim() !== "")
+        .map(art => {
+          const matched = registeredArtists.find(a => 
+            (a.nombre || '').toLowerCase() === art.nombre.trim().toLowerCase() ||
+            (a.username || '').toLowerCase() === art.nombre.trim().toLowerCase()
+          );
+          return {
+            nombre: art.nombre.trim(),
+            headliner: Boolean(art.headliner),
+            usuario: art.usuario || (matched ? matched._id : null),
+            username: art.username || (matched ? matched.username : null)
+          };
+        });
+
+      const numPrecio = form.precio === "" ? 0 : Number(form.precio);
+      const numCapacidad = form.capacidadTotal === "" ? 100 : Number(form.capacidadTotal);
 
       const payload = {
         nombre: form.nombre,
@@ -231,11 +269,11 @@ export default function EventFormPage() {
         fecha: new Date(form.fecha),
         hora: form.hora,
         lugar: form.lugar,
-        precio: form.precio,
+        precio: numPrecio,
         descripcion: form.descripcion,
         artistas: cleanArtists,
-        capacidadTotal: form.capacidadTotal,
-        stock: form.capacidadTotal, // Initial stock equals total capacity
+        capacidadTotal: numCapacidad,
+        stock: numCapacidad,
       };
 
       if (isEditMode) {
@@ -462,10 +500,12 @@ export default function EventFormPage() {
                       <div className={styles.field} style={{ flex: 1, gap: 0 }}>
                         <input 
                           type="text" 
+                          list="registered-artists-list"
                           placeholder="Nombre del artista / banda"
                           value={artist.nombre}
                           onChange={(e) => handleArtistNameChange(idx, e.target.value)}
                           className={styles.input}
+                          autoComplete="off"
                         />
                       </div>
                       
@@ -490,6 +530,14 @@ export default function EventFormPage() {
                       </button>
                     </div>
                   ))}
+
+                  <datalist id="registered-artists-list">
+                    {registeredArtists.map((a) => (
+                      <option key={a._id || a.username} value={a.nombre}>
+                        {a.username ? `@${a.username}` : ''} {a.lema ? `- ${a.lema}` : ''}
+                      </option>
+                    ))}
+                  </datalist>
                 </div>
                 
                 {errors.artists && <div className={styles.errorMsg} style={{ marginTop: "10px" }}>{errors.artists}</div>}
@@ -519,7 +567,7 @@ export default function EventFormPage() {
                     <h2 className={styles.sectionTitle}>
                       <EyeIcon size={16} color="#FF007A" /> Imagen / Flyer
                     </h2>
-                    <p className={styles.sectionSubtitle}>Subí la gráfica o cartelera oficial de tu show</p>
+                    <p className={styles.sectionSubtitle}>Subí la gráfica oficial o seleccioná un flyer preset</p>
                   </div>
                 </div>
 
@@ -551,6 +599,56 @@ export default function EventFormPage() {
                       />
                     </label>
                   )}
+
+                  {/* Preset Flyers selection */}
+                  <div style={{ marginTop: '12px' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--ds-color-text-secondary)', display: 'block', marginBottom: '6px' }}>
+                      O SELECCIONÁ UN FLYER PRESET:
+                    </span>
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
+                      {[
+                        '/flyer-danny-proyectil.png',
+                        '/flyer-sabbath-fest.png',
+                        '/flyer-lacrifagia.png',
+                        '/flyer-las-cosas-inexplicables.png'
+                      ].map((presetUrl, pIdx) => (
+                        <div 
+                          key={pIdx}
+                          onClick={() => {
+                            setForm(prev => ({ ...prev, imagen: presetUrl }));
+                            setFlyerPreview(presetUrl);
+                          }}
+                          style={{
+                            height: '56px',
+                            borderRadius: '8px',
+                            overflow: 'hidden',
+                            cursor: 'pointer',
+                            border: flyerPreview === presetUrl ? '2px solid #00FF9F' : '1px solid rgba(255,255,255,0.1)',
+                            opacity: flyerPreview === presetUrl ? 1 : 0.7
+                          }}
+                        >
+                          <img src={presetUrl} alt={`Preset ${pIdx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div style={{ marginTop: '12px' }}>
+                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--ds-color-text-secondary)', display: 'block', marginBottom: '4px' }}>
+                      URL DE LA IMAGEN (OPCIONAL):
+                    </span>
+                    <input
+                      type="url"
+                      placeholder="https://..."
+                      value={form.imagen}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        setForm(prev => ({ ...prev, imagen: val }));
+                        setFlyerPreview(val);
+                      }}
+                      className={styles.input}
+                    />
+                  </div>
                 </div>
               </div>
 

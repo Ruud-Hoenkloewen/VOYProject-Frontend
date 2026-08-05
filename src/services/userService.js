@@ -10,6 +10,16 @@ export const getProfileByUsername = async (username) => {
   return data;
 };
 
+export const fetchRegisteredArtists = async () => {
+  try {
+    const { data } = await api.get('/users/artists/list');
+    return data;
+  } catch (err) {
+    console.error("Error fetching registered artists:", err);
+    return [];
+  }
+};
+
 export const followUser = async (userId) => {
   const { data } = await api.post(`/users/${userId}/follow`);
   return data;

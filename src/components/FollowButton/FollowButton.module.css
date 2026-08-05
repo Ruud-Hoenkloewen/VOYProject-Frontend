@@ -45,3 +45,44 @@
 .following:hover:not(:disabled) {
   background: rgba(163, 230, 53, 0.08);
 }
+
+/* Botón flotante compacto en la foto de perfil */
+.compactBtn {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--ds-color-bg-canvas, #0a0b10);
+  cursor: pointer;
+  z-index: 10;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.2s, border-color 0.2s;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.compactBtn:hover:not(:disabled) {
+  transform: scale(1.15);
+}
+
+.compactNotFollowing {
+  background: #00FF9F;
+  color: #000;
+}
+
+.compactNotFollowing:hover:not(:disabled) {
+  background: #33FFB2;
+}
+
+.compactFollowing {
+  background: #12141d;
+  color: #00FF9F;
+  border-color: #00FF9F;
+}
+
+.compactFollowing:hover:not(:disabled) {
+  background: #1a1e2b;
+}

@@ -92,45 +92,9 @@ export default function ArtistDashboard() {
           </div>
         </div>
 
-        {/* Métricas Rápidas */}
-        <div className={styles.metricsBar}>
-          <div className={styles.metricItem}>
-            <span className={styles.metricNumber}>{myEvents.length}</span>
-            <span className={styles.metricLabel}>PRÓXIMOS SHOWS</span>
-          </div>
-          <div className={styles.metricDivider} />
-          <div className={styles.metricItem}>
-            <span className={styles.metricNumber}>{user?.seguidores?.length || 14}</span>
-            <span className={styles.metricLabel}>SEGUIDORES</span>
-          </div>
-          <div className={styles.metricDivider} />
-          <div className={styles.metricItem}>
-            <span className={styles.metricNumber}>100%</span>
-            <span className={styles.metricLabel}>UNDER TUCUMANO</span>
-          </div>
-        </div>
-
         {/* Grilla de Acciones Principales */}
         <section className={styles.grid}>
-          {/* Tarjeta 1: Perfil Artístico */}
-          <div className={styles.card}>
-            <div className={styles.iconCircle}>
-              <UserIcon size={28} className={styles.iconPrimary} />
-            </div>
-            <h3 className={styles.cardTitle}>Mi Perfil Artístico</h3>
-            <p className={styles.cardDesc}>
-              Actualizá tus fotos de perfil y portada, tu lema oficial, biografía y redes sociales (Instagram, Spotify, YouTube).
-            </p>
-            <button 
-              className={styles.cardBtn} 
-              onClick={() => navigate('/profile/edit')}
-            >
-              <span>EDITAR PERFIL</span>
-              <ArrowRightIcon size={16} />
-            </button>
-          </div>
-
-          {/* Tarjeta 2: Próximas Fechas (AHORA INTERACTIVA Y PROTOTIPADA) */}
+          {/* Tarjeta 1: Próximas Fechas */}
           <div className={styles.card}>
             <div className={styles.iconCircle}>
               <CalendarIcon size={28} className={styles.iconCyan} />

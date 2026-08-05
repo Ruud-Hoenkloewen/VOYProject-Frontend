@@ -13,6 +13,7 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
   const isProducer = role === 'producer' || user?.role === 'producer';
   const isProducerDashboard = location.pathname.includes('/producer');
   const isEventForm = location.pathname.includes('/events/create') || location.pathname.includes('/events/edit');
+  const isArtistPage = location.pathname.includes('/artist') || location.pathname.includes('/profile');
   const [hidden, setHidden] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -213,8 +214,8 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
         <div className={styles.drawerOverlay} onClick={closeMenu} aria-hidden="true" />
       )}
 
-      {/* Botón flotante inferior derecho con animación ¿Necesitás ayuda? (Solo visible en el panel para productores y fuera de los formularios) */}
-      {(!isEventForm && (!isProducer || isProducerDashboard)) && (
+      {/* Botón flotante inferior derecho con animación ¿Necesitás ayuda? (Solo visible en el panel para productores y fuera de los formularios o artistas) */}
+      {(!isEventForm && !isArtistPage && (!isProducer || isProducerDashboard)) && (
         <div 
           className={styles.floatingHelpWrapper}
           onMouseEnter={() => setBadgeVisible(false)}

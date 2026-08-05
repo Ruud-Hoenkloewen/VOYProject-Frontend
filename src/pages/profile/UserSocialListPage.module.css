@@ -1,0 +1,311 @@
+/* ─────────────────────────────────────────────────────
+   UserSocialListPage.module.css
+   Diseño Social Estilo Roblox adaptado a las convenciones tipográficas de VOY
+───────────────────────────────────────────────────── */
+
+.pageRoot {
+  min-height: 100vh;
+  background-color: var(--ds-color-bg-canvas, #090a0f);
+  color: var(--ds-color-text-primary, #ffffff);
+  font-family: var(--ds-font-family-base, 'Inter', -apple-system, sans-serif);
+  display: flex;
+  flex-direction: column;
+}
+
+.mainContent {
+  flex: 1;
+  padding-top: 32px;
+  padding-bottom: 80px;
+}
+
+.topBarRow {
+  margin-bottom: 20px;
+}
+
+.backLinkBtn {
+  background: transparent;
+  border: none;
+  color: var(--ds-color-text-editorial-muted, #94a3b8);
+  font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+}
+
+.backLinkBtn:hover {
+  color: var(--ds-color-accent-primary, #00FF9F);
+}
+
+/* PESTAÑAS NAVEGADORAS ESTILO ROBLOX */
+.tabsNavContainer {
+  display: flex;
+  gap: 8px;
+  border-bottom: 2px solid var(--ds-color-border-subtle, rgba(255, 255, 255, 0.1));
+  margin-bottom: 28px;
+}
+
+.tabBtn {
+  background: transparent;
+  border: none;
+  color: var(--ds-color-text-editorial-muted, #8c96a8);
+  font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 12px 24px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s ease;
+  letter-spacing: -0.01em;
+}
+
+.tabBtn:hover {
+  color: #ffffff;
+}
+
+.activeTab {
+  color: #ffffff;
+}
+
+.activeTab::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: #ffffff;
+  border-radius: 2px;
+}
+
+/* SUBHEADER: BUSCADOR */
+.subHeaderArea {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+}
+
+.searchBox {
+  background: var(--ds-color-bg-surface-muted, #141722);
+  border: 1px solid var(--ds-color-border-subtle, rgba(255, 255, 255, 0.12));
+  border-radius: 8px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 300px;
+  max-width: 100%;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.searchBox:focus-within {
+  border-color: var(--ds-color-accent-primary, #00FF9F);
+  box-shadow: 0 0 12px rgba(0, 255, 159, 0.15);
+}
+
+.searchIcon {
+  font-size: 0.85rem;
+  opacity: 0.7;
+}
+
+.searchInput {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+  font-size: 0.88rem;
+  width: 100%;
+}
+
+.searchInput::placeholder {
+  color: var(--ds-color-text-editorial-muted, #64748b);
+}
+
+.clearSearchBtn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.clearSearchBtn:hover {
+  color: #ffffff;
+}
+
+/* GRILLA DE 3 COLUMNAS ESTILO ROBLOX */
+.robloxGrid3Col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 992px) {
+  .robloxGrid3Col {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .robloxGrid3Col {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* CAJAS HORIZONTALES ESTILO ROBLOX */
+.robloxCard {
+  background: var(--ds-color-bg-surface, #12141f);
+  border: 1px solid var(--ds-color-border-subtle, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.robloxCard:hover {
+  background: var(--ds-color-bg-editorial-surface, #191c2c);
+  border-color: var(--ds-color-accent-primary, #00FF9F);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
+}
+
+.robloxAvatarWrapper {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--ds-color-accent-primary, #00FF9F);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0d0e14;
+  flex-shrink: 0;
+}
+
+.robloxAvatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.robloxAvatarInitials {
+  font-family: var(--ds-font-family-display, 'Outfit', sans-serif);
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.robloxCardMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  flex: 1;
+}
+
+.robloxNameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.robloxName {
+  font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+  font-weight: 800;
+  font-size: 1.02rem;
+  color: #ffffff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: -0.01em;
+}
+
+.robloxHandle {
+  font-family: var(--ds-font-family-mono, 'Space Mono', monospace);
+  font-size: 0.8rem;
+  color: var(--ds-color-magenta-400, #FF2D78);
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.robloxBio {
+  font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+  font-size: 0.78rem;
+  color: var(--ds-color-text-editorial-muted, #94a3b8);
+  font-style: italic;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+.robloxRoleBadge {
+  font-family: var(--ds-font-family-mono, monospace);
+  font-size: 0.68rem;
+  font-weight: 800;
+  color: var(--ds-color-accent-primary, #00FF9F);
+  margin-top: 2px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* ESTADOS DE CARGA Y VACÍO */
+.loadingRoot, .errorRoot, .emptyState {
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  gap: 16px;
+  font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid rgba(0, 255, 159, 0.15);
+  border-top-color: var(--ds-color-accent-primary, #00FF9F);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loadingText {
+  color: var(--ds-color-text-editorial-muted, #94a3b8);
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.emptyText {
+  color: var(--ds-color-text-editorial-muted, #94a3b8);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.backBtn {
+  background: var(--ds-color-accent-primary, #00FF9F);
+  color: #000000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-family: var(--ds-font-family-base, 'Inter', sans-serif);
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}

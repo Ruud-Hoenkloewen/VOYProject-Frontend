@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { fetchEvents } from '../../services/eventService';
 import { getProfileByUsername, getMyProfile, GRADIENTS } from '../../services/userService';
 import { EventCard } from '../../design-system';
-import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon, ZapIcon, MusicIcon } from '../../components/icons';
+import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon, ZapIcon, MusicIcon, PeopleIcon, ExternalLinkIcon } from '../../components/icons';
 import FollowButton from '../../components/FollowButton/FollowButton';
 import LogoVoy from '../../components/LogoVoy/LogoVoy';
 import styles from './ProfilePage.module.css';
@@ -141,6 +141,7 @@ export default function ProfilePage() {
   const [profile, setProfile] = useState(null);
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState(null);
+  const [socialModalType, setSocialModalType] = useState(null); // 'followers' | 'following' | null
 
   const isMyProfile = isAuthenticated && user && (
     username === 'me' || 
@@ -216,10 +217,10 @@ export default function ProfilePage() {
   const isProducer = profile.role === 'producer' || profile.rol === 'producer' || profile.isVerifiedProducer;
   const isArtist = profile.role === 'artist' || profile.rol === 'artist' || profile.rol === 'artista';
 
-  const avatarColor = (profile.avatarColor && profile.avatarColor !== 'transparent' && profile.avatarColor !== 'none') 
-    ? profile.avatarColor 
-    : (isProducer ? 'var(--ds-color-cyan-400)' : isArtist ? 'var(--ds-color-magenta-400)' : 'var(--ds-color-accent-primary)');
-  const avatarStyle = { background: avatarColor, color: '#ffffff', padding: '3px' };
+  const hasCustomBorder = profile.avatarColor && profile.avatarColor !== 'transparent' && profile.avatarColor !== 'none';
+  const avatarStyle = hasCustomBorder 
+    ? { background: profile.avatarColor, color: '#ffffff', padding: '3px' } 
+    : { background: 'transparent', color: '#ffffff', padding: 0 };
   const bannerBg = profile.bannerImagen
     ? `url("${profile.bannerImagen}") center/cover no-repeat`
     : (GRADIENTS[profile.bannerGradiente] || profile.bannerGradiente || profile.bannerColor || GRADIENTS.g1);
@@ -249,7 +250,8 @@ export default function ProfilePage() {
     : isArtist 
     ? ['MÚSICA', 'PRÓXIMOS SHOWS', 'MI INFO'] 
     : ['MI INFO', 'EVENTOS GUARDADOS', 'HISTORIAL'];
-  const currentTab = validTabs.includes(activeTab) ? activeTab : validTabs[0];
+  const isSocialTab = activeTab === 'SEGUIDORES' || activeTab === 'SIGUIENDO';
+  const currentTab = isSocialTab ? activeTab : (validTabs.includes(activeTab) ? activeTab : validTabs[0]);
 
   const isFollowing = profile.seguidores?.some(
     (s) => s === user?._id || s._id === user?._id
@@ -320,6 +322,14 @@ export default function ProfilePage() {
                 ) : (
                   initial
                 )}
+
+                {isAuthenticated && !isMyProfile && (
+                  <FollowButton
+                    userId={profile._id}
+                    isFollowing={isFollowing}
+                    compact={true}
+                  />
+                )}
               </div>
               
               <div className={styles.headerDetailsCol}>
@@ -348,13 +358,19 @@ export default function ProfilePage() {
                     </>
                   )}
 
-                  <span className={styles.statItemClickable}>
+                  <span 
+                    className={styles.statItemClickable} 
+                    onClick={() => navigate(`/profile/${profile.username || username}/followers`)}
+                  >
                     <strong className={styles.statNumber}>{followersCount}</strong> seguidores
                   </span>
 
                   <span className={styles.metaDivider}>|</span>
 
-                  <span className={styles.statItemClickable}>
+                  <span 
+                    className={styles.statItemClickable} 
+                    onClick={() => navigate(`/profile/${profile.username || username}/following`)}
+                  >
                     <strong className={styles.statNumber}>{followingCount}</strong> siguiendo
                   </span>
 
@@ -381,22 +397,13 @@ export default function ProfilePage() {
                     )}
                   </div>
                 </div>
-                
-                {!isMyProfile && (
-                  <div className={styles.followWrapper}>
-                    <FollowButton
-                      userId={profile._id}
-                      isFollowing={isFollowing}
-                    />
-                  </div>
-                )}
               </div>
             </div>
 
-            {/* Lower Section: Bio & Profile Tag/Badges */}
-            {profile.bio && (
-              <p className={styles.bioText}>
-                {profile.bio}
+            {/* Lower Section: Motto/Lema */}
+            {profile.lema && (
+              <p className={styles.bioText} style={{ fontStyle: 'italic', opacity: 0.95 }}>
+                "{profile.lema}"
               </p>
             )}
 

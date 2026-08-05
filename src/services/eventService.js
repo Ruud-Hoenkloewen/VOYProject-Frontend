@@ -84,6 +84,7 @@ const mapEvent = (evt) => {
         bannerGradiente: a.usuario.bannerGradiente || '',
         bannerColor: a.usuario.bannerColor || '',
         bio: a.usuario.bio || '',
+        lema: a.usuario.lema || '',
         role: a.usuario.role || a.usuario.rol || 'artist',
         redesSociales: a.usuario.redesSociales || {}
       } : null

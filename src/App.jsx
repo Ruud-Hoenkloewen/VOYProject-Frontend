@@ -26,6 +26,7 @@ const LoginPage            = lazy(() => import("./pages/auth/LoginPage"));
 const OnboardingPage       = lazy(() => import("./pages/auth/OnboardingPage"));
 const ProfilePage          = lazy(() => import("./pages/profile/ProfilePage"));
 const ProfileEditPage      = lazy(() => import("./pages/profile/ProfileEditPage"));
+const UserSocialListPage   = lazy(() => import("./pages/profile/UserSocialListPage"));
 const ProducerDashboard    = lazy(() => import("./pages/dashboard/ProducerDashboard"));
 const ArtistDashboard      = lazy(() => import("./pages/dashboard/ArtistDashboard"));
 const ArtistCalendarPage   = lazy(() => import("./pages/dashboard/ArtistCalendarPage"));
@@ -166,6 +167,16 @@ export default function App() {
                     <ProfileEditPage />
                   </ErrorBoundary>
                 </ProtectedRoute>
+              } />
+              <Route path="/profile/:username/followers" element={
+                <ErrorBoundary label="Seguidores" inline>
+                  <UserSocialListPage type="followers" />
+                </ErrorBoundary>
+              } />
+              <Route path="/profile/:username/following" element={
+                <ErrorBoundary label="Siguiendo" inline>
+                  <UserSocialListPage type="following" />
+                </ErrorBoundary>
               } />
               <Route path="/profile/:username" element={
                 <ErrorBoundary label="Perfil de Usuario" inline>
