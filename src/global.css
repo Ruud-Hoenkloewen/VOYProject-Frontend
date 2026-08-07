@@ -138,8 +138,8 @@
 
 
   --ds-color-bg-canvas: var(--ds-color-neutral-0);
-  --ds-color-bg-surface: var(--ds-color-neutral-100);
-  --ds-color-bg-surface-muted: var(--ds-color-neutral-200);
+  --ds-color-bg-surface: #0a0a0a;
+  --ds-color-bg-surface-muted: #121212;
 
   --ds-color-text-primary: var(--ds-color-neutral-900);
   --ds-color-text-secondary: var(--ds-color-neutral-700);
@@ -167,7 +167,7 @@
   --ds-color-editorial-subtle: #cbd5e1;
   --ds-color-editorial-border: rgba(255, 255, 255, 0.08);
   --ds-color-editorial-border-mid: rgba(255, 255, 255, 0.15);
-  --ds-color-editorial-surface: #12141f;
+  --ds-color-editorial-surface: #0a0a0a;
 
   --ds-color-bg-editorial: var(--ds-color-brand-canvas);
   --ds-color-accent-primary: var(--ds-color-brand-lime);
@@ -176,7 +176,7 @@
   --ds-color-text-editorial-subtle: var(--ds-color-editorial-subtle);
   --ds-color-border-editorial: var(--ds-color-editorial-border);
   --ds-color-border-editorial-mid: var(--ds-color-editorial-border-mid);
-  --ds-color-bg-editorial-surface: var(--ds-color-editorial-surface);
+  --ds-color-bg-editorial-surface: #0a0a0a;
 
   /* Background Glows and Texture for Dark Mode */
   --ds-bg-glow-1: radial-gradient(circle at 15% 0%, rgba(255, 123, 238, 0.08) 0%, transparent 50%);

@@ -460,10 +460,17 @@
 }
 
 .controlsCard {
-  background-color: var(--ds-color-editorial-surface);
-  border: 1px solid var(--ds-color-editorial-border);
-  padding: 40px;
-  border-radius: 2px;
+  background-color: #080808;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 36px;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+:global([data-theme="light"]) .controlsCard {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
 }
 
 @media (max-width: 600px) {
@@ -573,11 +580,18 @@
 }
 
 .miniProfile {
-  border: 1px solid var(--ds-color-editorial-border-mid);
-  background-color: var(--ds-color-editorial-surface) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: #080808 !important;
+  border-radius: 16px !important;
   padding: 0 !important;
   overflow: hidden;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+:global([data-theme="light"]) .miniProfile {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
 }
 
 .miniBanner {
@@ -740,16 +754,17 @@
 .welcomeCardDark {
   max-width: 540px;
   width: 100%;
-  background-color: var(--ds-color-neutral-100);
+  background-color: #121422;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   padding: 48px 40px;
-  border-radius: 4px;
+  border-radius: 12px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 20px;
   position: relative;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
   animation: cardSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
 }
@@ -774,11 +789,13 @@
 .lightningBox {
   width: 64px;
   height: 64px;
-  border: 1px solid var(--ds-color-brand-lime);
+  border: 2px solid var(--ds-color-brand-lime);
+  border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 8px;
+  overflow: hidden;
 }
 
 .lightningIcon {
@@ -789,10 +806,10 @@
 }
 
 .welcomeEyebrow {
-  color: var(--ds-color-brand-fuchsia);
+  color: #a855f7;
   font-family: var(--ds-font-family-mono);
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   letter-spacing: 0.25em;
   text-transform: uppercase;
   margin: 0;
@@ -802,17 +819,17 @@
   font-family: var(--ds-font-family-display);
   font-size: 4rem;
   font-weight: 900;
-  color: var(--ds-color-neutral-900);
+  color: #ffffff;
   margin: 0;
   line-height: 1;
 }
 
 .welcomeDescriptionDark {
   font-size: 0.95rem;
-  color: var(--ds-color-neutral-700);
+  color: #cbd5e1;
   line-height: var(--ds-line-height-relaxed);
   margin: 0;
-  max-width: 85%;
+  max-width: 90%;
 }
 
 .welcomeActionsRow {
@@ -832,22 +849,27 @@
 }
 
 .btnExplorar {
-  background: var(--ds-color-neutral-200) !important;
-  color: var(--ds-color-neutral-700) !important;
-  border: 1px solid var(--ds-color-editorial-border-mid) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: #f8fafc !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  transition: all 0.2s ease !important;
 }
 .btnExplorar:hover {
-  background: var(--ds-color-neutral-300) !important;
-  color: var(--ds-color-text-primary) !important;
+  background: rgba(255, 255, 255, 0.16) !important;
+  color: #ffffff !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
 .btnPerfil {
-  background: var(--ds-color-brand-lime) !important;
-  color: var(--ds-color-bg-canvas) !important;
+  background: #00FF9F !important;
+  color: #091e15 !important;
+  font-weight: 900 !important;
   border: none !important;
+  transition: all 0.2s ease !important;
 }
 .btnPerfil:hover {
-  background: #00cc7f !important;
+  background: #00e68e !important;
+  box-shadow: 0 0 20px rgba(0, 255, 159, 0.4) !important;
 }
 
 /* ── ANIMACIONES ── */
@@ -974,8 +996,14 @@
 :global([data-theme="light"]) .controlsCard,
 :global([data-theme="light"]) .miniProfile {
   background-color: #ffffff !important;
-  border-color: #cbd5e1 !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06) !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.03) !important;
+}
+
+:global([data-theme="light"]) .eyebrow {
+  color: #7c3aed;
+  font-weight: 800;
 }
 
 :global([data-theme="light"]) .title {
@@ -986,6 +1014,11 @@
   color: #334155;
 }
 
+:global([data-theme="light"]) .previewTitle {
+  color: #475569;
+  font-weight: 800;
+}
+
 :global([data-theme="light"]) .miniName {
   color: #050811;
 }
@@ -994,6 +1027,28 @@
 :global([data-theme="light"]) .previewCaption,
 :global([data-theme="light"]) .miniLocation {
   color: #334155;
+  font-weight: 500;
+}
+
+:global([data-theme="light"]) .instagramPreviewBtn {
+  border-color: #cbd5e1;
+  color: #0f172a;
+  background: #f1f5f9;
+  font-weight: 600;
+}
+
+:global([data-theme="light"]) .instagramPreviewBtn svg {
+  color: #7c3aed;
+}
+
+:global([data-theme="light"]) .stepsIndicator {
+  color: #94a3b8;
+}
+
+:global([data-theme="light"]) .stepActive {
+  color: #00FF9F;
+  font-weight: 800;
+  text-shadow: 0 0 8px rgba(0, 255, 159, 0.4);
 }
 
 :global([data-theme="light"]) .btnPrimary {
@@ -1021,4 +1076,49 @@
 
 :global([data-theme="light"]) .btnSkip:hover {
   color: #050811;
+}
+
+:global([data-theme="light"]) .overlay {
+  background: rgba(15, 23, 42, 0.65);
+  backdrop-filter: blur(8px);
+}
+
+:global([data-theme="light"]) .welcomeCardDark {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.18) !important;
+}
+
+:global([data-theme="light"]) .welcomeEyebrow {
+  color: #7c3aed !important;
+}
+
+:global([data-theme="light"]) .welcomeGiantNumber {
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .welcomeDescriptionDark {
+  color: #475569 !important;
+  font-weight: 500;
+}
+
+:global([data-theme="light"]) .btnExplorar {
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+  border: 1px solid #cbd5e1 !important;
+}
+
+:global([data-theme="light"]) .btnExplorar:hover {
+  background: #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+:global([data-theme="light"]) .btnPerfil {
+  background: #00FF9F !important;
+  color: #091e15 !important;
+  font-weight: 900 !important;
+}
+
+:global([data-theme="light"]) .btnPerfil:hover {
+  background: #00e68e !important;
 }

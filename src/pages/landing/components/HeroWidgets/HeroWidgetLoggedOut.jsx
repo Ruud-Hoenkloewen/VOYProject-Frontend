@@ -8,9 +8,9 @@ export default function HeroWidgetLoggedOut() {
   return (
     <div className={styles.heroWidget}>
       <div className={styles.hwLoggedOutCard}>
-        <span className={styles.hwEyebrow}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> UNITE A LA ESCENA</span>
+        <span className={styles.hwEyebrow}><span style={{color: 'var(--ds-color-accent-secondary)'}}>♦</span> CREÁ TU CUENTA</span>
         <h2 className={styles.hwTitle}>
-          VOLVETE PARTE DE LA MOVIDA
+          VOLVETE PARTE DE NUESTRA COMUNIDAD
         </h2>
 
         <ul className={styles.hwList}>

@@ -861,3 +861,47 @@
 :global([data-theme="light"]) .iconMagenta {
   color: #7c3aed;
 }
+
+/* ─── MOBILE RESPONSIVE OPTIMIZATIONS ────────────────────────────────────── */
+@media (max-width: 768px) {
+  .hero {
+    height: 260px;
+  }
+  .heroTitleBlock {
+    left: 16px;
+    bottom: 16px;
+    max-width: calc(100% - 32px);
+  }
+  .container {
+    padding: 0 16px 60px;
+    gap: 24px;
+  }
+  .topInfoBar {
+    padding: 14px 16px;
+    gap: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .movidaDescription {
+    max-width: 100%;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero {
+    height: 220px;
+  }
+  .heroTitle {
+    font-size: clamp(1.3rem, 7vw, 2.2rem);
+  }
+  .container {
+    padding: 0 12px 50px;
+  }
+  .infoValue {
+    font-size: 0.9rem;
+  }
+  .topInfoBar {
+    padding: 12px;
+  }
+}

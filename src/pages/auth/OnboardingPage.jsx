@@ -19,29 +19,25 @@ const InstagramSVG = () => (
 // ── Datos ────────────────────────────────────────────────────────────
 const GENEROS = [
   "PUNK", "METAL", "HARDCORE", "GRUNGE", "ROCK", "POST-ROCK",
-  "POST-PUNK", "NOISE ROCK", "STONER ROCK", "HEAVY ROCK", "INDIE ROCK", "ALTERNATICO"
+  "POST-PUNK", "NOISE ROCK", "HEAVY ROCK", "INDIE ROCK", "ROCK ALTERNATIVO"
 ];
 
 const VIBES = [
-  { label: "Pogo",                 emoji: "🔥" },
-  { label: "Dance floor",          emoji: "🕺" },
-  { label: "Karaoke",              emoji: "🎤" },
-  { label: "Contemplación",        emoji: "😌" },
-  { label: "Mosh pit",             emoji: "🤘" },
-  { label: "Cerveza en mano",      emoji: "🍺" },
-  { label: "Fotógrafo",            emoji: "📷" },
-  { label: "Arte en vivo",         emoji: "🎨" },
-  { label: "Noctámbulo",           emoji: "🌙" },
-  { label: "Guitarrero",           emoji: "🎸" },
-  { label: "Baterista de corazón", emoji: "🥁" },
-  { label: "Synth lover",          emoji: "🎹" },
+  { label: "Pogo",            emoji: "🔥" },
+  { label: "Karaoke",         emoji: "🎤" },
+  { label: "Mosh pit",        emoji: "🤘" },
+  { label: "Cerveza en mano", emoji: "🍺" },
+  { label: "Fotógrafo",       emoji: "📷" },
+  { label: "Noctámbulo",      emoji: "🌙" },
+  { label: "Guitarrero",      emoji: "🎸" },
+  { label: "Drums lover",     emoji: "🥁" },
 ];
 
 // ── Stepper ──────────────────────────────────────────────────────────
 function Stepper({ current }) {
   const steps = [
     { id: 0, label: "TU PERFIL", icon: "👤" },
-    { id: 1, label: "TU MÚSICA", icon: "🎵" },
+    { id: 1, label: "CÓMO SOS", icon: "🎵" },
     { id: 2, label: "TU ESTILO", icon: "🎨" },
   ];
 
@@ -120,7 +116,7 @@ function LivePreview({ data }) {
               </div>
               {data.generos.length > 0 && (
                 <div style={{ marginTop: '16px' }}>
-                  <span className={styles.appearanceLabel} style={{ marginBottom: '8px', display: 'block', fontSize: '10px', fontWeight: 800, color: 'var(--ds-color-editorial-subtle)' }}>GÉNEROS</span>
+                  <span className={styles.appearanceLabel} style={{ marginBottom: '8px', display: 'block', fontSize: '10px', fontWeight: 800, color: 'var(--ds-color-editorial-subtle)' }}>GUSTOS MUSICALES</span>
                   <div className={styles.chipGrid}>
                     {data.generos.map((g) => (
                       <span key={g} className={`${styles.chip} ${styles.chipActiveGenre}`} style={{ cursor: 'default', fontSize: '0.65rem', padding: '3px 10px' }}>{g}</span>
@@ -130,7 +126,7 @@ function LivePreview({ data }) {
               )}
               {data.vibes.length > 0 && (
                 <div style={{ marginTop: '12px' }}>
-                  <span className={styles.appearanceLabel} style={{ marginBottom: '8px', display: 'block', fontSize: '10px', fontWeight: 800, color: 'var(--ds-color-editorial-subtle)' }}>VIBES</span>
+                  <span className={styles.appearanceLabel} style={{ marginBottom: '8px', display: 'block', fontSize: '10px', fontWeight: 800, color: 'var(--ds-color-editorial-subtle)' }}>MI VIBRA</span>
                   <div className={styles.chipGrid}>
                     {data.vibes.map((v) => (
                       <span key={v} className={`${styles.chip} ${styles.chipActiveVibe}`} style={{ cursor: 'default', fontSize: '0.65rem', padding: '3px 10px' }}>{v}</span>
@@ -214,31 +210,37 @@ function StepMusica({ data, onChange, onNext, onBack, onSkip }) {
   const canAdvance = data.generos.length >= 1;
 
   function toggleGenero(g) {
-    const next = data.generos.includes(g)
-      ? data.generos.filter((x) => x !== g)
-      : [...data.generos, g];
-    onChange("generos", next);
+    if (data.generos.includes(g)) {
+      onChange("generos", data.generos.filter((x) => x !== g));
+    } else {
+      if (data.generos.length < 3) {
+        onChange("generos", [...data.generos, g]);
+      }
+    }
   }
 
   function toggleVibe(v) {
-    const next = data.vibes.includes(v)
-      ? data.vibes.filter((x) => x !== v)
-      : [...data.vibes, v];
-    onChange("vibes", next);
+    if (data.vibes.includes(v)) {
+      onChange("vibes", data.vibes.filter((x) => x !== v));
+    } else {
+      if (data.vibes.length < 3) {
+        onChange("vibes", [...data.vibes, v]);
+      }
+    }
   }
 
   return (
     <div className={styles.gridContainer}>
       <section className={styles.controlsSection}>
         <div className={styles.controlsCard}>
-          <Typography variant="caption" className={styles.eyebrow}>PASO 2: TU MÚSICA</Typography>
-          <h1 className={styles.title}>¿QUÉ MÚSICA TE MUEVE?</h1>
-          <p className={styles.subtitle}>Elegí los géneros y vibes que van con vos.</p>
+          <Typography variant="caption" className={styles.eyebrow}>PASO 2: CÓMO SOS</Typography>
+          <h1 className={styles.title}>¿CÓMO SOS?</h1>
+          <p className={styles.subtitle}>Elegí tus gustos musicales y tu vibra (máximo 3 de cada uno).</p>
 
           <div className={styles.divider} />
 
           <div className={styles.sectionField}>
-            <Typography variant="label" className={styles.sectionLabel}>GÉNEROS</Typography>
+            <Typography variant="label" className={styles.sectionLabel}>GUSTOS MUSICALES (MÁX. 3)</Typography>
             <div className={styles.chipGrid}>
               {GENEROS.map((g) => (
                 <button
@@ -252,12 +254,12 @@ function StepMusica({ data, onChange, onNext, onBack, onSkip }) {
               ))}
             </div>
             {data.generos.length === 0 && (
-              <p className={styles.validationHint}>Seleccioná al menos 1 género para continuar.</p>
+              <p className={styles.validationHint}>Seleccioná al menos 1 gusto musical para continuar.</p>
             )}
           </div>
 
           <div className={styles.sectionField}>
-            <Typography variant="label" className={styles.sectionLabel}>TU VIBE EN LOS SHOWS</Typography>
+            <Typography variant="label" className={styles.sectionLabel}>MI VIBRA (MÁX. 3)</Typography>
             <div className={styles.chipGrid}>
               {VIBES.map((v) => (
                 <button
@@ -326,46 +328,44 @@ function StepEstilo({ data, onChange, onConfirm, onBack, onSkip, submitting }) {
     reader.readAsDataURL(file);
   };
 
+  const pinkBtnStyleSmall = {
+    background: 'rgba(255, 123, 238, 0.12)',
+    border: '1px solid #ff7bee',
+    color: '#ff7bee',
+    padding: '0.4rem 0.9rem',
+    borderRadius: '6px',
+    fontSize: '0.75rem',
+    fontWeight: 800,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+    boxShadow: '0 2px 10px rgba(255, 123, 238, 0.12)',
+    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+  };
+
   return (
     <div className={styles.gridContainer}>
       <section className={styles.controlsSection}>
         <div className={styles.controlsCard}>
           <Typography variant="caption" className={styles.eyebrow}>PASO 3: TU ESTILO</Typography>
-          <h1 className={styles.title}>DEFINÍ TU IDENTIDAD VISUAL</h1>
+          <h1 className={styles.title}>EDITÁ TU PERFIL</h1>
           <p className={styles.subtitle}>
-            Elegí tu foto, color de acento y portada que representarán tu presencia en VOY.
+            Modificá tu perfil a tu gusto.
           </p>
 
           <div className={styles.divider} />
 
-          {/* FOTO DE PERFIL */}
+          {/* FOTO DE PERFIL (AVATAR) */}
           <div className={styles.sectionField}>
-            <Typography variant="label" className={styles.sectionLabel} style={{ textAlign: 'center', display: 'block', marginBottom: '0.6rem' }}>FOTO DE PERFIL (AVATAR)</Typography>
-            <div style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem', flexWrap: 'wrap', gap: '8px' }}>
+              <Typography variant="label" className={styles.sectionLabel} style={{ margin: 0 }}>FOTO DE PERFIL (AVATAR)</Typography>
               <button
                 type="button"
                 onClick={() => avatarInputRef.current?.click()}
-                style={{
-                  background: 'rgba(0, 255, 159, 0.12)',
-                  border: '1px solid rgba(0, 255, 159, 0.35)',
-                  color: '#00FF9F',
-                  padding: '0.6rem 1.4rem',
-                  borderRadius: '8px',
-                  fontSize: '0.78rem',
-                  fontWeight: 900,
-                  letterSpacing: '0.06em',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '8px',
-                  width: '100%',
-                  maxWidth: '280px',
-                  boxShadow: '0 4px 16px rgba(0, 255, 159, 0.15)',
-                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}
+                style={pinkBtnStyleSmall}
               >
-                📷 {uploadingAvatar ? "SUBIENDO FOTO..." : "SUBIR FOTO DE PERFIL"}
+                📷 {uploadingAvatar ? "SUBIENDO..." : "SUBIR FOTO DE PERFIL"}
               </button>
               <input
                 ref={avatarInputRef}
@@ -375,32 +375,10 @@ function StepEstilo({ data, onChange, onConfirm, onBack, onSkip, submitting }) {
                 onChange={handleAvatarFile}
               />
             </div>
-          </div>
 
-          {/* COLOR DE AVATAR */}
-          <div className={styles.sectionField}>
-            <Typography variant="label" className={styles.sectionLabel}>COLOR / ACENTO DEL PERFIL</Typography>
-            <div style={{ fontSize: '0.7rem', color: '#888', marginBottom: '0.35rem', fontWeight: 700 }}>COLORES FIJOS</div>
-            <div className={styles.swatchesGrid} role="radiogroup" aria-label="Colores fijos">
-              {(AVATAR_COLORS || []).filter(c => c.category === 'fijo').map((swatch) => (
-                <button
-                  key={swatch.value}
-                  type="button"
-                  role="radio"
-                  aria-checked={data.avatarColor === swatch.value}
-                  onClick={() => onChange("avatarColor", swatch.value)}
-                  className={`${styles.swatchBtn} ${
-                    data.avatarColor === swatch.value ? styles.swatchBtnActive : ""
-                  }`}
-                  style={{ background: swatch.value }}
-                  title={swatch.name}
-                />
-              ))}
-            </div>
-
-            <div style={{ fontSize: '0.7rem', color: '#888', margin: '0.75rem 0 0.35rem', fontWeight: 700 }}>GRADIENTES MIXTOS Y ARCOÍRIS</div>
-            <div className={styles.swatchesGrid} role="radiogroup" aria-label="Gradientes y arcoíris">
-              {(AVATAR_COLORS || []).filter(c => c.category !== 'fijo').map((swatch) => (
+            {/* Lista unificada de colores de avatar */}
+            <div className={styles.swatchesGrid} role="radiogroup" aria-label="Colores de avatar">
+              {(AVATAR_COLORS || []).map((swatch) => (
                 <button
                   key={swatch.value}
                   type="button"
@@ -417,29 +395,27 @@ function StepEstilo({ data, onChange, onConfirm, onBack, onSkip, submitting }) {
             </div>
           </div>
 
-          {/* PORTADA */}
+          {/* PORTADA DEL PERFIL (BANNER) */}
           <div className={styles.sectionField}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem', flexWrap: 'wrap', gap: '8px' }}>
               <Typography variant="label" className={styles.sectionLabel} style={{ margin: 0 }}>PORTADA DEL PERFIL (BANNER)</Typography>
-              <button
-                type="button"
-                onClick={() => bannerInputRef.current?.click()}
-                style={{
-                  background: 'rgba(0, 255, 159, 0.1)',
-                  border: '1px solid rgba(0, 255, 159, 0.3)',
-                  color: '#00FF9F',
-                  padding: '0.3rem 0.8rem',
-                  borderRadius: '4px',
-                  fontSize: '0.75rem',
-                  fontWeight: 800,
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px'
-                }}
-              >
-                📷 SUBIR FOTO DE PORTADA
-              </button>
+              {data.bannerImagen ? (
+                <button
+                  type="button"
+                  onClick={() => onChange("bannerImagen", "")}
+                  style={{ ...pinkBtnStyleSmall, background: 'rgba(239, 68, 68, 0.12)', borderColor: '#ef4444', color: '#ef4444' }}
+                >
+                  🗑️ QUITAR FOTO DE PORTADA
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => bannerInputRef.current?.click()}
+                  style={pinkBtnStyleSmall}
+                >
+                  📷 SUBIR FOTO DE PORTADA
+                </button>
+              )}
               <input
                 ref={bannerInputRef}
                 type="file"
@@ -449,6 +425,7 @@ function StepEstilo({ data, onChange, onConfirm, onBack, onSkip, submitting }) {
               />
             </div>
 
+            {/* Lista unificada de gradientes de portada */}
             <div className={styles.gradientsGrid} role="radiogroup" aria-label="Portada del perfil">
               {Object.keys(GRADIENTS).map((key) => (
                 <button
@@ -519,7 +496,7 @@ export default function OnboardingPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
-  // Guardar bio + música en el backend
+  // Guardar bio + música + estilo en el backend en una sola petición atómica
   async function saveProfileData(data) {
     try {
       const payload = {
@@ -527,12 +504,17 @@ export default function OnboardingPage() {
         redesSociales: { instagram: data.instagram },
         generosMusicales: data.generos,
         vibeEnShows: data.vibes,
+        avatarColor: data.avatarColor,
+        bannerGradiente: data.gradientKey,
+        bannerImagen: data.bannerImagen,
       };
-      await api.put("/users/me", payload);
-      const updatedUser = { ...user, ...payload };
-      localStorage.setItem("voy_user", JSON.stringify(updatedUser));
+      const res = await updateMyProfile(payload);
+      const updatedUser = res?.user || res || { ...user, ...payload };
+      updateUser(updatedUser);
+      return updatedUser;
     } catch (err) {
       console.error("[Onboarding] Error al guardar perfil:", err);
+      throw err;
     }
   }
 
@@ -541,12 +523,6 @@ export default function OnboardingPage() {
     setSaving(true);
     try {
       await saveProfileData(form);
-      const result = await updateMyProfile({
-        avatarColor: form.avatarColor,
-        bannerGradiente: form.gradientKey,
-        bannerImagen: form.bannerImagen,
-      });
-      updateUser(result.user || result);
       localStorage.setItem("onboardingDone", "true");
       setShowWelcomeOverlay(true);
     } catch (err) {
@@ -586,7 +562,7 @@ export default function OnboardingPage() {
       {/* Nav superior mínima */}
       <nav className={styles.nav}>
         <div className={styles.navLogo}>
-          <LogoVoy />
+          <LogoVoy inverse={true} />
         </div>
         <div className={styles.stepsIndicator}>
           Estás actualmente: <span className={styles.stepActive}>creando tu perfil.</span>

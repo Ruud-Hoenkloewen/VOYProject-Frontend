@@ -128,6 +128,7 @@ export default function ProfilePage() {
   const [isLoadingProfile, setIsLoadingProfile] = useState(true);
   const [profileError, setProfileError] = useState(null);
   const [socialModalType, setSocialModalType] = useState(null);
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   const [activeTab, setActiveTab] = useState('MI INFO');
   const [allEvents, setAllEvents] = useState([]);
@@ -582,11 +583,11 @@ export default function ProfilePage() {
               </div>
             )}
 
-            {profile.vibeEnShows && profile.vibeEnShows.length > 0 && (
+            {((profile.vibeEnShows && profile.vibeEnShows.length > 0) || (profile.vibes && profile.vibes.length > 0)) && (
               <div className={styles.badgesGroupBlock}>
-                <h3 className={styles.subHeadingLabel}>VIBES EN SHOWS</h3>
+                <h3 className={styles.subHeadingLabel}>MI VIBRA</h3>
                 <div className={styles.badgesFlex}>
-                  {profile.vibeEnShows.map(vibe => (
+                  {(profile.vibeEnShows || profile.vibes).map(vibe => (
                     <div key={vibe} className={styles.pogoBadge}>
                       {vibe}
                     </div>
@@ -595,11 +596,11 @@ export default function ProfilePage() {
               </div>
             )}
             
-            {profile.generosMusicales && profile.generosMusicales.length > 0 && (
+            {((profile.generosMusicales && profile.generosMusicales.length > 0) || (profile.generos && profile.generos.length > 0)) && (
                <div className={styles.badgesGroupBlock}>
-                  <h3 className={styles.subHeadingLabel}>GÉNEROS MUSICALES FAVORITOS</h3>
+                  <h3 className={styles.subHeadingLabel}>GUSTOS MUSICALES</h3>
                   <div className={styles.badgesFlex}>
-                  {profile.generosMusicales.map(g => (
+                  {(profile.generosMusicales || profile.generos).map(g => (
                     <div key={g} className={styles.pogoBadge}>
                       {g}
                     </div>

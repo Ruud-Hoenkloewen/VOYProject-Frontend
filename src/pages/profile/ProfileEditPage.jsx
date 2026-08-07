@@ -444,24 +444,30 @@ export default function ProfileEditPage() {
           <div className={styles.topGridRight}>
             <span className={styles.appearanceTitle}>APARIENCIA Y PERSONALIZACIÓN</span>
 
+            {/* FOTO DE PERFIL (AVATAR) */}
             <div className={styles.appearanceSection}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                <span className={styles.appearanceLabel}>FOTO DE PERFIL</span>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem', flexWrap: 'wrap', gap: '8px' }}>
+                <span className={styles.appearanceLabel}>FOTO DE PERFIL (AVATAR)</span>
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   style={{
-                    background: 'rgba(0, 255, 159, 0.1)',
-                    border: '1px solid rgba(0, 255, 159, 0.3)',
-                    color: '#00FF9F',
-                    padding: '0.2rem 0.6rem',
-                    borderRadius: '4px',
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
-                    cursor: 'pointer'
+                    background: 'rgba(255, 123, 238, 0.12)',
+                    border: '1px solid #ff7bee',
+                    color: '#ff7bee',
+                    padding: '0.4rem 0.9rem',
+                    borderRadius: '6px',
+                    fontSize: '0.75rem',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    boxShadow: '0 2px 10px rgba(255, 123, 238, 0.12)',
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
                 >
-                  📷 SUBIR FOTO
+                  📷 SUBIR FOTO DE PERFIL
                 </button>
                 <input
                   ref={fileInputRef}
@@ -471,36 +477,10 @@ export default function ProfileEditPage() {
                   onChange={handleFileChange}
                 />
               </div>
-              <div className={styles.inputWrapper}>
-                <input
-                  type="url"
-                  className={styles.inputInner}
-                  placeholder="https://link-a-tu-foto.jpg"
-                  value={form.avatarUrl}
-                  onChange={(e) => handleChange("avatarUrl", e.target.value)}
-                />
-              </div>
-            </div>
 
-            <div className={styles.appearanceSection}>
-              <span className={styles.appearanceLabel}>COLOR / ACENTO DEL PERFIL</span>
-              <div style={{ fontSize: '0.7rem', color: '#888', marginBottom: '0.35rem', fontWeight: 700 }}>COLORES FIJOS</div>
+              {/* Lista unificada de colores de avatar */}
               <div className={styles.swatchGrid}>
-                {(AVATAR_COLORS || []).filter(c => c.category === 'fijo').map((c) => (
-                  <button
-                    key={c.value}
-                    className={`${styles.swatch} ${form.avatarColor === c.value ? styles.swatchActive : ""}`}
-                    style={{ background: c.value }}
-                    onClick={() => handleChange("avatarColor", c.value)}
-                    title={c.name}
-                    type="button"
-                  />
-                ))}
-              </div>
-
-              <div style={{ fontSize: '0.7rem', color: '#888', margin: '0.75rem 0 0.35rem', fontWeight: 700 }}>GRADIENTES MIXTOS Y ARCOÍRIS</div>
-              <div className={styles.swatchGrid}>
-                {(AVATAR_COLORS || []).filter(c => c.category !== 'fijo').map((c) => (
+                {(AVATAR_COLORS || []).map((c) => (
                   <button
                     key={c.value}
                     className={`${styles.swatch} ${form.avatarColor === c.value ? styles.swatchActive : ""}`}
@@ -513,25 +493,53 @@ export default function ProfileEditPage() {
               </div>
             </div>
 
-            <div className={styles.appearanceSection}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
-                <span className={styles.appearanceLabel}>BANER DE PORTADA</span>
-                <button
-                  type="button"
-                  onClick={() => bannerInputRef.current?.click()}
-                  style={{
-                    background: 'rgba(0, 255, 159, 0.1)',
-                    border: '1px solid rgba(0, 255, 159, 0.3)',
-                    color: '#00FF9F',
-                    padding: '0.2rem 0.6rem',
-                    borderRadius: '4px',
-                    fontSize: '0.7rem',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
-                >
-                  📷 CARGAR FOTO BANNER
-                </button>
+            {/* PORTADA DEL PERFIL (BANNER) */}
+            <div className={styles.appearanceSection} style={{ marginTop: '1rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.6rem', flexWrap: 'wrap', gap: '8px' }}>
+                <span className={styles.appearanceLabel}>PORTADA DEL PERFIL (BANNER)</span>
+                {form.bannerImagen ? (
+                  <button
+                    type="button"
+                    onClick={() => handleChange("bannerImagen", "")}
+                    style={{
+                      background: 'rgba(239, 68, 68, 0.12)',
+                      border: '1px solid #ef4444',
+                      color: '#ef4444',
+                      padding: '0.4rem 0.9rem',
+                      borderRadius: '6px',
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    🗑️ QUITAR FOTO DE PORTADA
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => bannerInputRef.current?.click()}
+                    style={{
+                      background: 'rgba(255, 123, 238, 0.12)',
+                      border: '1px solid #ff7bee',
+                      color: '#ff7bee',
+                      padding: '0.4rem 0.9rem',
+                      borderRadius: '6px',
+                      fontSize: '0.75rem',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      boxShadow: '0 2px 10px rgba(255, 123, 238, 0.12)',
+                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}
+                  >
+                    📷 SUBIR FOTO DE PORTADA
+                  </button>
+                )}
                 <input
                   ref={bannerInputRef}
                   type="file"
@@ -554,16 +562,6 @@ export default function ProfileEditPage() {
                     type="button"
                   />
                 ))}
-              </div>
-
-              <div className={styles.inputWrapper} style={{ marginTop: '0.5rem' }}>
-                <input
-                  type="url"
-                  className={styles.inputInner}
-                  placeholder="O pegá la URL de una foto para el banner..."
-                  value={form.bannerImagen}
-                  onChange={(e) => handleChange("bannerImagen", e.target.value)}
-                />
               </div>
             </div>
           </div>

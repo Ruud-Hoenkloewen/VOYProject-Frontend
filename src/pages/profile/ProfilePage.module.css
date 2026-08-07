@@ -1035,3 +1035,39 @@
   border: 1.5px solid #1DB954;
   box-shadow: 0 8px 24px rgba(30, 215, 96, 0.2);
 }
+
+/* ─── MOBILE RESPONSIVE OPTIMIZATIONS ────────────────────────────────────── */
+@media (max-width: 640px) {
+  .navbarOpaque {
+    padding: 12px 16px;
+  }
+  .profileContent {
+    padding: 0 16px 40px;
+    margin-top: 70px;
+  }
+  .banner {
+    height: 160px;
+  }
+  .avatarAndHeaderRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .avatarSquare {
+    width: 96px;
+    height: 96px;
+    font-size: 38px;
+    border-radius: 16px;
+  }
+  .headerDetailsCol {
+    padding-top: 0;
+    width: 100%;
+  }
+  .navActions {
+    gap: 8px;
+  }
+  .editBtn, .logoutBtn {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+  }
+}

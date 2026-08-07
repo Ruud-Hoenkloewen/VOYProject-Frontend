@@ -32,10 +32,14 @@ const mapStatusTone = (status) => {
  * @returns {object} Evento normalizado
  */
 const mapEvent = (evt) => {
-  let imageUrl = evt.imagen || '';
+  let imageUrl = evt.imagen || evt.imageUrl || '';
   
-  // Sanitize invalid local mock paths and assign actual flyers based on title
-  if (imageUrl.startsWith('/public/') || !imageUrl) {
+  if (imageUrl.startsWith('/public/')) {
+    imageUrl = imageUrl.replace('/public/', '/');
+  }
+
+  // Sanitize invalid local mock paths and assign actual flyers based on title only if empty
+  if (!imageUrl) {
     const titleLower = (evt.nombre || '').toLowerCase();
     
     if (titleLower.includes('danny') || titleLower.includes('proyectil')) {
