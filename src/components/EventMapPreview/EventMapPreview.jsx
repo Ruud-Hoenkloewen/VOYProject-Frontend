@@ -14,12 +14,16 @@ export default function EventMapPreview({ venue = '', height = 240, showDirectio
   }
 
   const cleanVenue = venue.trim();
-  // Ensure location includes Tucumán for map precision if not mentioned
-  const querySearch = cleanVenue.toLowerCase().includes('tucumán') || cleanVenue.toLowerCase().includes('tucuman')
-    ? cleanVenue
-    : `${cleanVenue}, San Miguel de Tucumán, Argentina`;
+  const lower = cleanVenue.toLowerCase();
+  
+  let querySearch = cleanVenue;
+  if (!lower.includes('tucumán') && !lower.includes('tucuman')) {
+    querySearch += ', San Miguel de Tucumán, Argentina';
+  } else if (!lower.includes('argentina')) {
+    querySearch += ', Argentina';
+  }
 
-  const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(querySearch)}&t=&z=15&ie=UTF8&iwloc=&output=embed`;
+  const mapEmbedUrl = `https://maps.google.com/maps?q=${encodeURIComponent(querySearch)}&t=&z=16&ie=UTF8&iwloc=&output=embed`;
   const directionsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(querySearch)}`;
 
   return (

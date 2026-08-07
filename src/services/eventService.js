@@ -73,7 +73,8 @@ const mapEvent = (evt) => {
     artists: (evt.artistas || []).map(a => ({
       id: a._id,
       nombre: a.nombre,
-      headliner: a.headliner || false,
+      headliner: a.headliner || a.debut || false,
+      debut: a.debut || a.headliner || false,
       usuario: a.usuario ? {
         id: a.usuario._id || a.usuario.id,
         nombre: a.usuario.nombre,

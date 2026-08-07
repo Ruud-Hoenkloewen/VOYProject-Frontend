@@ -207,6 +207,7 @@
 .iconPrimary { color: #00FF9F; }
 .iconCyan { color: #38bdf8; }
 .iconFuchsia { color: #ec4899; }
+.iconGray { color: #94a3b8; }
 
 .cardTitle {
   font-size: 1.15rem;
@@ -273,6 +274,31 @@
 .cardBtnSecondary:hover {
   background: rgba(255, 255, 255, 0.12);
   border-color: rgba(255, 255, 255, 0.3);
+}
+
+.cardBtnFuchsia {
+  width: 100%;
+  padding: 0.8rem 1.25rem;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ec4899;
+  color: #ffffff;
+  border: none;
+}
+
+.cardBtnFuchsia:hover {
+  background: #db2777;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(236, 72, 153, 0.4);
 }
 
 /* Sección de Próximos Recitales */

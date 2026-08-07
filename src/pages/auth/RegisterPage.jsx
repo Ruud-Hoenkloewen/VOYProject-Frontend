@@ -300,7 +300,7 @@ export default function RegisterPage() {
         <div className={styles.confirmOverlay} role="dialog" aria-modal="true">
           <div className={styles.confirmCard}>
             <div className={styles.confirmHeader}>
-              <p>Por favor verificá la información antes de crear tu cuenta para asegurar que puedas iniciar sesión sin problemas.</p>
+              <p>Verificá la información antes de crear tu cuenta.</p>
             </div>
 
             <div className={styles.confirmBody}>
@@ -329,7 +329,7 @@ export default function RegisterPage() {
             </div>
 
             <div className={styles.confirmNotice} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-              <Info size={16} style={{ color: "#00FF9F", flexShrink: 0 }} />
+              <Info size={16} className={styles.confirmNoticeIcon} />
               <span><strong>Atención:</strong> El email <code>{form.email}</code> se asociará a tu usuario. Asegurate de que no tenga errores de tipeo.</span>
             </div>
 

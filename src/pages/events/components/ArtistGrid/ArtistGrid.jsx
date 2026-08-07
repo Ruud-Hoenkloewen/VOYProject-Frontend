@@ -32,10 +32,10 @@ const ARTIST_REGISTERED_REGISTRY = {
   },
   'danny proyectil': {
     username: 'danny_proyectil',
-    avatar: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=400&q=80',
-    bannerImagen: '/flyer-danny-proyectil.png',
-    lema: 'Post-punk y grunge tucumano con actitud New Direction.',
-    bio: 'Post-punk y grunge tucumano.',
+    avatar: '/dannyproyectil-avatar.png',
+    bannerImagen: '/dannyproyectil-banner.png',
+    lema: 'Hacemos música instrumental.',
+    bio: 'Hacemos música instrumental.',
     avatarColor: '#33FF57',
     instagram: '@danny_proyectil'
   },
@@ -50,12 +50,13 @@ const ARTIST_REGISTERED_REGISTRY = {
   },
   'utópico amanecer': {
     username: 'utopico.amanecer',
-    avatar: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=400&q=80',
-    bannerImagen: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=1200&q=80',
-    lema: 'Dream rock y synth pop en texturas envolventes.',
-    bio: 'Dream rock y synth pop alternativo.',
+    avatar: '/utopicoamanecer-avatar.png',
+    bannerImagen: '/utopicoamanecer-banner.png',
+    lema: 'EUSTALGIA ya disponible en todas nuestras plataformas.',
+    bio: 'EUSTALGIA ya disponible en todas nuestras plataformas.',
     avatarColor: '#00E5FF',
-    instagram: '@utopico.amanecer'
+    instagram: '@utopico.amanecer',
+    spotifyTrack: 'https://open.spotify.com/track/5PCoH5xzGhciRy1KWgkLY7?si=d7e13045248f46eb'
   },
   'las maldiciones': {
     username: 'las.maldiciones',
@@ -117,30 +118,33 @@ const ARTIST_REGISTERED_REGISTRY = {
   },
   'entre penumbras': {
     username: 'entrepenumbras',
-    avatar: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=400&q=80',
-    bannerImagen: 'https://images.unsplash.com/photo-1508854710579-5cecc3a9ff17?auto=format&fit=crop&w=1200&q=80',
-    lema: 'Post-punk atmosférico y paisajes sombríos.',
-    bio: 'Post-punk atmosférico.',
+    avatar: '/entrepenumbras-avatar.png',
+    bannerImagen: '/entrepenumbras-banner.png',
+    lema: 'Banda hardcore de San Miguel de Tucumán que nace en dic de 2020, en un contexto particular del mundo.',
+    bio: 'Banda hardcore de San Miguel de Tucumán que nace en dic de 2020, en un contexto particular del mundo.',
     avatarColor: '#00E5FF',
-    instagram: '@entrepenumbras'
+    instagram: '@entrepenumbras',
+    spotifyTrack: 'https://open.spotify.com/track/6KvF0h8DZI7FBONenQ0Afq?si=10867e047af74d85'
   },
   'para salir de la oscuridad': {
     username: 'parasalirdelaoscuridad',
-    avatar: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=400&q=80',
-    bannerImagen: '/flyer-lacrifagia.png',
-    lema: 'Screamo, emo noventero y catarsis colectiva.',
-    bio: 'Screamo y emo violencia.',
+    avatar: '/parasalirdelaoscuridad-avatar.png',
+    bannerImagen: '/parasalirdelaoscuridad-banner.png',
+    lema: 'ESCUCHÁ NUESTRO SINGLE "HERMANO" EN TODAS LAS PLATAFORMAS',
+    bio: 'ESCUCHÁ NUESTRO SINGLE "HERMANO" EN TODAS LAS PLATAFORMAS',
     avatarColor: '#FF2D78',
-    instagram: '@parasalirdelaoscuridad'
+    instagram: '@parasalirdelaoscuridad',
+    spotifyTrack: 'https://open.spotify.com/track/03bDbfkojQCELp6tYhWJzt?si=084caf87f4a74b0e'
   },
   'las cosas inexplicables': {
     username: 'lascosasinexplicables',
-    avatar: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?auto=format&fit=crop&w=400&q=80',
-    bannerImagen: '/flyer-las-cosas-inexplicables.png',
-    lema: 'Math rock e indie instrumental de compases desarmados.',
-    bio: 'Math rock e indie progresivo.',
+    avatar: '/lascosasinexplicables-avatar.png',
+    bannerImagen: '/lascosasinexplicables-banner.png',
+    lema: 'Las cosas inexplicables suceden a pesar de todo.',
+    bio: 'Las cosas inexplicables suceden a pesar de todo.',
     avatarColor: '#00FF9F',
-    instagram: '@lascosasinexplicables'
+    instagram: '@lascosasinexplicables',
+    spotifyTrack: 'https://open.spotify.com/track/6aOQ9UpwxQLk8eNEbYdsKT?si=36544c1eafc140f9'
   }
 };
 
@@ -152,11 +156,11 @@ export default function ArtistGrid({ artists, concertPhotos = [], bandDescriptio
   return (
     <div className={styles.artistsGrid}>
       {artists.map((artist, idx) => {
-        const isHeadliner = idx === n - 1 || artist.headliner;
+        const isHeadliner = idx === n - 1 || artist.headliner || artist.debut;
         const isApertura  = idx === 0 && !isHeadliner;
         const isInvitada  = idx === 1 && n > 2 && !isHeadliner;
         const badgeColor  = isHeadliner ? "magenta" : isApertura ? "green" : "grey";
-        const badgeText   = isHeadliner ? "HEADLINER" : isApertura ? "APERTURA" : isInvitada ? "INVITADA" : null;
+        const badgeText   = isHeadliner ? "DEBUT" : isApertura ? "APERTURA" : isInvitada ? "INVITADA" : null;
 
         const normName = (artist.nombre || '').toLowerCase().trim();
         const registryMatch = ARTIST_REGISTERED_REGISTRY[normName] || {};
@@ -209,7 +213,7 @@ export default function ArtistGrid({ artists, concertPhotos = [], bandDescriptio
                 </div>
                 <button
                   className={styles.artistProfileBtn}
-                  onClick={() => navigate(`/profile/${username}`)}
+                  onClick={() => navigate(`/profile/${username}?tab=MUSICA`)}
                 >
                   Ver perfil <ExternalLinkIcon />
                 </button>

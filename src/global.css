@@ -162,7 +162,13 @@
   --ds-color-state-warning: #f5a623;
   --ds-color-state-highlight: var(--ds-color-magenta-400);
 
-  /* Aliases semánticos editoriales — landing page + brand */
+  /* Aliases semánticos editoriales base */
+  --ds-color-editorial-muted: #94a3b8;
+  --ds-color-editorial-subtle: #cbd5e1;
+  --ds-color-editorial-border: rgba(255, 255, 255, 0.08);
+  --ds-color-editorial-border-mid: rgba(255, 255, 255, 0.15);
+  --ds-color-editorial-surface: #12141f;
+
   --ds-color-bg-editorial: var(--ds-color-brand-canvas);
   --ds-color-accent-primary: var(--ds-color-brand-lime);
   --ds-color-accent-secondary: var(--ds-color-brand-fuchsia);
@@ -170,7 +176,7 @@
   --ds-color-text-editorial-subtle: var(--ds-color-editorial-subtle);
   --ds-color-border-editorial: var(--ds-color-editorial-border);
   --ds-color-border-editorial-mid: var(--ds-color-editorial-border-mid);
-    --ds-color-bg-editorial-surface: var(--ds-color-editorial-surface);
+  --ds-color-bg-editorial-surface: var(--ds-color-editorial-surface);
 
   /* Background Glows and Texture for Dark Mode */
   --ds-bg-glow-1: radial-gradient(circle at 15% 0%, rgba(255, 123, 238, 0.08) 0%, transparent 50%);
@@ -214,7 +220,13 @@
   
   /* Vivid accents for light mode to contrast with warm beige */
   --ds-color-accent-primary: #ff5722; /* Vivid Deep Orange */
-  --ds-color-accent-secondary: #4f46e5; /* Vivid Indigo/Purple */
+  --ds-color-accent-secondary: #7c3aed; /* Vivid Strong Purple */
+
+  /* Magenta / Fucsia / Elementos secundarios para Modo Claro (Púrpura Fuerte de Alto Contraste) */
+  --ds-color-magenta-400: #7c3aed;
+  --ds-color-magenta-500: #6d28d9;
+  --ds-color-brand-fuchsia: #7c3aed;
+  --ds-color-brand-fuchsia-dark: #6d28d9;
   
   --ds-color-border-accent: var(--ds-color-accent-primary);
 
@@ -232,11 +244,13 @@
   --ds-color-state-highlight: var(--ds-color-magenta-500);
 
   --ds-color-bg-editorial: #f7f4ec; /* Warmer editorial background */
-  --ds-color-text-editorial-muted: #1e293b;
+  --ds-color-editorial-muted: #334155;
+  --ds-color-editorial-subtle: #0f172a;
+  --ds-color-text-editorial-muted: #334155;
   --ds-color-text-editorial-subtle: #0f172a;
   --ds-color-border-editorial: #e2e8f0;
   --ds-color-border-editorial-mid: #cbd5e1;
-    --ds-color-bg-editorial-surface: #ffffff;
+  --ds-color-bg-editorial-surface: #ffffff;
 
   /* Background Glows and Texture for Light Mode */
   --ds-bg-glow-1: radial-gradient(circle at 85% 10%, rgba(255, 87, 34, 0.05) 0%, transparent 60%);
@@ -281,10 +295,10 @@ body {
 ──────────────────────────────────────────────────────────── */
 [data-animate] {
   opacity: 0;
-  transform: translateY(24px);
+  transform: translateY(10px);
   transition:
-    opacity   0.5s ease var(--entry-delay, 0s),
-    transform 0.5s ease var(--entry-delay, 0s);
+    opacity   0.25s ease-out var(--entry-delay, 0s),
+    transform 0.25s ease-out var(--entry-delay, 0s);
 }
 
 [data-animate].animate-visible {

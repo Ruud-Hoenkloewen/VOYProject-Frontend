@@ -7,6 +7,7 @@ import { EventCard } from '../../design-system';
 import { TicketIcon, HeartIcon, StarIcon, EditIcon, MapPinIcon, ZapIcon, MusicIcon, PeopleIcon, ExternalLinkIcon } from '../../components/icons';
 import FollowButton from '../../components/FollowButton/FollowButton';
 import LogoVoy from '../../components/LogoVoy/LogoVoy';
+import ImageLightboxModal from '../../components/ImageLightboxModal/ImageLightboxModal';
 import styles from './ProfilePage.module.css';
 
 const InstagramSVG = () => (
@@ -123,7 +124,11 @@ export default function ProfilePage() {
   const [searchParams] = useSearchParams();
   const tabParam = searchParams.get('tab');
   const { username } = useParams();
-  
+  const [profile, setProfile] = useState(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [profileError, setProfileError] = useState(null);
+  const [socialModalType, setSocialModalType] = useState(null);
+
   const [activeTab, setActiveTab] = useState('MI INFO');
   const [allEvents, setAllEvents] = useState([]);
   const [favoriteEvents, setFavoriteEvents] = useState([]);
@@ -132,16 +137,16 @@ export default function ProfilePage() {
   useEffect(() => {
     if (tabParam) {
       const upperTab = tabParam.toUpperCase();
-      if (['MÚSICA', 'PRÓXIMOS SHOWS', 'MI INFO', 'EVENTOS GUARDADOS', 'HISTORIAL', 'CARTELERA', 'INFO'].includes(upperTab)) {
-        setActiveTab(upperTab);
+      if (['MÚSICA', 'MUSICA', 'PRÓXIMOS SHOWS', 'MI INFO', 'EVENTOS GUARDADOS', 'HISTORIAL', 'CARTELERA', 'INFO'].includes(upperTab)) {
+        setActiveTab(upperTab === 'MUSICA' ? 'MÚSICA' : upperTab);
+      }
+    } else if (profile) {
+      const isArtist = profile.role === 'artist' || profile.rol === 'artist' || profile.rol === 'artista';
+      if (isArtist) {
+        setActiveTab('MÚSICA');
       }
     }
-  }, [tabParam]);
-  
-  const [profile, setProfile] = useState(null);
-  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
-  const [profileError, setProfileError] = useState(null);
-  const [socialModalType, setSocialModalType] = useState(null); // 'followers' | 'following' | null
+  }, [tabParam, profile]);
 
   const isMyProfile = isAuthenticated && user && (
     username === 'me' || 
@@ -220,7 +225,7 @@ export default function ProfilePage() {
   const hasCustomBorder = profile.avatarColor && profile.avatarColor !== 'transparent' && profile.avatarColor !== 'none';
   const avatarStyle = hasCustomBorder 
     ? { background: profile.avatarColor, color: '#ffffff', padding: '3px' } 
-    : { background: 'transparent', color: '#ffffff', padding: 0 };
+    : { background: '#1e2433', color: '#ffffff', padding: 0 };
   const bannerBg = profile.bannerImagen
     ? `url("${profile.bannerImagen}") center/cover no-repeat`
     : (GRADIENTS[profile.bannerGradiente] || profile.bannerGradiente || profile.bannerColor || GRADIENTS.g1);
@@ -304,7 +309,12 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className={styles.banner} style={{ background: bannerBg }} />
+        <div 
+          className={styles.banner} 
+          style={{ background: bannerBg, cursor: profile.bannerImagen ? "zoom-in" : "default" }} 
+          onClick={() => profile.bannerImagen && setLightboxImage({ src: profile.bannerImagen, caption: `Banner de ${safeName}` })}
+          title={profile.bannerImagen ? "Clic para ampliar banner en alta resolución" : ""}
+        />
       </div>
 
       <div className={styles.profileContent}>
@@ -318,6 +328,9 @@ export default function ProfilePage() {
                     src={profile.avatarUrl || profile.fotoPerfil || profile.avatar} 
                     alt={safeName} 
                     className={styles.avatarImage} 
+                    onClick={() => setLightboxImage({ src: profile.avatarUrl || profile.fotoPerfil || profile.avatar, caption: safeName })}
+                    title="Clic para ampliar foto de perfil en alta resolución"
+                    style={{ cursor: "zoom-in" }}
                   />
                 ) : (
                   initial
@@ -453,18 +466,9 @@ export default function ProfilePage() {
               if (!embedUrl) {
                 return (
                   <div className={styles.emptyState}>
-                    <div className={styles.emptyIconWrapper}>
-                      <MusicIcon size={36} className={styles.emptyIcon} />
-                    </div>
-                    <span className={styles.emptyTitle}>NO HAY MÚSICA CONFIGURADA</span>
                     <span className={styles.emptyText}>
                       Este artista aún no ha vinculado una canción, álbum o playlist de Spotify.
                     </span>
-                    {isMyProfile && (
-                      <Link to="/profile/edit" className={styles.emptyLinkButton}>
-                        CONFIGURAR MÚSICA →
-                      </Link>
-                    )}
                   </div>
                 );
               }
@@ -495,10 +499,6 @@ export default function ProfilePage() {
           <div className={styles.sectionBlock}>
             {artistEvents.length === 0 ? (
               <div className={styles.emptyState}>
-                <div className={styles.emptyIconWrapper}>
-                  <CalendarIcon size={36} className={styles.emptyIcon} />
-                </div>
-                <span className={styles.emptyTitle}>SIN PRÓXIMOS SHOWS CONFIRMADOS</span>
                 <span className={styles.emptyText}>
                   No hay fechas confirmadas por el momento para este artista. ¡Volvé pronto para más novedades!
                 </span>
@@ -724,6 +724,14 @@ export default function ProfilePage() {
           </div>
         )}
       </div>
+
+      {lightboxImage && (
+        <ImageLightboxModal
+          src={lightboxImage.src}
+          caption={lightboxImage.caption}
+          onClose={() => setLightboxImage(null)}
+        />
+      )}
     </div>
   );
 }

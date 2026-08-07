@@ -295,13 +295,13 @@
 .topGridLeft,
 .topGridRight,
 .datosCard {
-  background-color: var(--ds-color-bg-editorial-surface);
-  border: 1px solid var(--ds-color-border-subtle);
+  background-color: transparent;
+  border: 1px solid var(--ds-color-border-editorial-mid);
   border-radius: 16px;
   padding: 32px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: none;
 }
 
 /* Panel de apariencia */

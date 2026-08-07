@@ -213,49 +213,47 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   {myOrders.slice(0, 3).map((order) => {
-                    const ev = order.evento || {};
+                    const ev = (typeof order.eventId === 'object' && order.eventId !== null) ? order.eventId : (order.evento || {});
+                    const title = ev.nombre || order.nombreEvento || "EVENTO VOY";
+                    const venue = ev.lugar || ev.venue || "San Miguel de Tucumán";
+
                     const isPaid = (order.estadoPago === 'PAGADA' || order.estado === 'completado' || order.estado === 'paid' || order.estado === 'pagado' || order.status === 'completed');
                     const statusLabel = isPaid ? "PAGADO" : "PENDIENTE";
-                    const statusBg = isPaid ? "rgba(0, 255, 159, 0.12)" : "rgba(255, 193, 7, 0.12)";
-                    const statusColor = isPaid ? "#00FF9F" : "#FFC107";
-                    const statusBorder = isPaid ? "1px solid rgba(0, 255, 159, 0.3)" : "1px solid rgba(255, 193, 7, 0.3)";
+                    const statusBg = isPaid ? "rgba(0, 200, 100, 0.12)" : "rgba(217, 119, 6, 0.12)";
+                    const statusColor = isPaid ? "var(--ds-color-state-success, #059669)" : "var(--ds-color-state-warning, #d97706)";
+                    const statusBorder = isPaid ? "1px solid rgba(5, 150, 105, 0.4)" : "1px solid rgba(217, 119, 6, 0.4)";
 
-                    let imageUrl = ev.imagen || ev.imageUrl || '';
-                    if (imageUrl.startsWith('/public/') || !imageUrl) {
-                      const titleLower = (ev.nombre || '').toLowerCase();
-                      if (titleLower.includes('danny') || titleLower.includes('proyectil') || titleLower.includes('oqlta')) imageUrl = '/flyer-danny-proyectil.png';
-                      else if (titleLower.includes('lacrifagia') || titleLower.includes('hardcore')) imageUrl = '/flyer-lacrifagia.png';
+                    let imageUrl = ev.imagen || ev.imageUrl || order.imagen || '';
+                    if (!imageUrl || imageUrl.startsWith('/public/')) {
+                      const titleLower = title.toLowerCase();
+                      if (titleLower.includes('danny') || titleLower.includes('proyectil')) imageUrl = '/flyer-danny-proyectil.png';
+                      else if (titleLower.includes('lacrifagia')) imageUrl = '/flyer-lacrifagia.png';
                       else imageUrl = '/flyer-sabbath-fest.png';
                     }
 
                     // Format date
-                    const dateObj = new Date(ev.fecha);
-                    const isDateValid = !isNaN(dateObj.getTime());
-                    const dateStr = isDateValid ? dateObj.toLocaleDateString('es-AR', { day: 'numeric', month: 'short' }).toUpperCase() : (ev.fecha || "A CONFIRMAR");
+                    const rawDate = ev.fecha || order.fecha;
+                    const dateObj = new Date(rawDate);
+                    const isDateValid = Boolean(rawDate) && !isNaN(dateObj.getTime());
+                    const dateStr = isDateValid ? dateObj.toLocaleDateString('es-AR', { day: 'numeric', month: 'short', year: 'numeric' }).toUpperCase() : "A CONFIRMAR";
 
                     return (
-                      <div key={order._id} style={{ display: "flex", gap: "10px", alignItems: "center", padding: "8px 10px", background: "rgba(255, 255, 255, 0.02)", border: "1px solid var(--ds-color-border-editorial-mid)", borderRadius: "8px" }}>
-                        <div style={{ width: "42px", height: "54px", flexShrink: 0, borderRadius: "5px", overflow: "hidden", background: "#111", border: "1px solid rgba(255,255,255,0.08)" }}>
-                          <img src={imageUrl} alt={ev.nombre} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                      <div key={order._id} style={{ display: "flex", gap: "10px", alignItems: "center", padding: "8px 10px", background: "transparent", border: "1px solid var(--ds-color-border-editorial-mid, rgba(0, 0, 0, 0.12))", borderRadius: "8px" }}>
+                        <div style={{ width: "38px", height: "50px", flexShrink: 0, borderRadius: "5px", overflow: "hidden", background: "#111", border: "1px solid rgba(0,0,0,0.1)" }}>
+                          <img src={imageUrl} alt={title} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0, gap: "2px" }}>
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "6px" }}>
-                            <strong style={{ color: "var(--ds-color-text-primary)", fontSize: "0.8rem", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", textTransform: "uppercase" }}>
-                              {ev.nombre}
-                            </strong>
-                          </div>
+                          <strong style={{ color: "var(--ds-color-text-primary, #050811)", fontSize: "0.74rem", fontWeight: "900", textTransform: "uppercase", letterSpacing: "0.01em", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                            {title}
+                          </strong>
 
-                          <span style={{ fontSize: "0.7rem", color: "var(--ds-color-text-editorial-subtle)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                            📍 {ev.venue || "Tucumán"}
-                          </span>
-
-                          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "0.68rem", color: "var(--ds-color-text-editorial-muted)" }}>
-                            <span>🗓 {dateStr} {ev.hora ? `• ${ev.hora} HS` : ''}</span>
-                            <span style={{ fontWeight: "800", color: "var(--ds-color-accent-primary)" }}>x{order.cantidad}</span>
+                          <div style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "0.66rem", color: "var(--ds-color-accent-secondary, #0284c7)", fontWeight: "700" }}>
+                            <span>🗓 {dateStr}</span>
+                            <span style={{ color: "var(--ds-color-state-success, #15803d)", fontWeight: "800" }}>• x{order.cantidad || 1}</span>
                           </div>
                         </div>
                         <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", flexShrink: 0 }}>
-                          <span style={{ fontSize: "0.58rem", fontWeight: "900", letterSpacing: "0.06em", padding: "2px 6px", borderRadius: "4px", background: statusBg, color: statusColor, border: statusBorder }}>
+                          <span style={{ fontSize: "0.58rem", fontWeight: "900", letterSpacing: "0.06em", padding: "3px 6px", borderRadius: "4px", background: statusBg, color: statusColor, border: statusBorder }}>
                             {statusLabel}
                           </span>
                         </div>
@@ -270,20 +268,11 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
             <div className={styles.hwSection}>
               <div className={styles.hwSectionHeader}>
                 <h3 className={styles.hwSectionTitle}>MIS CONEXIONES</h3>
-                <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}`} className={styles.hwSectionLink}>MI PERFIL</Link>
+                <Link to={`/profile/${user?.username || user?._id || user?.id || 'me'}/following`} className={styles.hwSectionLink}>VER SEGUIDOS</Link>
               </div>
               {(() => {
                 const siguiendoList = user?.siguiendo || [];
-                const followedArtistsCount = user?.siguiendoArtistasCount ?? (
-                  siguiendoList.filter(item => typeof item === 'object' ? (item.role === 'producer' || item.rol === 'producer' || item.isArtist) : true).length
-                );
-                const followedUsersCount = user?.siguiendoPersonasCount ?? (
-                  siguiendoList.filter(item => typeof item === 'object' ? (item.role === 'client' || item.rol === 'client' || item.role === 'user') : false).length
-                );
-
-                const hasConnections = followedArtistsCount > 0 || followedUsersCount > 0;
-
-                if (!hasConnections) {
+                if (!Array.isArray(siguiendoList) || siguiendoList.length === 0) {
                   return (
                     <EmptyState 
                       icon={<PeopleIcon size={24} />}
@@ -293,18 +282,82 @@ export default function HeroWidgetLoggedIn({ user, activeShowsCount = 0 }) {
                   );
                 }
 
+                const artistsList = siguiendoList.filter(u => {
+                  const r = typeof u === 'object' ? (u.role || u.rol) : '';
+                  return r === 'artist' || r === 'artista';
+                });
+
+                const personsList = siguiendoList.filter(u => {
+                  const r = typeof u === 'object' ? (u.role || u.rol) : '';
+                  return r !== 'artist' && r !== 'artista';
+                });
+
+                const artistsCount = artistsList.length;
+                const personsCount = personsList.length;
+
                 return (
-                  <div className={styles.hwCommunity} style={{ flexDirection: "column", alignItems: "flex-start", gap: "8px" }}>
-                    {followedArtistsCount > 0 && (
-                      <span className={styles.hwCommunityText} style={{ fontSize: "0.78rem" }}>
-                        Siguiendo a <strong>{followedArtistsCount} artista{followedArtistsCount > 1 ? 's' : ''} {followedArtistsCount > 1 ? 'locales' : 'local'}</strong>
-                      </span>
-                    )}
-                    {followedUsersCount > 0 && (
-                      <span className={styles.hwCommunityText} style={{ fontSize: "0.78rem" }}>
-                        Siguiendo a <strong>{followedUsersCount} persona{followedUsersCount > 1 ? 's' : ''}</strong>
-                      </span>
-                    )}
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+                    {/* Texto resumen de seguimiento */}
+                    <div style={{ display: "flex", flexDirection: "column", gap: "3px", paddingLeft: "2px" }}>
+                      {artistsCount > 0 && (
+                        <span style={{ fontSize: "0.74rem", color: "var(--ds-color-text-secondary)" }}>
+                          Siguiendo a <strong style={{ color: "var(--ds-color-accent-secondary, #0284c7)", fontWeight: "800" }}>{artistsCount} artista{artistsCount > 1 ? 's' : ''}</strong>
+                        </span>
+                      )}
+                      {personsCount > 0 && (
+                        <span style={{ fontSize: "0.74rem", color: "var(--ds-color-text-secondary)" }}>
+                          Siguiendo a <strong style={{ color: "var(--ds-color-state-success, #15803d)", fontWeight: "800" }}>{personsCount} persona{personsCount > 1 ? 's' : ''}</strong>
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Tarjetas de conexiones seguidas (hasta 3) */}
+                    <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "2px" }}>
+                      {siguiendoList.slice(0, 3).map((conn, idx) => {
+                        const cObj = typeof conn === 'object' ? conn : { username: String(conn) };
+                        const name = cObj.nombre || cObj.username || 'Usuario';
+                        const handle = cObj.username ? `@${cObj.username}` : '';
+                        const avatar = cObj.avatarUrl || cObj.fotoPerfil || cObj.avatar || '';
+                        const cRole = cObj.role || cObj.rol || 'fan';
+                        const isArt = cRole === 'artist' || cRole === 'artista';
+                        const isProd = cRole === 'producer';
+                        const badgeLabel = isArt ? 'ARTISTA' : isProd ? 'PRODUCTOR' : 'FAN';
+                        const badgeColor = isArt ? 'var(--ds-color-state-success, #059669)' : isProd ? '#A855F7' : 'var(--ds-color-text-editorial-muted, #64748b)';
+
+                        return (
+                          <Link 
+                            key={cObj._id || idx}
+                            to={`/profile/${cObj.username || cObj._id}`}
+                            style={{ 
+                              display: "flex", 
+                              alignItems: "center", 
+                              gap: "10px", 
+                              padding: "6px 10px", 
+                              background: "transparent", 
+                              border: "1px solid var(--ds-color-border-editorial-mid, rgba(0, 0, 0, 0.12))", 
+                              borderRadius: "8px", 
+                              textDecoration: "none",
+                              transition: "background 0.2s"
+                            }}
+                          >
+                            <div style={{ width: "30px", height: "30px", borderRadius: "50%", overflow: "hidden", background: "var(--ds-color-bg-surface-muted, #181a26)", flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", border: `1px solid ${badgeColor}` }}>
+                              {avatar ? (
+                                <img src={avatar} alt={name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                              ) : (
+                                <span style={{ fontSize: "0.75rem", fontWeight: "900", color: "var(--ds-color-text-primary, #050811)" }}>{name.charAt(0).toUpperCase()}</span>
+                              )}
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", flex: 1, minWidth: 0 }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                <strong style={{ color: "var(--ds-color-text-primary, #050811)", fontSize: "0.74rem", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{name}</strong>
+                                <span style={{ fontSize: "0.54rem", fontWeight: "900", padding: "1px 4px", borderRadius: "3px", border: `1px solid ${badgeColor}`, color: badgeColor, letterSpacing: "0.04em" }}>{badgeLabel}</span>
+                              </div>
+                              {handle && <span style={{ fontSize: "0.65rem", color: "var(--ds-color-magenta-400, #FF2D78)", fontFamily: "monospace" }}>{handle}</span>}
+                            </div>
+                          </Link>
+                        );
+                      })}
+                    </div>
                   </div>
                 );
               })()}

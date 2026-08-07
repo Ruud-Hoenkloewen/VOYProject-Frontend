@@ -48,7 +48,7 @@ export default function ArtistDashboard() {
           });
         });
 
-        setMyEvents(matched.length > 0 ? matched : events.slice(0, 3));
+        setMyEvents(matched);
       } catch (err) {
         console.error("Error cargando eventos del artista:", err);
       } finally {
@@ -72,39 +72,19 @@ export default function ArtistDashboard() {
       <EditorialHeader transparent={false} />
       
       <main className={styles.mainContent}>
-        {/* Banner de Bienvenida del Artista */}
-        <div className={styles.artistBanner}>
-          <div className={styles.avatarWrap} style={{ borderColor: user?.avatarColor || '#00FF9F' }}>
-            {avatar ? (
-              <img src={avatar} alt={userName} className={styles.avatarImg} />
-            ) : (
-              <span className={styles.avatarInitials}>{userName.charAt(0).toUpperCase()}</span>
-            )}
-          </div>
-          <div className={styles.bannerInfo}>
-            <div className={styles.badgeRow}>
-              <span className={styles.badgeArtist}>ARTISTA VERIFICADO</span>
-              <span className={styles.badgeLocation}>📍 Tucumán, AR</span>
-            </div>
-            <h1 className={styles.pageTitle}>{userName}</h1>
-            <p className={styles.userHandleText}>{userHandle}</p>
-            <p className={styles.artistBioText}>"{bio}"</p>
-          </div>
-        </div>
-
         {/* Grilla de Acciones Principales */}
         <section className={styles.grid}>
           {/* Tarjeta 1: Próximas Fechas */}
           <div className={styles.card}>
             <div className={styles.iconCircle}>
-              <CalendarIcon size={28} className={styles.iconCyan} />
+              <CalendarIcon size={28} className={styles.iconGray} />
             </div>
             <h3 className={styles.cardTitle}>Próximas Fechas</h3>
             <p className={styles.cardDesc}>
-              Visualizá los recitales en los que estás tocando próximamente, tu posición en la grilla y el estado de las entradas.
+              Mirá los recitales en los que vas a tocar pronto.
             </p>
             <button 
-              className={styles.cardBtnCyan} 
+              className={styles.cardBtnSecondary} 
               onClick={() => navigate('/dashboard/artist/calendar')}
             >
               <span>VER CALENDARIO Y FECHAS ({myEvents.length})</span>
@@ -112,55 +92,68 @@ export default function ArtistDashboard() {
             </button>
           </div>
 
-          {/* Tarjeta 3: Postular a Fechas / Solicitar Show */}
+          {/* Tarjeta 2: Postular a Fechas / Solicitar Show */}
           <div className={styles.card}>
             <div className={styles.iconCircle}>
-              <ZapIcon size={28} className={styles.iconFuchsia} />
+              <ZapIcon size={28} className={styles.iconGray} />
             </div>
             <h3 className={styles.cardTitle}>Postular a Fechas</h3>
             <p className={styles.cardDesc}>
-              Proponé a tu banda para tocar en fechas de productoras locales o solicitá espacio en festivales under.
+              Enviá tu propuesta a las productoras. Podés ser tomado en cuenta para futuros eventos.
             </p>
             <button 
-              className={styles.cardBtnSecondary} 
+              className={styles.cardBtnSecondary}
               onClick={() => setShowApplyModal(true)}
             >
-              <span>POSTULAR BANDA</span>
+              <span>POSTULAR MI BANDA / PROYECTO</span>
               <PlusIcon size={16} />
             </button>
           </div>
         </section>
 
-        {/* Sección: Vista Previa de la Grilla de Mis Fechas */}
+        {/* Sección: Lista de Recitales Confirmados */}
         <section className={styles.upcomingSection}>
           <div className={styles.sectionHeaderRow}>
             <h2 className={styles.sectionTitle}>MIS RECITALES CONFIRMADOS</h2>
-            <button className={styles.viewPublicBtn} onClick={() => navigate(`/profile/${user?.username || 'me'}`)}>
-              Ver mi perfil público <ExternalLinkIcon size={14} />
+            <button 
+              className={styles.viewPublicBtn}
+              onClick={() => navigate(`/profile/${user?.username || 'me'}`)}
+            >
+              <span>Ver mi perfil público</span>
+              <ExternalLinkIcon size={14} />
             </button>
           </div>
 
           <div className={styles.eventsList}>
-            {myEvents.map((evt) => (
-              <div key={evt.id} className={styles.eventRowCard}>
-                <div className={styles.eventFlyerThumb}>
-                  <img src={evt.imageUrl} alt={evt.title} />
-                </div>
-                <div className={styles.eventRowDetails}>
-                  <div className={styles.eventRowMeta}>
-                    <span className={styles.eventDateBadge}>{evt.date}</span>
-                    <span className={styles.eventTimeBadge}>{evt.time}</span>
-                  </div>
-                  <h3 className={styles.eventRowTitle}>{evt.title}</h3>
-                  <p className={styles.eventRowVenue}>📍 {evt.venue}</p>
-                </div>
-                <div className={styles.eventRowActions}>
-                  <Link to={`/events/${evt.id}`} className={styles.goEventBtn}>
-                    Página del show ↗
-                  </Link>
-                </div>
+            {myEvents.length === 0 ? (
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "40px 20px", textAlign: "center", background: "transparent", border: "1px dashed var(--ds-color-border-editorial-mid)", borderRadius: "12px", color: "var(--ds-color-text-editorial-muted)", gap: "10px" }}>
+                <CalendarIcon size={36} color="#94a3b8" />
+                <p style={{ margin: 0, fontSize: "0.95rem", fontWeight: "700", color: "var(--ds-color-text-primary)" }}>
+                  No tenes ningun evento confirmado todavia.
+                </p>
               </div>
-            ))}
+            ) : (
+              myEvents.map((evt) => (
+                <div key={evt.id} className={styles.eventRowCard}>
+                  <div className={styles.eventFlyerThumb}>
+                    <img src={evt.imageUrl} alt={evt.title} />
+                  </div>
+                  <div className={styles.eventRowDetails}>
+                    <div className={styles.eventRowMeta}>
+                      <span className={styles.eventDateBadge}>{evt.date}</span>
+                      <span className={styles.eventTimeBadge}>{evt.time}</span>
+                    </div>
+                    <h3 className={styles.eventRowTitle}>{evt.title}</h3>
+                    <p className={styles.eventRowVenue}>📍 {evt.venue}</p>
+                  </div>
+                  <div className={styles.eventRowActions}>
+                    <Link to={`/events/${evt.id}`} className={styles.goEventBtn}>
+                      Página del show ↗
+                    </Link>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </section>
       </main>

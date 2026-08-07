@@ -164,16 +164,12 @@ export default function UserSocialListPage({ type = 'followers' }) {
                     <div className={styles.robloxCardMeta}>
                       <div className={styles.robloxNameRow}>
                         <span className={styles.robloxName}>{name}</span>
+                        <span className={styles.robloxRoleBadge}>
+                          [{roleBadgeText}]
+                        </span>
                       </div>
                       {handle && <span className={styles.robloxHandle}>{handle}</span>}
-                      
-                      {bio ? (
-                        <span className={styles.robloxBio}>"{bio}"</span>
-                      ) : (
-                        <span className={styles.robloxRoleBadge}>
-                          {roleBadgeText}
-                        </span>
-                      )}
+                      {bio && <span className={styles.robloxBio}>"{bio}"</span>}
                     </div>
                   </div>
                 );

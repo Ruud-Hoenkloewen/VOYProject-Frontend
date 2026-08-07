@@ -285,14 +285,19 @@
   color: var(--ds-color-text-secondary);
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 10px;
 }
 
 .detailItem {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-weight: 600;
+}
+
+.detailItem svg {
+  flex-shrink: 0;
+  margin-right: 4px;
 }
 
 .progressContainer {
@@ -334,7 +339,7 @@
   background: transparent;
   color: var(--ds-color-text-primary);
   border: 1px solid var(--ds-color-border-editorial-mid);
-  padding: 8px;
+  padding: 8px 10px;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.05em;
@@ -343,6 +348,15 @@
   transition: all 0.2s;
   text-align: center;
   text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.actionBtn svg {
+  flex-shrink: 0;
+  margin-right: 4px;
 }
 
 .actionBtn:hover {

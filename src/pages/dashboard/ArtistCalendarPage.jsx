@@ -52,7 +52,7 @@ export default function ArtistCalendarPage() {
           });
         });
 
-        const listToUse = matched.length > 0 ? matched : events;
+        const listToUse = matched;
         setAllEvents(listToUse);
 
         // Fijar el mes inicial en el primer evento futuro si existe
@@ -118,34 +118,32 @@ export default function ArtistCalendarPage() {
 
   // Lista de eventos filtrados para las tarjetas
   const displayedEvents = useMemo(() => {
-    let result = [...allEvents];
+    let list = [...allEvents];
 
     if (selectedDay) {
-      result = result.filter(evt => {
+      const y = selectedDay.getFullYear();
+      const m = selectedDay.getMonth();
+      const d = selectedDay.getDate();
+      list = list.filter(evt => {
         if (!evt.rawDate) return false;
         const eDate = new Date(evt.rawDate);
-        return eDate.getFullYear() === selectedDay.getFullYear() &&
-               eDate.getMonth() === selectedDay.getMonth() &&
-               eDate.getDate() === selectedDay.getDate();
+        return eDate.getFullYear() === y && eDate.getMonth() === m && eDate.getDate() === d;
       });
     } else if (filterMode === "MES") {
-      result = result.filter(evt => {
+      const y = currentDate.getFullYear();
+      const m = currentDate.getMonth();
+      list = list.filter(evt => {
         if (!evt.rawDate) return false;
         const eDate = new Date(evt.rawDate);
-        return eDate.getFullYear() === currentDate.getFullYear() && eDate.getMonth() === currentDate.getMonth();
-      });
-    } else if (filterMode === "HEADLINER") {
-      result = result.filter(evt => {
-        const normName = (user?.nombre || '').toLowerCase().trim();
-        return evt.artists?.some(a => a.headliner && (a.nombre || '').toLowerCase().trim() === normName);
+        return eDate.getFullYear() === y && eDate.getMonth() === m;
       });
     }
 
-    return result;
-  }, [allEvents, selectedDay, filterMode, currentDate, user]);
+    return list;
+  }, [allEvents, selectedDay, filterMode, currentDate]);
 
   return (
-    <div className={styles.calendarPage}>
+    <div className={styles.pageRoot}>
       <EditorialHeader transparent={false} />
 
       <main className={styles.mainContainer}>
@@ -157,14 +155,7 @@ export default function ArtistCalendarPage() {
           </button>
 
           <div className={styles.titleBlock}>
-            <div className={styles.headerBadgeRow}>
-              <span className={styles.badgeNeon}>AGENDA Y RECITALES</span>
-              <span className={styles.artistNameTag}>{userName} {userHandle}</span>
-            </div>
             <h1 className={styles.pageTitle}>CALENDARIO DE FECHAS</h1>
-            <p className={styles.pageSubtitle}>
-              Gestión mensual de tus conciertos confirmados, horarios de puertas y grillas de escenarios en Tucumán.
-            </p>
           </div>
         </div>
 
@@ -274,11 +265,7 @@ export default function ArtistCalendarPage() {
             {displayedEvents.length === 0 ? (
               <div className={styles.emptyEventsState}>
                 <CalendarIcon size={36} className={styles.emptyIcon} />
-                <h3>No hay recitales registrados para este filtro</h3>
-                <p>Navegá entre los meses del calendario para ver tus próximas fechas de toque.</p>
-                <button className={styles.resetFilterBtn} onClick={() => { setFilterMode("TODOS"); setSelectedDay(null); }}>
-                  VER TODAS MIS FECHAS
-                </button>
+                <h3 style={{ margin: "6px 0 0 0", fontSize: "1rem" }}>No tenes ningun evento confirmado todavia.</h3>
               </div>
             ) : (
               <div className={styles.showCardsGrid}>
@@ -296,7 +283,7 @@ export default function ArtistCalendarPage() {
                         </span>
                         {isHeadliner && (
                           <span className={styles.headlinerBadge}>
-                            ⭐ HEADLINER
+                            ⭐ DEBUT
                           </span>
                         )}
                       </div>

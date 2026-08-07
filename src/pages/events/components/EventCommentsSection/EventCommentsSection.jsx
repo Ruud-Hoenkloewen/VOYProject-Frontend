@@ -86,8 +86,8 @@ export default function EventCommentsSection({ eventId, initialComments = [], ev
             />
             {errorMsg && <div style={{ color: '#ef4444', fontSize: '0.8rem', marginTop: '6px' }}>{errorMsg}</div>}
             <div className={styles.formFooter}>
-              <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
-                Comentando como <strong>{user?.nombre || user?.username}</strong>
+              <span className={styles.commentingNotice}>
+                Comentando como <strong className={styles.commentingUser}>{user?.nombre || user?.username}</strong>
               </span>
               <button
                 type="submit"

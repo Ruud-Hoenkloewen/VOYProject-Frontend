@@ -309,3 +309,90 @@
   text-transform: uppercase;
   cursor: pointer;
 }
+
+/* ── LIGHT MODE HIGH CONTRAST OVERRIDES ── */
+:global([data-theme="light"]) .backLinkBtn {
+  color: #334155;
+}
+
+:global([data-theme="light"]) .backLinkBtn:hover {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .tabsNavContainer {
+  border-bottom-color: #cbd5e1;
+}
+
+:global([data-theme="light"]) .tabBtn {
+  color: #64748b;
+}
+
+:global([data-theme="light"]) .tabBtn:hover {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .activeTab {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .activeTab::after {
+  background: #050811;
+}
+
+:global([data-theme="light"]) .searchBox {
+  background: #ffffff;
+  border-color: #cbd5e1;
+}
+
+:global([data-theme="light"]) .searchInput {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .searchInput::placeholder {
+  color: #64748b;
+}
+
+:global([data-theme="light"]) .robloxCard {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+:global([data-theme="light"]) .robloxCard:hover {
+  background: #f8fafc;
+  border-color: var(--ds-color-magenta-500, #c026d3);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+:global([data-theme="light"]) .robloxName {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .robloxRoleBadge {
+  color: #ea580c;
+  font-weight: 900;
+}
+
+:global([data-theme="light"]) .robloxHandle {
+  color: #c026d3;
+  font-weight: 800;
+}
+
+:global([data-theme="light"]) .robloxBio {
+  color: #334155;
+  font-weight: 500;
+}
+
+:global([data-theme="light"]) .robloxAvatarWrapper {
+  background: #f1f5f9;
+}
+
+:global([data-theme="light"]) .robloxAvatarInitials {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .loadingText,
+:global([data-theme="light"]) .emptyText {
+  color: #334155;
+  font-weight: 600;
+}

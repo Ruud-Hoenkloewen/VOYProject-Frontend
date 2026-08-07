@@ -162,7 +162,7 @@ export default function LandingPage() {
         {/* Ticker: interactivo y arrastrable con mouse y touch (celular) */}
         <DraggableEventsTicker isLoading={isLoading} previewEvents={previewEvents} />
 
-        <div className={styles.eventsCtaWrapper} data-animate>
+        <div className={styles.eventsCtaWrapper}>
           <Link to="/events" className={styles.ctaPrimary}>VER TODOS LOS EVENTOS</Link>
         </div>
       </section>

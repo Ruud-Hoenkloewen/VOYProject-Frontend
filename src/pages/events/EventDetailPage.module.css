@@ -310,15 +310,15 @@
 .tlSubtitle { font-size: 0.82rem; color: var(--ds-color-text-editorial-muted); }
 
 .tlBadge {
-  font-size: 0.62rem;
+  font-size: 0.65rem;
   font-weight: 800;
-  padding: 3px 7px;
-  border-radius: 2px;
+  padding: 3px 8px;
+  border-radius: 3px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
-.badgeGreen   { background-color: var(--ds-color-accent-primary); color: var(--ds-color-neutral-0); }
-.badgeMagenta { background-color: var(--ds-color-magenta-400); color: var(--ds-color-neutral-0); }
+.badgeGreen   { background-color: var(--ds-color-accent-primary); color: #000000; }
+.badgeMagenta { background-color: var(--ds-color-magenta-400); color: #000000; font-weight: 800; }
 
 .lineupLine {
   width: 1px;
@@ -427,18 +427,19 @@
   position: absolute;
   top: 12px;
   right: 12px;
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 800;
-  padding: 4px 8px;
-  border-radius: 2px;
+  padding: 4px 10px;
+  border-radius: 4px;
   text-transform: uppercase;
-  color: var(--ds-color-neutral-0);
+  color: #000000;
   z-index: 5;
+  letter-spacing: 0.05em;
 }
-.bg_green   { background-color: var(--ds-color-accent-primary); }
-.bg_magenta { background-color: var(--ds-color-magenta-400); }
-.bg_cyan    { background-color: var(--ds-color-cyan-400); }
-.bg_grey    { background-color: var(--ds-color-text-editorial-subtle); }
+.bg_green   { background-color: var(--ds-color-accent-primary); color: #000000; }
+.bg_magenta { background-color: var(--ds-color-magenta-400); color: #000000 !important; }
+.bg_cyan    { background-color: var(--ds-color-cyan-400); color: #000000; }
+.bg_grey    { background-color: var(--ds-color-text-editorial-subtle); color: #ffffff; }
 
 .artistCardContent { padding: 20px; display: flex; flex-direction: column; flex: 1; }
 .artistCardInfo { margin-bottom: 16px; flex: 1; }
@@ -777,4 +778,86 @@
 @keyframes toastFadeIn {
   from { opacity: 0; transform: translate(-50%, 12px); }
   to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ── LIGHT MODE TICKET CARD & OVERRIDES ── */
+:global([data-theme="light"]) .ticketCard {
+  background-color: #ffffff;
+  border: 2px solid #000000;
+  border-image: none;
+  background-image: none;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+:global([data-theme="light"]) .ticketHeader {
+  border-bottom-color: #cbd5e1;
+}
+
+:global([data-theme="light"]) .ticketType {
+  color: #050811;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+:global([data-theme="light"]) .ticketPriceValue {
+  color: #ea580c;
+  font-weight: 900;
+}
+
+:global([data-theme="light"]) .ticketFee {
+  color: #334155;
+  font-weight: 700;
+}
+
+:global([data-theme="light"]) .ticketLabel {
+  color: #050811;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+:global([data-theme="light"]) .badgeValAvailable {
+  background: #ea580c;
+  color: #000000;
+  font-weight: 900;
+  border: 1px solid #ea580c;
+}
+
+:global([data-theme="light"]) .buyButton {
+  background-color: #ea580c;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+:global([data-theme="light"]) .buyButton:hover:not(:disabled) {
+  background-color: #c2410c;
+}
+
+:global([data-theme="light"]) .outlineButton {
+  background: #ffffff;
+  color: #050811;
+  border: 1.5px solid #050811;
+  font-weight: 800;
+}
+
+:global([data-theme="light"]) .outlineButton:hover {
+  background: #f1f5f9;
+  border-color: #050811;
+  color: #050811;
+}
+
+:global([data-theme="light"]) .stickyBuyBar {
+  background: #ffffff;
+  border-top-color: #000000;
+}
+
+:global([data-theme="light"]) .stickyBuyTitle {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .stickyBuyPrice {
+  color: #ea580c;
+}
+
+:global([data-theme="light"]) .iconMagenta {
+  color: #7c3aed;
 }

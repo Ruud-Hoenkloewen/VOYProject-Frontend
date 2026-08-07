@@ -604,14 +604,24 @@ export default function ProfileEditPage() {
 
           {/* SPOTIFY REPRODUCTOR 30s (EXCLUSIVO PARA ARTISTAS) */}
           {(user?.role === 'artist' || user?.rol === 'artist' || user?.rol === 'artista') && (
-            <div className={`${styles.fieldGroup} ${styles.fieldGroupMarginTop}`} style={{ background: 'rgba(30, 215, 96, 0.04)', border: '1px solid rgba(30, 215, 96, 0.25)', padding: '20px', borderRadius: '14px', marginTop: '1.5rem' }}>
-              <label className={styles.label} style={{ color: '#1DB954', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.88rem', fontWeight: 800 }}>
+            <div 
+              className={`${styles.fieldGroup} ${styles.fieldGroupMarginTop}`} 
+              style={{ 
+                background: 'linear-gradient(135deg, rgba(30, 215, 96, 0.14) 0%, rgba(18, 20, 30, 0.4) 100%)', 
+                border: '1.5px solid #1DB954', 
+                padding: '22px', 
+                borderRadius: '16px', 
+                marginTop: '1.5rem',
+                boxShadow: '0 8px 24px rgba(30, 215, 96, 0.15)'
+              }}
+            >
+              <label className={styles.label} style={{ color: '#1DB954', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.9rem', fontWeight: 900, letterSpacing: '0.08em' }}>
                 <SpotifySVG /> SOUNDTRACK PREVIEW
               </label>
-              <p style={{ fontSize: '0.8rem', color: '#94a3b8', margin: '4px 0 12px 0', lineHeight: 1.4 }}>
+              <p style={{ fontSize: '0.85rem', color: 'var(--ds-color-text-secondary, #334155)', fontWeight: 600, margin: '6px 0 14px 0', lineHeight: 1.45 }}>
                 Pegá la URL o ID de tu canción en Spotify para que los usuarios escuchen un reproductor de 30 segundos directamente en tu perfil.
               </p>
-              <div className={styles.inputWrapper}>
+              <div className={styles.inputWrapper} style={{ borderColor: 'rgba(30, 215, 96, 0.5)' }}>
                 <input
                   className={styles.inputInner}
                   placeholder="Ej: https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT"
@@ -622,7 +632,7 @@ export default function ProfileEditPage() {
 
               {extractSpotifyTrackId(form.redesSociales.spotifyTrack) ? (
                 <div style={{ marginTop: '16px' }}>
-                  <div style={{ fontSize: '0.7rem', color: '#1DB954', fontWeight: 800, marginBottom: '8px', letterSpacing: '0.05em' }}>
+                  <div style={{ fontSize: '0.75rem', color: '#1DB954', fontWeight: 900, marginBottom: '8px', letterSpacing: '0.05em' }}>
                     ▶ VISTA PREVIA DEL REPRODUCTOR (30 SEGUNDOS):
                   </div>
                   <iframe
@@ -637,7 +647,7 @@ export default function ProfileEditPage() {
                   />
                 </div>
               ) : (
-                <div style={{ fontSize: '0.72rem', color: '#64748b', marginTop: '8px', fontStyle: 'italic' }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--ds-color-text-secondary, #475569)', fontWeight: 600, marginTop: '10px', fontStyle: 'italic' }}>
                   Podés copiar el enlace de cualquier canción desde Spotify (Compartir {'>'} Copiar enlace de canción).
                 </div>
               )}

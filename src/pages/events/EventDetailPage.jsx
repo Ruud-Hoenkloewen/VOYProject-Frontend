@@ -20,6 +20,7 @@ import ArtistGrid from "./components/ArtistGrid/ArtistGrid";
 import TicketCard from "./components/TicketCard/TicketCard";
 import EventMapPreview from "../../components/EventMapPreview/EventMapPreview";
 import EventCommentsSection from "./components/EventCommentsSection/EventCommentsSection";
+import ImageLightboxModal from "../../components/ImageLightboxModal/ImageLightboxModal";
 
 const SET_DURATION   = 55;
 const PUERTAS_OFFSET = 30;
@@ -34,6 +35,8 @@ export default function EventDetailPage() {
   const [error, setError]   = useState(null);
   const [isTogglingFav, setIsTogglingFav] = useState(false);
   const [toastNotice, setToastNotice] = useState("");
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   const isFavorite = user?.favoritos?.includes(id) || false;
 
@@ -110,7 +113,14 @@ export default function EventDetailPage() {
       {/* ── HERO ──────────────────────────────────────────────────────────── */}
       <div className={styles.hero}>
         {eventData.imageUrl && (
-          <img src={eventData.imageUrl} alt={eventData.title} className={styles.heroBg} />
+          <img 
+            src={eventData.imageUrl} 
+            alt={eventData.title} 
+            className={styles.heroBg} 
+            onClick={() => setLightboxOpen(true)}
+            title="Clic para ampliar flyer en alta resolución"
+            style={{ cursor: "zoom-in" }}
+          />
         )}
         <div className={styles.heroOverlay} />
 
@@ -278,6 +288,14 @@ export default function EventDetailPage() {
         <div className={styles.toastNotice}>
           {toastNotice}
         </div>
+      )}
+
+      {lightboxOpen && (
+        <ImageLightboxModal
+          src={eventData?.imageUrl}
+          caption={eventData?.title}
+          onClose={() => setLightboxOpen(false)}
+        />
       )}
     </div>
   );

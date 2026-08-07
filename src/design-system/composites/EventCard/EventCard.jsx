@@ -1,9 +1,11 @@
+import { useState } from "react";
 import Badge from "../../primitives/Badge/Badge";
 import Button from "../../primitives/Button/Button";
 import Card from "../../primitives/Card/Card";
 import Chip from "../../primitives/Chip/Chip";
 import Typography from "../../primitives/Typography/Typography";
 import { useNavigate } from "react-router-dom";
+import ImageLightboxModal from "../../../components/ImageLightboxModal/ImageLightboxModal";
 import styles from "./EventCard.module.css";
 
 const CalendarIcon = () => (
@@ -42,6 +44,7 @@ export default function EventCard({
   isLoading = false,
 }) {
   const navigate = useNavigate();
+  const [lightboxOpen, setLightboxOpen] = useState(false);
 
   // ESTADO DE CARGA: Retorna la versión Skeleton de la card
   if (isLoading) {
@@ -64,22 +67,28 @@ export default function EventCard({
 
   // RENDERIZADO SEGURO: Cada elemento comprueba la existencia de su dato antes de renderizarse
   return (
-    <Card highlighted={highlighted} className={styles.card}>
-      <div className={styles.media}>
-        {imageUrl && (
-          <img
-            src={imageUrl}
-            alt={title || "Evento"}
-            loading="lazy"
-            draggable={false}
-            onDragStart={(e) => e.preventDefault()}
-          />
-        )}
-        <div className={styles.topBar}>
-          {status && <Badge tone={statusTone}>{status}</Badge>}
-          {price && <span className={styles.price}>{price}</span>}
+    <>
+      <Card highlighted={highlighted} className={styles.card}>
+        <div 
+          className={styles.media}
+          onClick={() => imageUrl && setLightboxOpen(true)}
+          title="Clic para ampliar flyer en alta resolución"
+          style={{ cursor: imageUrl ? "zoom-in" : "default" }}
+        >
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt={title || "Evento"}
+              loading="lazy"
+              draggable={false}
+              onDragStart={(e) => e.preventDefault()}
+            />
+          )}
+          <div className={styles.topBar}>
+            {status && <Badge tone={statusTone}>{status}</Badge>}
+            {price && <span className={styles.price}>{price}</span>}
+          </div>
         </div>
-      </div>
       <div className={styles.content}>
         {/* Array seguro usando optional chaining y fallback a array vacío */}
         {(genres || []).length > 0 && (
@@ -125,5 +134,14 @@ export default function EventCard({
         </div>
       </div>
     </Card>
+
+    {lightboxOpen && (
+      <ImageLightboxModal
+        src={imageUrl}
+        caption={title}
+        onClose={() => setLightboxOpen(false)}
+      />
+    )}
+    </>
   );
 }

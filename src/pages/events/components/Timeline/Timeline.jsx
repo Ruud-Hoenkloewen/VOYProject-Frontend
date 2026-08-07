@@ -42,7 +42,7 @@ export default function Timeline({ doorsOpenTime = "22:00", venueCloseTime = "01
                       {artist.nombre}
                     </span>
                     {isHeadliner && (
-                      <span className={`${styles.tlBadge} ${styles.badgeMagenta}`}>HEADLINER</span>
+                      <span className={`${styles.tlBadge} ${styles.badgeMagenta}`}>DEBUT</span>
                     )}
                     {!isHeadliner && isApertura && artists.length > 1 && (
                       <span className={`${styles.tlBadge} ${styles.badgeGreen}`}>APERTURA</span>

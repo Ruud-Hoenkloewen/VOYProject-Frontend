@@ -247,9 +247,90 @@
   word-break: break-word;
 }
 
+.commentingNotice {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.commentingUser {
+  color: #ffffff;
+}
+
 .emptyComments {
   padding: 16px 0;
   color: #64748b;
   font-size: 0.88rem;
   font-style: italic;
+}
+
+/* ── LIGHT MODE HIGH CONTRAST OVERRIDES ── */
+:global([data-theme="light"]) .headerRow {
+  border-bottom-color: #cbd5e1;
+}
+
+:global([data-theme="light"]) .title {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .textarea {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  color: #050811;
+}
+
+:global([data-theme="light"]) .textarea::placeholder {
+  color: #64748b;
+}
+
+:global([data-theme="light"]) .textarea:focus {
+  border-color: var(--ds-color-accent-primary);
+  background: #ffffff;
+}
+
+:global([data-theme="light"]) .commentingNotice {
+  color: #475569;
+}
+
+:global([data-theme="light"]) .commentingUser {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .loginNotice {
+  color: #334155;
+  font-weight: 600;
+}
+
+:global([data-theme="light"]) .loginNotice strong {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .submitBtn {
+  background: #00c853;
+  color: #ffffff;
+  font-weight: 900;
+}
+
+:global([data-theme="light"]) .submitBtn:hover:not(:disabled) {
+  background: #00b048;
+}
+
+:global([data-theme="light"]) .commentCard {
+  border-bottom-color: #e2e8f0;
+}
+
+:global([data-theme="light"]) .authorName {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .authorUsername {
+  color: #475569;
+}
+
+:global([data-theme="light"]) .commentText {
+  color: #0f172a;
+}
+
+:global([data-theme="light"]) .emptyComments {
+  color: #334155;
+  font-weight: 600;
 }

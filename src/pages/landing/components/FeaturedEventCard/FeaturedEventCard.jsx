@@ -95,7 +95,7 @@ export default function FeaturedEventCard({ event, isLoading }) {
                     <span className={styles.fecLineupBar} aria-hidden="true" />
                     <span className={styles.fecLineupName}>{name}</span>
                     {isHeadliner && (
-                      <span className={styles.fecHeadlinerBadge}>HEADLINER</span>
+                      <span className={styles.fecHeadlinerBadge}>DEBUT</span>
                     )}
                   </li>
                 );

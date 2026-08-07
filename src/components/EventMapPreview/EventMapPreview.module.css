@@ -80,3 +80,18 @@
   font-size: 0.85rem;
   text-align: center;
 }
+
+/* ── LIGHT MODE OVERRIDES ── */
+:global([data-theme="light"]) .directionsBtn {
+  background: #7c3aed;
+  color: #ffffff;
+  font-weight: 800;
+}
+
+:global([data-theme="light"]) .directionsBtn:hover {
+  background: #6d28d9;
+}
+
+:global([data-theme="light"]) .addressIcon {
+  color: #7c3aed;
+}

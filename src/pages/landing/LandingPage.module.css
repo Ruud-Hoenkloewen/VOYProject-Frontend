@@ -68,11 +68,10 @@
   margin: 0;
 }
 
-/* ── ANIMATIONS ──────────────────────────────── */
 @keyframes fadeInUpStagger {
   0% {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(10px);
   }
   100% {
     opacity: 1;
@@ -82,14 +81,14 @@
 
 .animateStagger {
   opacity: 0;
-  animation: fadeInUpStagger 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeInUpStagger 0.25s ease-out forwards;
 }
 
-.delay1 { animation-delay: 0.1s; }
-.delay2 { animation-delay: 0.25s; }
-.delay3 { animation-delay: 0.4s; }
-.delay4 { animation-delay: 0.55s; }
-.delay5 { animation-delay: 0.7s; }
+.delay1 { animation-delay: 0.04s; }
+.delay2 { animation-delay: 0.08s; }
+.delay3 { animation-delay: 0.12s; }
+.delay4 { animation-delay: 0.16s; }
+.delay5 { animation-delay: 0.2s; }
 
 /* ── HERO ──────────────────────────────── */
 .hero {
@@ -1524,13 +1523,14 @@
 /* Badge HEADLINER — magenta, igual al mockup */
 .fecHeadlinerBadge {
   display: inline-block;
-  font-size: 0.55rem;
-  font-weight: 900;
-  letter-spacing: 0.1em;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 0.18rem 0.5rem;
+  padding: 0.2rem 0.55rem;
   background: var(--ds-color-accent-secondary);
-  color: var(--ds-color-bg-editorial);
+  color: #000000;
+  border-radius: 4px;
   margin-left: 0.25rem;
 }
 
@@ -1817,6 +1817,12 @@
 
 :global([data-theme="light"]) .fecLeft {
   border-right-color: rgba(0, 0, 0, 0.1);
+}
+
+:global([data-theme="light"]) .fecHeadlinerBadge {
+  background: #7c3aed;
+  color: #ffffff;
+  font-weight: 700;
 }
 
 /* ── RESPONSIVE ────────────────────────── */

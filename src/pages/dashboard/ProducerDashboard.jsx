@@ -39,12 +39,22 @@ export default function ProducerDashboard() {
 
   const handleTogglePause = async (eventId, currentStatus) => {
     try {
-      const newStatus = currentStatus === "PAUSADO" ? "PUBLICADO" : "PAUSADO";
-      await api.patch(`/events/${eventId}`, { status: newStatus });
+      const isCurrentlyPaused = currentStatus === "PAUSADO";
+      if (isCurrentlyPaused) {
+        await api.put(`/events/${eventId}`, { estadoPublicacion: 'ACTIVO' });
+      } else {
+        await api.patch(`/events/${eventId}/pause`);
+      }
       setEvents((prev) =>
-        prev.map((e) => (e.id === eventId ? { ...e, status: newStatus } : e))
+        prev.map((e) => {
+          if (e.id === eventId) {
+            const nextStatus = isCurrentlyPaused ? "DISPONIBLE" : "PAUSADO";
+            return { ...e, status: nextStatus, estadoPublicacion: isCurrentlyPaused ? "ACTIVO" : "PAUSADO" };
+          }
+          return e;
+        })
       );
-      showToastMsg(newStatus === "PAUSADO" ? "Evento pausado correctamente." : "Evento reactivado correctamente.");
+      showToastMsg(isCurrentlyPaused ? "Evento reactivado correctamente." : "Evento pausado correctamente.");
     } catch (err) {
       console.error("Error al cambiar estado del evento:", err);
       showToastMsg("Error al cambiar el estado del evento.", true);
@@ -95,11 +105,6 @@ export default function ProducerDashboard() {
           <div className={styles.titleArea}>
             <span className={styles.eyebrow}>PRODUCTOR DIGITAL</span>
             <h1 className={styles.title}>PANEL PRODUCTOR</h1>
-          </div>
-          <div>
-            <Link to="/events/create" className={styles.createBtn}>
-              + Crear Nuevo Evento
-            </Link>
           </div>
         </div>
 
@@ -181,7 +186,7 @@ export default function ProducerDashboard() {
                           ? styles.statusCancelled 
                           : styles.statusActive
                     }`}>
-                      {evt.status}
+                      {isPaused ? "PAUSADO" : evt.status}
                     </span>
 
                     {/* Title placed cleanly over image */}

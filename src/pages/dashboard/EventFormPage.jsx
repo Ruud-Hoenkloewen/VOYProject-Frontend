@@ -9,7 +9,45 @@ import styles from "./EventFormPage.module.css";
 
 import { fetchRegisteredArtists } from "../../services/userService";
 
-const DEFAULT_GENRES = ["Punk", "Rock", "Metal", "Hardcore", "Post-Hardcore", "Grunge", "Post-Punk", "Noise Rock", "Shoegaze", "Indie"];
+const DEFAULT_GENRES = [
+  "Indie", "Rock", "Pop", "Punk", "Metal", "Trap",
+  "Hip-Hop", "Electrónica", "Cumbia", "Folk", "Shoegaze", "Post-Punk"
+];
+
+const TUCUMAN_VENUES = [
+  "La Gesta Cultural, Rondeau 1050, San Miguel de Tucumán",
+  "Santos Discépolo, Jujuy 434, San Miguel de Tucumán",
+  "La Casona del Centro, General Paz 450, San Miguel de Tucumán",
+  "Oskar Bar, Virgen de la Merced 611, San Miguel de Tucumán",
+  "Robert Nesta Club, San Martín 1129, San Miguel de Tucumán",
+  "Magic Music Box, José Colombres 427, San Miguel de Tucumán",
+  "Teatro San Martín, Av. Sarmiento 601, San Miguel de Tucumán",
+  "Centro Cultural Virla, 25 de Mayo 265, San Miguel de Tucumán",
+  "Teatro Alberdi, Jujuy 99, San Miguel de Tucumán",
+  "Casa Dumit, Italia 536, San Miguel de Tucumán",
+  "Club Tucumán, Laprida 135, San Miguel de Tucumán",
+  "Palacio de los Deportes, Av. Soldati 300, San Miguel de Tucumán",
+  "Teatro Rosita Ávila, Las Piedras 1500, San Miguel de Tucumán",
+  "Sociedad Francesa, San Juan 751, San Miguel de Tucumán",
+  "El Árbol de Galeano, Virgen de la Merced 435, San Miguel de Tucumán",
+  "Polo Cultural La Usina, Av. Sarmiento 1100, San Miguel de Tucumán",
+  "Punto de Encuentro, Muñecas 350, San Miguel de Tucumán",
+  "Club Floresta, Av. Colón 471, San Miguel de Tucumán",
+  "Estadio Central Córdoba, Av. Alem 790, San Miguel de Tucumán",
+  "Sportivo Patria, San Lorenzo 1100, San Miguel de Tucumán",
+  "La Bohemica, Catamarca 450, San Miguel de Tucumán",
+  "Bar de Barrio, Santa Fe 540, San Miguel de Tucumán",
+  "Tucumán Lawn Tennis Club, Av. Gobernador del Campo 350, San Miguel de Tucumán",
+  "Plaza Independencia, 25 de Mayo 1, San Miguel de Tucumán",
+  "La Coupole, Av. Aconquija 2300, Yerba Buena, Tucumán",
+  "Casa Managua, San Juan 1015, San Miguel de Tucumán",
+  "Teatro de la Paz, 9 de Julio 162, San Miguel de Tucumán",
+  "Club Villa Luján, Don Bosco 2280, San Miguel de Tucumán",
+  "Sociedad Española, Laprida 563, San Miguel de Tucumán",
+  "Sociedad Sirio Libanesa, Maipú 575, San Miguel de Tucumán",
+  "Sociedad Antoniana, Bartolomé Mitre 250, Tafí Viejo, Tucumán",
+  "La Vieja Estación, San Martín 150, Tafí Viejo, Tucumán"
+];
 
 export default function EventFormPage() {
   const navigate = useNavigate();
@@ -37,6 +75,8 @@ export default function EventFormPage() {
   const [loading, setLoading] = useState(false);
   const [fetching, setFetching] = useState(false);
   const [toast, setToast] = useState(null);
+  const [isVenueFocused, setIsVenueFocused] = useState(false);
+  const [activeArtistIndexFocused, setActiveArtistIndexFocused] = useState(null);
 
   useEffect(() => {
     fetchRegisteredArtists()
@@ -179,7 +219,7 @@ export default function EventFormPage() {
   };
 
   const handleArtistHeadlinerChange = (index, isChecked) => {
-    setArtists(prev => prev.map((art, idx) => idx === index ? { ...art, headliner: isChecked } : art));
+    setArtists(prev => prev.map((art, idx) => idx === index ? { ...art, headliner: isChecked, debut: isChecked } : art));
   };
 
   const handleAddArtist = (e) => {
@@ -192,19 +232,40 @@ export default function EventFormPage() {
     setArtists(prev => prev.filter((_, idx) => idx !== index));
   };
 
-  // Photo Uploader & Base64 Converter
+  // Photo Uploader & Compressed Base64 Converter
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Show preview URL locally
-    const objectUrl = URL.createObjectURL(file);
-    setFlyerPreview(objectUrl);
-
-    // Convert file to Base64 to save on the backend
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setForm(prev => ({ ...prev, imagen: reader.result }));
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        let width = img.width;
+        let height = img.height;
+
+        const maxDim = 1200;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.8);
+        setForm(prev => ({ ...prev, imagen: compressedDataUrl }));
+        setFlyerPreview(compressedDataUrl);
+      };
+      img.src = event.target.result;
     };
     reader.readAsDataURL(file);
   };
@@ -251,10 +312,19 @@ export default function EventFormPage() {
             (a.nombre || '').toLowerCase() === art.nombre.trim().toLowerCase() ||
             (a.username || '').toLowerCase() === art.nombre.trim().toLowerCase()
           );
+
+          let userId = null;
+          if (art.usuario) {
+            userId = typeof art.usuario === 'object' ? (art.usuario._id || art.usuario.id) : art.usuario;
+          } else if (matched) {
+            userId = matched._id;
+          }
+
           return {
             nombre: art.nombre.trim(),
-            headliner: Boolean(art.headliner),
-            usuario: art.usuario || (matched ? matched._id : null),
+            headliner: Boolean(art.headliner || art.debut),
+            debut: Boolean(art.debut || art.headliner),
+            usuario: userId || undefined,
             username: art.username || (matched ? matched.username : null)
           };
         });
@@ -341,7 +411,6 @@ export default function EventFormPage() {
                     <h2 className={styles.sectionTitle}>
                       <CalendarIcon size={16} color="var(--ds-color-cyan-400)" /> Información Básica
                     </h2>
-                    <p className={styles.sectionSubtitle}>Nombre, fecha y horario de inicio del show</p>
                   </div>
                 </div>
 
@@ -388,6 +457,7 @@ export default function EventFormPage() {
                       id="hora"
                       type="time" 
                       name="hora"
+                      step="600"
                       value={form.hora}
                       onChange={handleChange}
                       onClick={(e) => e.target.showPicker && e.target.showPicker()}
@@ -408,11 +478,10 @@ export default function EventFormPage() {
                     <h2 className={styles.sectionTitle}>
                       <MapPinIcon size={16} color="#A855F7" /> Ubicación y Venue
                     </h2>
-                    <p className={styles.sectionSubtitle}>Dirección del lugar y vista previa interactiva en mapa</p>
                   </div>
                 </div>
 
-                <div className={styles.field} style={{ marginBottom: "20px" }}>
+                <div className={styles.field} style={{ marginBottom: "20px", position: "relative" }}>
                   <label className={styles.label} htmlFor="lugar">
                     Dirección / Lugar <span className={styles.requiredStar}>*</span>
                   </label>
@@ -422,9 +491,42 @@ export default function EventFormPage() {
                     name="lugar"
                     value={form.lugar}
                     onChange={handleChange}
+                    onFocus={() => setIsVenueFocused(true)}
+                    onBlur={() => {
+                      setTimeout(() => {
+                        setIsVenueFocused(false);
+                        if (form.lugar && form.lugar.trim()) {
+                          const q = form.lugar.trim().toLowerCase();
+                          const match = TUCUMAN_VENUES.find(v => v.toLowerCase().includes(q));
+                          if (match) {
+                            setForm(prev => ({ ...prev, lugar: match }));
+                          }
+                        }
+                      }, 150);
+                    }}
                     className={`${styles.input} ${errors.lugar ? styles.inputError : ""}`}
-                    placeholder="Ej. Oskar Bar, Virgen de la Merced 611, Tucumán"
+                    placeholder="Ej. Santos Discépolo, Jujuy 434, San Miguel de Tucumán"
+                    autoComplete="off"
                   />
+                  {isVenueFocused && form.lugar.trim().length >= 1 && (
+                    <div className={styles.customAutocompleteDropdown}>
+                      {TUCUMAN_VENUES
+                        .filter(v => v.toLowerCase().includes(form.lugar.trim().toLowerCase()))
+                        .map((address, vIdx) => (
+                          <div 
+                            key={vIdx}
+                            className={styles.autocompleteOption}
+                            onMouseDown={() => {
+                              setForm(prev => ({ ...prev, lugar: address }));
+                              setIsVenueFocused(false);
+                            }}
+                          >
+                            <MapPinIcon size={14} color="var(--ds-color-cyan-400)" />
+                            <span>{address}</span>
+                          </div>
+                        ))}
+                    </div>
+                  )}
                   {errors.lugar && <span className={styles.errorMsg}>{errors.lugar}</span>}
                 </div>
 
@@ -445,7 +547,6 @@ export default function EventFormPage() {
                     <h2 className={styles.sectionTitle}>
                       <DollarIcon size={16} color="#00FF9F" /> Entradas y Stock
                     </h2>
-                    <p className={styles.sectionSubtitle}>Establecé el precio individual y la cantidad disponible de tickets</p>
                   </div>
                 </div>
 
@@ -490,33 +591,52 @@ export default function EventFormPage() {
                     <h2 className={styles.sectionTitle}>
                       <PeopleIcon size={16} color="var(--ds-color-cyan-400)" /> Lineup de Artistas <span className={styles.requiredStar}>*</span>
                     </h2>
-                    <p className={styles.sectionSubtitle}>Agregá las bandas participantes y destacá al headliner principal</p>
                   </div>
                 </div>
 
                 <div className={styles.artistsList}>
                   {artists.map((artist, idx) => (
                     <div key={idx} className={styles.artistRow}>
-                      <div className={styles.field} style={{ flex: 1, gap: 0 }}>
+                      <div className={styles.field} style={{ flex: 1, gap: 0, position: "relative" }}>
                         <input 
                           type="text" 
-                          list="registered-artists-list"
                           placeholder="Nombre del artista / banda"
                           value={artist.nombre}
                           onChange={(e) => handleArtistNameChange(idx, e.target.value)}
+                          onFocus={() => setActiveArtistIndexFocused(idx)}
+                          onBlur={() => setTimeout(() => setActiveArtistIndexFocused(null), 200)}
                           className={styles.input}
                           autoComplete="off"
                         />
+                        {activeArtistIndexFocused === idx && artist.nombre.trim().length >= 1 && (
+                          <div className={styles.customAutocompleteDropdown}>
+                            {registeredArtists
+                              .filter(a => a.nombre.toLowerCase().includes(artist.nombre.trim().toLowerCase()) || (a.username && a.username.toLowerCase().includes(artist.nombre.trim().toLowerCase())))
+                              .map((a) => (
+                                <div 
+                                  key={a._id || a.username}
+                                  className={styles.autocompleteOption}
+                                  onMouseDown={() => {
+                                    handleArtistNameChange(idx, a.nombre);
+                                    setActiveArtistIndexFocused(null);
+                                  }}
+                                >
+                                  <PeopleIcon size={14} color="var(--ds-color-cyan-400)" />
+                                  <span><strong>{a.nombre}</strong> {a.username ? `@${a.username}` : ''} {a.lema ? `- ${a.lema}` : ''}</span>
+                                </div>
+                              ))}
+                          </div>
+                        )}
                       </div>
                       
                       <label className={styles.headlinerCheck}>
                         <input 
                           type="checkbox"
-                          checked={artist.headliner}
+                          checked={artist.headliner || artist.debut}
                           onChange={(e) => handleArtistHeadlinerChange(idx, e.target.checked)}
                           className={styles.checkbox}
                         />
-                        <span>Headliner</span>
+                        <span>Debut</span>
                       </label>
 
                       <button 
@@ -530,14 +650,6 @@ export default function EventFormPage() {
                       </button>
                     </div>
                   ))}
-
-                  <datalist id="registered-artists-list">
-                    {registeredArtists.map((a) => (
-                      <option key={a._id || a.username} value={a.nombre}>
-                        {a.username ? `@${a.username}` : ''} {a.lema ? `- ${a.lema}` : ''}
-                      </option>
-                    ))}
-                  </datalist>
                 </div>
                 
                 {errors.artists && <div className={styles.errorMsg} style={{ marginTop: "10px" }}>{errors.artists}</div>}
@@ -567,7 +679,6 @@ export default function EventFormPage() {
                     <h2 className={styles.sectionTitle}>
                       <EyeIcon size={16} color="#FF007A" /> Imagen / Flyer
                     </h2>
-                    <p className={styles.sectionSubtitle}>Subí la gráfica oficial o seleccioná un flyer preset</p>
                   </div>
                 </div>
 
@@ -600,39 +711,6 @@ export default function EventFormPage() {
                     </label>
                   )}
 
-                  {/* Preset Flyers selection */}
-                  <div style={{ marginTop: '12px' }}>
-                    <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--ds-color-text-secondary)', display: 'block', marginBottom: '6px' }}>
-                      O SELECCIONÁ UN FLYER PRESET:
-                    </span>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
-                      {[
-                        '/flyer-danny-proyectil.png',
-                        '/flyer-sabbath-fest.png',
-                        '/flyer-lacrifagia.png',
-                        '/flyer-las-cosas-inexplicables.png'
-                      ].map((presetUrl, pIdx) => (
-                        <div 
-                          key={pIdx}
-                          onClick={() => {
-                            setForm(prev => ({ ...prev, imagen: presetUrl }));
-                            setFlyerPreview(presetUrl);
-                          }}
-                          style={{
-                            height: '56px',
-                            borderRadius: '8px',
-                            overflow: 'hidden',
-                            cursor: 'pointer',
-                            border: flyerPreview === presetUrl ? '2px solid #00FF9F' : '1px solid rgba(255,255,255,0.1)',
-                            opacity: flyerPreview === presetUrl ? 1 : 0.7
-                          }}
-                        >
-                          <img src={presetUrl} alt={`Preset ${pIdx}`} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
                   <div style={{ marginTop: '12px' }}>
                     <span style={{ fontSize: '0.72rem', fontWeight: 800, color: 'var(--ds-color-text-secondary)', display: 'block', marginBottom: '4px' }}>
                       URL DE LA IMAGEN (OPCIONAL):
@@ -662,7 +740,6 @@ export default function EventFormPage() {
                     <h2 className={styles.sectionTitle}>
                       <DiscIcon size={16} color="#A855F7" /> Géneros Musicales
                     </h2>
-                    <p className={styles.sectionSubtitle}>Etiquetá los estilos musicales de tu evento</p>
                   </div>
                 </div>
 
@@ -722,7 +799,6 @@ export default function EventFormPage() {
                     <h2 className={styles.sectionTitle}>
                       <PlusIcon size={16} color="#00FF9F" /> Descripción del Show
                     </h2>
-                    <p className={styles.sectionSubtitle}>Información adicional, condiciones de ingreso y detalles</p>
                   </div>
                 </div>
 

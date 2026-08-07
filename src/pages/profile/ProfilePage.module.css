@@ -49,15 +49,15 @@
   justify-content: space-between;
   align-items: center;
   padding: 16px 32px;
-  background-color: var(--ds-color-bg-canvas);
-  border-bottom: 1px solid var(--ds-color-border-editorial-mid);
+  background-color: #12141f;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .brandTextOnly {
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: var(--ds-color-text-primary);
+  color: #ffffff;
   font-weight: 900;
   letter-spacing: 0.15em;
   font-size: 1.1rem;
@@ -70,9 +70,9 @@
 }
 
 .editBtn {
-  background: var(--ds-color-bg-surface-muted);
-  border: 1px solid var(--ds-color-border-editorial-mid);
-  color: var(--ds-color-text-primary);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
   padding: 8px 16px;
   border-radius: 6px;
   font-size: 0.75rem;
@@ -88,16 +88,16 @@
 }
 
 .editBtn:hover {
-  background: var(--ds-color-bg-editorial-surface);
-  border-color: var(--ds-color-accent-primary);
-  color: var(--ds-color-accent-primary);
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #00FF9F;
+  color: #00FF9F;
   transform: translateY(-1px);
 }
 
 .logoutBtn {
   background: transparent;
-  border: 1px solid var(--ds-color-border-editorial-mid);
-  color: var(--ds-color-editorial-muted);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -112,7 +112,7 @@
 }
 
 .logoutBtn:hover {
-  background: rgba(239, 68, 68, 0.1);
+  background: rgba(239, 68, 68, 0.15);
   color: var(--ds-color-red-400);
   border-color: var(--ds-color-red-400);
 }
@@ -249,12 +249,12 @@
 /* Reproductor de Spotify para Artistas */
 .spotifyPlayerCard {
   margin-top: 1.25rem;
-  background: rgba(30, 215, 96, 0.04);
-  border: 1px solid rgba(30, 215, 96, 0.2);
+  background: linear-gradient(135deg, rgba(30, 215, 96, 0.12) 0%, rgba(18, 20, 30, 0.9) 100%);
+  border: 1.5px solid rgba(30, 215, 96, 0.4);
   border-radius: 16px;
-  padding: 16px 20px;
+  padding: 18px 22px;
   backdrop-filter: blur(12px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(30, 215, 96, 0.15);
 }
 
 .spotifyPlayerHeader {
@@ -573,16 +573,16 @@
   width: 100%;
   box-sizing: border-box;
   border: 1px dashed var(--ds-color-border-editorial-mid);
-  background-color: var(--ds-color-bg-editorial-surface);
+  background-color: transparent;
   border-radius: 16px;
-  padding: 44px 24px;
+  padding: 32px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 12px;
   text-align: center;
-  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
   transition: border-color 0.25s ease;
 }
 
@@ -967,4 +967,71 @@
   margin: 0;
   font-size: 0.9rem;
   font-weight: 500;
+}
+
+/* ── LIGHT MODE HIGH CONTRAST OVERRIDES ── */
+:global([data-theme="light"]) .avatarSquare {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+}
+
+:global([data-theme="light"]) .displayName {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .username {
+  color: var(--ds-color-magenta-500, #c026d3);
+  font-weight: 800;
+}
+
+:global([data-theme="light"]) .locationBlock {
+  color: #334155;
+  font-weight: 600;
+}
+
+:global([data-theme="light"]) .metaDivider {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+:global([data-theme="light"]) .statItemClickable {
+  color: #334155;
+  font-weight: 600;
+}
+
+:global([data-theme="light"]) .statNumber {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .tab {
+  color: #475569;
+  font-weight: 700;
+}
+
+:global([data-theme="light"]) .tab:hover {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .tabActive {
+  color: #050811;
+}
+
+:global([data-theme="light"]) .emptyState {
+  background-color: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+:global([data-theme="light"]) .emptyText {
+  color: #334155;
+  font-weight: 600;
+}
+
+:global([data-theme="light"]) .bioText {
+  color: #0f172a;
+}
+
+:global([data-theme="light"]) .spotifyPlayerCard {
+  background: linear-gradient(135deg, rgba(30, 215, 96, 0.14) 0%, #ffffff 100%);
+  border: 1.5px solid #1DB954;
+  box-shadow: 0 8px 24px rgba(30, 215, 96, 0.2);
 }
