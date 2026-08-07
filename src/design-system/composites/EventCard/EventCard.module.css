@@ -40,16 +40,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
   z-index: 2;
 }
 
 .price {
+  font-size: 0.75rem;
   font-weight: var(--ds-font-weight-bold);
   color: var(--ds-color-action-primary-bg);
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.85);
   backdrop-filter: blur(4px);
-  padding: var(--ds-space-1) var(--ds-space-2);
+  padding: 3px 7px;
   border-radius: var(--ds-radius-sm);
+  white-space: nowrap;
 }
 
 .content {

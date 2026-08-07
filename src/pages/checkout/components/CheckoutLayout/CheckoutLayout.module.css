@@ -405,3 +405,35 @@
   }
 }
 
+/* ── LIGHT MODE OVERRIDES ── */
+:global([data-theme="light"]) .header {
+  background: #12141f !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+:global([data-theme="light"]) .headerEyebrow {
+  color: #94a3b8 !important;
+}
+
+:global([data-theme="light"]) .headerEventName {
+  color: #ffffff !important;
+}
+
+:global([data-theme="light"]) .backBtn {
+  border-color: #334155;
+  color: #ff5722;
+}
+
+:global([data-theme="light"]) .backBtn:hover {
+  border-color: #ff5722;
+  background: rgba(255, 87, 34, 0.12);
+}
+
+:global([data-theme="light"]) .backTextBtn {
+  color: #cbd5e1;
+}
+
+:global([data-theme="light"]) .backTextBtn:hover {
+  color: #ffffff;
+}
+

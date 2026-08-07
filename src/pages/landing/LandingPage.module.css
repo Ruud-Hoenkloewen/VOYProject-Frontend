@@ -1912,6 +1912,63 @@
   .footerNav {
     gap: 1rem;
   }
+
+  /* ── CAROUSEL RESPONSIVE ── */
+  .carouselStage {
+    padding: 1.5rem 0 1rem;
+  }
+
+  .carouselFlyerSide {
+    display: none !important;
+  }
+
+  .carouselFlyerCenter {
+    flex: 0 0 100% !important;
+    max-width: 280px !important;
+    margin: 0 auto;
+  }
+
+  .carouselFlyerCenter .flyerImg {
+    max-width: 280px !important;
+  }
+
+  .carouselArrow {
+    width: 40px !important;
+    height: 40px !important;
+    font-size: 1.25rem !important;
+    flex: 0 0 40px !important;
+  }
+
+  .carouselArrowLeft { margin-left: 0.5rem !important; }
+  .carouselArrowRight { margin-right: 0.5rem !important; }
+
+  /* ── FEATURED EVENT CARD RESPONSIVE ── */
+  .featuredEventCard {
+    display: flex !important;
+    flex-direction: column !important;
+    margin: 0 1rem 2rem !important;
+    border-radius: 8px;
+  }
+
+  .fecLeft {
+    border-right: none !important;
+    border-bottom: 1px solid var(--ds-color-border-editorial) !important;
+    padding: 1.25rem 1rem !important;
+  }
+
+  .fecRight {
+    padding: 1.25rem 1rem !important;
+  }
+
+  .fecTitle {
+    font-size: 1.35rem !important;
+    word-break: break-word;
+  }
+
+  .fecLineupNum {
+    width: 1.5rem;
+    padding-right: 0.3rem;
+  }
 }
 
 /* ── MOBILE S ─ ≤480px ──────────────────── */
