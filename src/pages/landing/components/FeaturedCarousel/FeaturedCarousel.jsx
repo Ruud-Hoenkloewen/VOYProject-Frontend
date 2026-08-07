@@ -8,20 +8,6 @@ import styles from "../../LandingPage.module.css";
 /** Datos hardcodeados — Shows destacados semana 25–31 de mayo 2026 */
 const FEATURED_SHOWS = [
   {
-    id: 1,
-    img: "/flyer-danny-proyectil.png",
-    alt: "New Direction Show, Danny Proyectil, Entre Penumbras, Lacrifagia",
-    title: "New Direction Show",
-    subtitle: "Danny Proyectil · Entre Penumbras · Lacrifagia · Para Salir de la Oscuridad",
-    date: "12.09.2026",
-    time: "19hs",
-    venue: "Oskar, Virgen de la Merced 611",
-    price: "Anticipadas $3500",
-    genre: "POST-PUNK / GRUNGE",
-    status: "DISPONIBLE",
-    statusTone: "success",
-  },
-  {
     id: 2,
     img: "/flyer-las-cosas-inexplicables.png",
     alt: "Los Días No Vividos, Debut de Lacrifagia, Para Salir de la Oscuridad",
@@ -32,20 +18,6 @@ const FEATURED_SHOWS = [
     venue: "Utopía House, Bernabé Aráoz 189",
     price: "Anticipadas $2500",
     genre: "POST-HARDCORE / EMO",
-    status: "DISPONIBLE",
-    statusTone: "success",
-  },
-  {
-    id: 3,
-    img: "/flyer-lacrifagia.png",
-    alt: "Para Salir de la Oscuridad, Lacrifagia, Corpúsculos de Krause",
-    title: "Para Salir de la Oscuridad",
-    subtitle: "Lacrifagia · Para Salir de la Oscuridad · Corpúsculos de Krause",
-    date: "08.05.2026",
-    time: "21hs",
-    venue: "Bar Floresta, Av. Colón 471",
-    price: "Anticipadas $5000",
-    genre: "POST-HARDCORE / ROCK ALTERNATIVO",
     status: "DISPONIBLE",
     statusTone: "success",
   },
@@ -63,6 +35,20 @@ const FEATURED_SHOWS = [
     status: "DISPONIBLE",
     statusTone: "success",
   },
+  {
+    id: 1,
+    img: "/flyer-danny-proyectil.png",
+    alt: "New Direction Show, Danny Proyectil, Entre Penumbras, Lacrifagia",
+    title: "New Direction Show",
+    subtitle: "Danny Proyectil · Entre Penumbras · Lacrifagia · Para Salir de la Oscuridad",
+    date: "12.09.2026",
+    time: "19hs",
+    venue: "Oskar, Virgen de la Merced 611",
+    price: "Anticipadas $3500",
+    genre: "POST-PUNK / GRUNGE",
+    status: "DISPONIBLE",
+    statusTone: "success",
+  },
 ];
 
 /**
@@ -71,7 +57,7 @@ const FEATURED_SHOWS = [
  * Navegación con flechas prev/next + dots. Card del evento central debajo.
  */
 export default function FeaturedCarousel() {
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(1);
 
   // Traemos los eventos del backend sin límite estricto para poder buscar los destacados
   const { events: backendEvents, isLoading } = useEvents();
@@ -80,30 +66,28 @@ export default function FeaturedCarousel() {
   const getFeaturedAndPaddedEvents = () => {
     if (isLoading || !backendEvents || backendEvents.length === 0) return [];
 
-    const saved = localStorage.getItem("voy_featured_events");
-    let featuredIds = [];
-    if (saved) {
-      try {
-        featuredIds = JSON.parse(saved);
-      } catch (e) {}
+    const featuredTitles = [
+      "Los Días No Vividos",
+      "Sabbath Fest, Edición Tucumán",
+      "New Direction Show"
+    ];
+
+    // Find each of the featured events in backendEvents by matching title
+    const featured = featuredTitles
+      .map(title => backendEvents.find(evt => evt.title === title))
+      .filter(Boolean);
+
+    // If we have all 3, return them
+    if (featured.length === 3) {
+      return featured;
     }
 
-    // Filtrar los que tengan su ID en la lista de destacados
-    const featured = backendEvents.filter(evt => featuredIds.includes(evt.id));
-
-    // Si no hay ninguno destacado por el admin, tomamos los primeros 3
-    if (featured.length === 0) {
-      return backendEvents.slice(0, 3);
-    }
-
-    // Si hay destacados pero son menos de 3, rellenamos con otros para mantener la estructura tridimensional
+    // Otherwise, fill with whatever is available, but prioritize the ones we want
     let finalEvents = [...featured];
-    if (finalEvents.length < 3 && backendEvents.length >= 3) {
-      for (const evt of backendEvents) {
-        if (finalEvents.length >= 3) break;
-        if (!finalEvents.some(fe => fe.id === evt.id)) {
-          finalEvents.push(evt);
-        }
+    for (const evt of backendEvents) {
+      if (finalEvents.length >= 3) break;
+      if (!finalEvents.some(fe => fe.id === evt.id)) {
+        finalEvents.push(evt);
       }
     }
     return finalEvents;
