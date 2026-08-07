@@ -10,8 +10,9 @@ import styles from "./EventFormPage.module.css";
 import { fetchRegisteredArtists } from "../../services/userService";
 
 const DEFAULT_GENRES = [
-  "Indie", "Rock", "Pop", "Punk", "Metal", "Trap",
-  "Hip-Hop", "Electrónica", "Cumbia", "Folk", "Shoegaze", "Post-Punk"
+  "Rock", "Post-Rock", "Hardcore", "Grunge", "Post-Punk", 
+  "Metal", "Stoner Rock", "Noise Rock", "Heavy Rock", "Indie Rock", 
+  "Alternativo", "Shoegaze", "Punk"
 ];
 
 const TUCUMAN_VENUES = [
@@ -404,9 +405,6 @@ export default function EventFormPage() {
               {/* Sección 1: Información Básica */}
               <div id="sec-info" className={styles.card}>
                 <div className={styles.sectionHeader}>
-                  <span className={`${styles.sectionBadge} ${isInfoComplete ? styles.badgeSuccess : styles.badgeCyan}`}>
-                    {isInfoComplete ? '✓' : '01'}
-                  </span>
                   <div>
                     <h2 className={styles.sectionTitle}>
                       <CalendarIcon size={16} color="var(--ds-color-cyan-400)" /> Información Básica
@@ -471,9 +469,6 @@ export default function EventFormPage() {
               {/* Sección 2: Lugar e Ubicación */}
               <div id="sec-venue" className={styles.card}>
                 <div className={styles.sectionHeader}>
-                  <span className={`${styles.sectionBadge} ${isVenueComplete ? styles.badgeSuccess : styles.badgePurple}`}>
-                    {isVenueComplete ? '✓' : '02'}
-                  </span>
                   <div>
                     <h2 className={styles.sectionTitle}>
                       <MapPinIcon size={16} color="#A855F7" /> Ubicación y Venue
@@ -540,9 +535,6 @@ export default function EventFormPage() {
               {/* Sección 3: Precio y Capacidad */}
               <div id="sec-tickets" className={styles.card}>
                 <div className={styles.sectionHeader}>
-                  <span className={`${styles.sectionBadge} ${isTicketsComplete ? styles.badgeSuccess : styles.badgeLime}`}>
-                    {isTicketsComplete ? '✓' : '03'}
-                  </span>
                   <div>
                     <h2 className={styles.sectionTitle}>
                       <DollarIcon size={16} color="#00FF9F" /> Entradas y Stock
@@ -584,9 +576,6 @@ export default function EventFormPage() {
               {/* Sección 4: Artistas (Dinámica) */}
               <div id="sec-lineup" className={styles.card}>
                 <div className={styles.sectionHeader}>
-                  <span className={`${styles.sectionBadge} ${isLineupComplete ? styles.badgeSuccess : styles.badgeCyan}`}>
-                    {isLineupComplete ? '✓' : '04'}
-                  </span>
                   <div>
                     <h2 className={styles.sectionTitle}>
                       <PeopleIcon size={16} color="var(--ds-color-cyan-400)" /> Lineup de Artistas <span className={styles.requiredStar}>*</span>
@@ -672,9 +661,6 @@ export default function EventFormPage() {
               {/* Sección 5: Flyer / Foto */}
               <div id="sec-flyer" className={styles.card}>
                 <div className={styles.sectionHeader}>
-                  <span className={`${styles.sectionBadge} ${isFlyerComplete ? styles.badgeSuccess : styles.badgePink}`}>
-                    {isFlyerComplete ? '✓' : '05'}
-                  </span>
                   <div>
                     <h2 className={styles.sectionTitle}>
                       <EyeIcon size={16} color="#FF007A" /> Imagen / Flyer
@@ -733,9 +719,6 @@ export default function EventFormPage() {
               {/* Sección 6: Géneros Musicales */}
               <div id="sec-genres" className={styles.card}>
                 <div className={styles.sectionHeader}>
-                  <span className={`${styles.sectionBadge} ${isGenresComplete ? styles.badgeSuccess : styles.badgePurple}`}>
-                    {isGenresComplete ? '✓' : '06'}
-                  </span>
                   <div>
                     <h2 className={styles.sectionTitle}>
                       <DiscIcon size={16} color="#A855F7" /> Géneros Musicales

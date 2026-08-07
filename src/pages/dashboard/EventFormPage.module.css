@@ -725,3 +725,26 @@
   background: rgba(0, 229, 255, 0.14);
   color: #00FF9F;
 }
+
+/* ── MOBILE RESPONSIVE OPTIMIZATIONS ── */
+@media (max-width: 640px) {
+  .stepperTrack {
+    display: none !important;
+  }
+
+  .submitRow {
+    padding: 10px 14px;
+    justify-content: flex-end;
+  }
+
+  .actionBtns {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cancelBtn, .submitBtn {
+    flex: 1;
+    text-align: center;
+    justify-content: center;
+  }
+}

@@ -652,7 +652,7 @@
 /* ── MOBILE RESPONSIVE OPTIMIZATIONS ── */
 @media (max-width: 640px) {
   .nav {
-    padding: 10px 12px;
+    padding: 8px 12px;
   }
 
   .navActions {
@@ -660,44 +660,73 @@
   }
 
   .btnCancel {
-    padding: 6px 10px;
-    font-size: 0.68rem;
+    padding: 5px 8px;
+    font-size: 0.65rem;
     gap: 4px;
     border-radius: 6px;
   }
 
   .btnSaveNav {
-    padding: 6px 12px;
-    font-size: 0.68rem;
+    padding: 5px 10px;
+    font-size: 0.65rem;
     gap: 4px;
     border-radius: 6px;
   }
 
+  .banner {
+    height: 120px;
+  }
+
   .editBody {
-    padding: 0 14px 30px;
-    margin-top: 60px;
+    padding: 0 12px 30px;
+    margin-top: 45px;
     gap: 16px;
   }
 
-  .banner {
-    height: 140px;
+  .profileHeader {
+    flex-direction: row;
+    align-items: flex-end;
+    gap: 12px;
+    margin-bottom: 12px;
   }
 
   .avatarSquare {
-    width: 90px;
-    height: 90px;
+    width: 76px !important;
+    height: 76px !important;
+    font-size: 28px !important;
+    border-radius: 14px !important;
+    flex-shrink: 0;
+    margin-top: -38px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
   }
 
-  .nameTitle {
-    font-size: 1.4rem !important;
+  .userInfoEdit {
+    gap: 2px;
+    width: 100%;
   }
 
-  .handleText {
-    font-size: 0.8rem !important;
+  .nameInputWrapper {
+    width: 100%;
+  }
+
+  .inputNombre {
+    font-size: 1.15rem !important;
+    width: 100% !important;
+    max-width: 210px !important;
+    padding-bottom: 2px !important;
+  }
+
+  .usernameInputWrapper {
+    font-size: 0.78rem !important;
+  }
+
+  .inputUsername {
+    font-size: 0.78rem !important;
+    width: 100% !important;
   }
 
   .card {
-    padding: 16px;
+    padding: 14px;
     border-radius: 12px;
   }
 
