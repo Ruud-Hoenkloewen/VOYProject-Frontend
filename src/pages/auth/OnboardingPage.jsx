@@ -93,7 +93,20 @@ function LivePreview({ data }) {
               style={{ backgroundColor: avatarColor, padding: avatarPhoto ? 0 : '3px' }}
             >
               {avatarPhoto ? (
-                <img src={avatarPhoto} alt="Avatar" className={styles.miniAvatarImg} />
+                <img 
+                  src={avatarPhoto} 
+                  alt="Avatar" 
+                  className={styles.miniAvatarImg} 
+                  onError={(e) => {
+                    e.currentTarget.style.display = 'none';
+                    if (e.currentTarget.parentNode) {
+                      const span = document.createElement('span');
+                      span.className = styles.miniAvatarText;
+                      span.innerText = initials;
+                      e.currentTarget.parentNode.appendChild(span);
+                    }
+                  }}
+                />
               ) : (
                 <span className={styles.miniAvatarText}>{initials}</span>
               )}

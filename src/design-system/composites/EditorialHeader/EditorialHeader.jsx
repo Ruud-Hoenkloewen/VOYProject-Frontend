@@ -126,10 +126,20 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
                 >
                   <div
                     className={styles.userAvatar}
-                    style={{ backgroundColor: user?.avatarColor || 'var(--ds-color-brand-lime)' }}
+                    style={{ backgroundColor: user?.avatarColor || 'var(--ds-color-brand-lime)', color: '#000000', fontWeight: 900 }}
                   >
                     {(user?.avatar || user?.avatarUrl || user?.fotoPerfil) ? (
-                      <img src={user.avatar || user.avatarUrl || user.fotoPerfil} alt="Avatar" className={styles.userAvatarImg} />
+                      <img 
+                        src={user.avatar || user.avatarUrl || user.fotoPerfil} 
+                        alt="Avatar" 
+                        className={styles.userAvatarImg} 
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          if (e.currentTarget.parentNode) {
+                            e.currentTarget.parentNode.innerText = (user?.nombre || user?.username || 'U').charAt(0).toUpperCase();
+                          }
+                        }}
+                      />
                     ) : (
                       (user?.nombre || user?.username || 'U').charAt(0).toUpperCase()
                     )}
@@ -197,9 +207,32 @@ export default function EditorialHeader({ ctaLabel = "ACCEDER", ctaTo = "/login"
             </NavLink>
           ))}
 
+          {isAuthenticated && (
+            <>
+              <NavLink
+                to={`/profile/${user?.username || user?._id || 'me'}`}
+                className={({ isActive }) =>
+                  `${styles.drawerLink} ${isActive ? styles.drawerLinkActive : ""}`
+                }
+                onClick={closeMenu}
+              >
+                MI PERFIL
+              </NavLink>
+              <NavLink
+                to="/profile/edit"
+                className={({ isActive }) =>
+                  `${styles.drawerLink} ${isActive ? styles.drawerLinkActive : ""}`
+                }
+                onClick={closeMenu}
+              >
+                AJUSTES DE PERFIL
+              </NavLink>
+            </>
+          )}
+
           {isAuthenticated ? (
             <button className={styles.drawerCta} onClick={() => { handleLogout(); closeMenu(); }}>
-              SALIR
+              CERRAR SESIÓN
             </button>
           ) : (
             <Link to={ctaTo} className={styles.drawerCta} onClick={closeMenu}>

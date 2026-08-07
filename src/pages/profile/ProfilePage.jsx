@@ -329,12 +329,23 @@ export default function ProfilePage() {
                     src={profile.avatarUrl || profile.fotoPerfil || profile.avatar} 
                     alt={safeName} 
                     className={styles.avatarImage} 
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                      if (e.currentTarget.parentNode) {
+                        const span = document.createElement('span');
+                        span.style.fontSize = '2.5rem';
+                        span.style.fontWeight = '900';
+                        span.style.color = '#ffffff';
+                        span.innerText = initial;
+                        e.currentTarget.parentNode.appendChild(span);
+                      }
+                    }}
                     onClick={() => setLightboxImage({ src: profile.avatarUrl || profile.fotoPerfil || profile.avatar, caption: safeName })}
                     title="Clic para ampliar foto de perfil en alta resolución"
                     style={{ cursor: "zoom-in" }}
                   />
                 ) : (
-                  initial
+                  <span style={{ fontSize: '2.5rem', fontWeight: 900, color: '#ffffff' }}>{initial}</span>
                 )}
 
                 {isAuthenticated && !isMyProfile && (

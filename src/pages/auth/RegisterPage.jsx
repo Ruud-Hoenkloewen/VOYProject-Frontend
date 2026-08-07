@@ -126,6 +126,55 @@ export default function RegisterPage() {
   }
 
   
+  const { user, isAuthenticated, login: authLogin, token: userToken } = useAuth();
+
+  async function handleRoleSelectForLoggedInUser(roleToRegister) {
+    setSubmitting(true);
+    try {
+      const uniqueUsername = await generateUniqueUsername(user?.nombre || "usuario");
+      const payload = {
+        role: roleToRegister,
+        username: user?.username || uniqueUsername,
+        onboardingCompleted: roleToRegister === "client" ? false : true,
+      };
+      if (roleToRegister === "producer") {
+        payload.avatarColor = "#00E5FF";
+        payload.bannerGradiente = "g5";
+      } else if (roleToRegister === "artist") {
+        payload.avatarColor = "#FF00E5";
+        payload.bannerGradiente = "g4";
+      }
+      const token = userToken || localStorage.getItem("voy_token");
+      const updated = await updateMyProfile(payload);
+      await authLogin(updated, token);
+
+      if (roleToRegister === "client") {
+        navigate("/onboarding");
+      } else {
+        localStorage.setItem("onboardingDone", "true");
+        navigate(`/dashboard/${roleToRegister}`);
+      }
+    } catch (err) {
+      console.error("Error al actualizar rol de usuario:", err);
+      if (roleToRegister === "client") {
+        navigate("/onboarding");
+      } else {
+        navigate(`/dashboard/${roleToRegister}`);
+      }
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  const handleCardClick = (role) => {
+    if (isAuthenticated && user) {
+      handleRoleSelectForLoggedInUser(role);
+    } else {
+      setSelectedRole(role);
+      setStep(1);
+    }
+  };
+
   if (step === 0) {
     return (
       <div className={styles.page}>
@@ -147,7 +196,7 @@ export default function RegisterPage() {
           <div className={styles.onboardingCards}>
             <div 
               className={`${styles.onboardingCard} ${selectedRole === "client" ? styles.onboardingCardActive : ""}`} 
-              onClick={() => { setSelectedRole("client"); setStep(1); }}
+              onClick={() => handleCardClick("client")}
             >
               <div className={styles.onboardingCardIcon}>
                 <User size={34} />
@@ -160,7 +209,7 @@ export default function RegisterPage() {
 
             <div 
               className={`${styles.onboardingCard} ${selectedRole === "producer" ? styles.onboardingCardActive : ""}`} 
-              onClick={() => { setSelectedRole("producer"); setStep(1); }}
+              onClick={() => handleCardClick("producer")}
             >
               <div className={styles.onboardingCardIcon}>
                 <Building2 size={34} />
@@ -173,7 +222,7 @@ export default function RegisterPage() {
 
             <div 
               className={`${styles.onboardingCard} ${selectedRole === "artist" ? styles.onboardingCardActive : ""}`} 
-              onClick={() => { setSelectedRole("artist"); setStep(1); }}
+              onClick={() => handleCardClick("artist")}
             >
               <div className={styles.onboardingCardIcon}>
                 <Guitar size={34} />

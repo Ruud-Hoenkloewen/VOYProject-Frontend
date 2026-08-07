@@ -46,14 +46,29 @@ export default function LoginPage() {
     setApiError("");
     try {
       const data = await googleLogin(credentialResponse.credential);
-      login({ _id: data._id, nombre: data.nombre, email: data.email, role: data.role, avatar: data.avatar }, data.token);
+      login({ 
+        _id: data._id, 
+        nombre: data.nombre, 
+        email: data.email, 
+        role: data.role, 
+        avatar: data.avatar, 
+        avatarUrl: data.avatarUrl,
+        onboardingCompleted: data.onboardingCompleted 
+      }, data.token);
       
-      import("../../services/userService")
-        .then(({ getMyProfile }) => getMyProfile())
-        .then((profile) => login(profile, data.token))
-        .catch(console.error);
+      try {
+        const { getMyProfile } = await import("../../services/userService");
+        const profile = await getMyProfile();
+        if (profile) login(profile, data.token);
+      } catch (profileErr) {
+        console.error("Error al obtener perfil tras Google Auth:", profileErr);
+      }
 
-      navigate(redirectTo, { replace: true });
+      if (data.isNewUser || !data.onboardingCompleted) {
+        navigate("/register", { replace: true });
+      } else {
+        navigate(redirectTo, { replace: true });
+      }
     } catch (err) {
       setApiError(err.response?.data?.mensaje || "Error al iniciar sesión con Google");
     } finally {

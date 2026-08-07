@@ -1039,35 +1039,118 @@
 /* ─── MOBILE RESPONSIVE OPTIMIZATIONS ────────────────────────────────────── */
 @media (max-width: 640px) {
   .navbarOpaque {
-    padding: 12px 16px;
+    padding: 8px 12px;
+    gap: 8px;
   }
-  .profileContent {
-    padding: 0 16px 40px;
-    margin-top: 70px;
+  
+  .navActions {
+    gap: 6px;
   }
+  
+  .editBtn, .logoutBtn {
+    padding: 5px 8px;
+    font-size: 0.65rem;
+    letter-spacing: 0.03em;
+    height: 30px;
+    border-radius: 6px;
+    gap: 4px;
+  }
+
+  .editBtn svg, .logoutBtn svg {
+    width: 12px;
+    height: 12px;
+  }
+
   .banner {
-    height: 160px;
+    height: 130px;
   }
+
+  .profileContent {
+    padding: 0 14px 30px;
+    margin-top: 55px;
+  }
+
   .avatarAndHeaderRow {
     flex-direction: column;
     align-items: flex-start;
-    gap: 12px;
+    gap: 8px;
   }
+
   .avatarSquare {
-    width: 96px;
-    height: 96px;
-    font-size: 38px;
-    border-radius: 16px;
+    width: 84px !important;
+    height: 84px !important;
+    font-size: 32px !important;
+    border-radius: 14px !important;
+    margin-top: -42px;
   }
+
   .headerDetailsCol {
     padding-top: 0;
     width: 100%;
   }
-  .navActions {
-    gap: 8px;
+
+  .displayName {
+    font-size: 1.45rem !important;
+    line-height: 1.15;
+    word-break: break-word;
+    letter-spacing: 0.01em;
   }
-  .editBtn, .logoutBtn {
-    padding: 6px 10px;
-    font-size: 0.7rem;
+
+  .username {
+    font-size: 0.78rem !important;
+  }
+
+  .statsRow {
+    gap: 12px;
+    font-size: 0.78rem;
+    margin-top: 6px;
+  }
+
+  .statNumber {
+    font-size: 0.9rem;
+  }
+
+  .tabsContainer {
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 2px;
+    flex-wrap: nowrap;
+    border-bottom-width: 1px;
+  }
+
+  .tab {
+    font-size: 0.72rem !important;
+    padding: 10px 8px !important;
+    flex-shrink: 0;
+    white-space: nowrap;
+    gap: 6px;
+  }
+
+  .tabIcon {
+    width: 13px;
+    height: 13px;
+  }
+
+  .eventsGrid {
+    grid-template-columns: 1fr !important;
+    gap: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 0.92rem;
+  }
+
+  .emptyState {
+    padding: 24px 16px;
+  }
+
+  .emptyTitle {
+    font-size: 0.95rem;
+  }
+
+  .emptyText {
+    font-size: 0.82rem;
   }
 }

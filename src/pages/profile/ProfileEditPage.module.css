@@ -648,3 +648,71 @@
   transform: translateY(-1px);
 }
 .btnSave:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+
+/* ── MOBILE RESPONSIVE OPTIMIZATIONS ── */
+@media (max-width: 640px) {
+  .nav {
+    padding: 10px 12px;
+  }
+
+  .navActions {
+    gap: 6px;
+  }
+
+  .btnCancel {
+    padding: 6px 10px;
+    font-size: 0.68rem;
+    gap: 4px;
+    border-radius: 6px;
+  }
+
+  .btnSaveNav {
+    padding: 6px 12px;
+    font-size: 0.68rem;
+    gap: 4px;
+    border-radius: 6px;
+  }
+
+  .editBody {
+    padding: 0 14px 30px;
+    margin-top: 60px;
+    gap: 16px;
+  }
+
+  .banner {
+    height: 140px;
+  }
+
+  .avatarSquare {
+    width: 90px;
+    height: 90px;
+  }
+
+  .nameTitle {
+    font-size: 1.4rem !important;
+  }
+
+  .handleText {
+    font-size: 0.8rem !important;
+  }
+
+  .card {
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .grid2Col {
+    grid-template-columns: 1fr !important;
+    gap: 12px;
+  }
+
+  .btnRow {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .btnBack, .btnSave {
+    padding: 12px;
+    font-size: 0.76rem;
+  }
+}
